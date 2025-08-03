@@ -1,0 +1,28 @@
+.SearchContainer {
+  position:relative;
+  font-size: 12px;
+}
+
+.SearchBox {
+  position:absolute;
+  top:0;
+  display: none;
+ 
+}
+
+.SearchContainer:hover div, .SearchBox:hover div {
+  display: block;
+}
+.dark {
+  border-color: white;
+  background-color: black;
+  color: white;
+}
+
+
+.light{
+  border-color: black;
+  background-color: white;
+  color: black;
+}
+
