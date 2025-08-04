@@ -1,26 +1,9 @@
+import { ToolTipData, DrawToolTipArgs, CoreSize, CanvasSets, CoreTransform, ContainerBox, NavIndex, MapChanges, NodeEl, LinkEl, LinkSet, NodeElOpt, LinkElOpt, Animation, HasIdEl, Cordinate, NodeLinks, LinkDraw, PointLookupResult, BundleDraw, } from "./CommonTypes"; import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 
-import {
-  CoreSize,
-  CanvasSets,
-  CoreTransform,
-  ContainerBox,
-  NavIndex,
-  MapChanges, NodeEl, LinkEl,
-  LinkSet, NodeElOpt, LinkElOpt,
-  Animation,
-  HasIdEl,
-  Cordinate,
-  NodeLinks,
-  LinkDraw,
-  PointLookupResult,
-  BundleDraw,
-} from "./CommonTypes";
-import { THEME_MAP,ThemeOptionSets } from "./THEME_MAP";
 type NodeLinkChoice = 'links' | 'nodes';
-
 interface LinkSets { [key: string]: LinkSet }
-
 interface SetCalculatorData {
+  toolTipData?:ToolTipData,
   changes?: MapChanges;
   grid?: boolean;
   theme?: string;
@@ -44,32 +27,73 @@ const CORE_SIZE = { width: 1920, height: 1080 }
 const CORE_R = 12;
 const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 
+export {SetCalculatorData}
 
 export default class Calculator {
+  toolTipData:{[key:string]:{label:string,data:string[]}}={};
+  linkCache: { [nodeId: string]: ContainerBox } = {}
+  highlight = false;
   textAlign: string = 'center';
   fontFamily: string = 'Arial';
   color: string = 'black';
   bgColor: string = 'white';
   bundleColor: string = 'darkgrey';
-  lineColor:string= 'black';
-  fillColor:string= 'white';
+  lineColor: string = 'black';
+  fillColor: string = 'white';
   theme: string = 'light';
   shadeColor: string = 'lightgrey';
   r: number = CORE_R;
-  mouseOverColor:string='lightblue';
-
+  mouseOverColor: string = 'lightblue';
+  stroke:string= 'black';
+  fill:string='black';
+  contexts: { [key: string]: CanvasRenderingContext2D } = {};
+  minMax = {
+    minX: NaN,
+    minY: NaN,
+    maxX: NaN,
+    maxY: NaN,
+  }
+  animations: Animation[] = [];
+  fit: boolean = false;
+  indexes: NavIndex = {};
+  canvases: CanvasSets = {
+    ctrl: null, nodes: null, bundles: null, animations: null, links: null
+  }
+  links: LinkSets = {};
+  nodes: { [id: string]: NodeEl } = {};
+  nodeLinks: NodeLinks = {};
+  rawLinks: { [id: string]: LinkEl } = {};
+  nodeOpts: { [optId: string]: NodeElOpt } = {}
+  alpha = 1;
+  shadeAlpha = .5;
+  linkOpts: { [option: string]: LinkElOpt } = {}
+  images: { [key: string]: { img: HTMLImageElement, n: NodeEl[], loaded: boolean } } = {};
+  imgSize = 24;
+  fontSize = 10;
+  drag: boolean = false;
   srcNodes: NodeEl[] = [];
   srcLinks: LinkEl[] = [];
   indexSize: number = 48;
   initSize: CoreSize = CORE_SIZE;
-
+  shadeR = 16.97;
+  tick = 0;
+  ticks = 40;
+  tickSlots = 3;
+  tickSpace = 4;
+  transform: CoreTransform = { ...CORE_TRANSFORM };
+  changes: MapChanges = { nodes: {}, transform: this.transform, grid: false };
+  noChange: boolean = false;
+  lineWidth = 1;
+  boxWidth = 21.6;
+  boxR = 5.4;
+  mounted = false;
+  timeout: NodeJS.Timeout | undefined;
+  animationTimer = 500;
 
   setData(dataSet: SetCalculatorData) {
-    const { changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
-
-
+    const { toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
     this.theme = theme || 'light'
-    const theme_choices=themes||THEME_MAP;
+    const theme_choices = themes || THEME_MAP;
     Object.assign(this, theme_choices[this.theme]);
     this.srcNodes = nodes || [];
     this.srcLinks = links || [];
@@ -84,31 +108,13 @@ export default class Calculator {
     this.changes.nodes = {};
     this.changes.grid = grid || false;
     this.changes.transform = this.transform;
+    this.toolTipData=toolTipData||{};
     if (changes) {
       Object.assign(this.changes, changes);
       this.changes.transform = this.transform = changes.transform;
     }
     this.buildData();
   }
-
-  minMax = {
-    minX: NaN,
-    minY: NaN,
-    maxX: NaN,
-    maxY: NaN,
-  }
-
-  animations: Animation[] = [];
-
-  fit: boolean = false;
-
-  indexes: NavIndex = {};
-
-  canvases: CanvasSets = {
-    ctrl: null, nodes: null, bundles: null, animations: null, links: null
-  }
-
-  drag: boolean = false;
 
   buildIndex(Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl) {
     const { ne, nw, se, sw } = Cs;
@@ -140,7 +146,6 @@ export default class Calculator {
     }
   }
 
-
   getIndex(p: Cordinate, t = this.transform) {
     const { indexSize, indexes } = this;
     const tp = this.translateCanvasYX(p, t);
@@ -152,31 +157,16 @@ export default class Calculator {
     const y = ry - ry % indexSize;
     return lx.hasOwnProperty(y) ? { ...lx[y], tp } : { tp, nodes: undefined, links: undefined };
   }
-  shadeR = 16.97;
-
-  tick = 0;
-  ticks = 40;
-  tickSlots = 3;
-  tickSpace = 4;
-  transform: CoreTransform = { ...CORE_TRANSFORM };
-
-  changes: MapChanges = { nodes: {}, transform: this.transform, grid: false };
-  noChange: boolean = false;
 
   getChanges() {
     return this.changes;
   }
-  lineWidth = 1;
-  boxWidth = 21.6;
-  boxR = 5.4;
-  mounted = false;
-  timeout: NodeJS.Timeout | undefined;
 
-  animationTimer = 500;
   onMount() {
     if (this.mounted) return;
     this.mounted = true;
   }
+
   onUnMount() {
     if (!this.mounted) return;
     this.mounted = false
@@ -228,6 +218,7 @@ export default class Calculator {
       if (minY < minMax.minY) minMax.minY = minY;
     }
   }
+
   createCenertTransform(minMax = this.minMax, offset = this.imgSize * 2.7) {
     const { width, height } = this.initSize;
     const h = Math.abs(minMax.maxY - minMax.minY + offset);
@@ -249,9 +240,6 @@ export default class Calculator {
     Object.assign(this.transform, this.createCenertTransform());
   }
 
-  linkCache: { [nodeId: string]: ContainerBox } = {}
-
-  highlight = false;
   clearCtrl(clear = true) {
     if (!clear) return;
 
@@ -264,11 +252,8 @@ export default class Calculator {
     }
     this.highlight = false;
   }
-  /** @param {PointLookupResult} res  
-   * @param {undefined|Cordinate} p
-  */
-  drawHighlight(res: PointLookupResult, p: Cordinate) {
 
+  drawHighlight(res: PointLookupResult, p: Cordinate) {
     this.clearCtrl(true);
     this.highlight = true;
 
@@ -302,13 +287,9 @@ export default class Calculator {
     this.draw();
   }
 
-  drawToolTip = (args: { id: string } & Cordinate) => { }
+  drawToolTip = (args: DrawToolTipArgs) => { }
 
-  /**
-   * @param {CanvasRenderingContext2D} ctrl 
-   * @param {NodeEl} node */
   drawNodeHighlght(ctrl: CanvasRenderingContext2D, node: NodeEl) {
-
     this.drawCircle(
       ctrl,
       node,
@@ -318,9 +299,6 @@ export default class Calculator {
     )
   }
 
-  /**
-   * @param {CanvasRenderingContext2D} ctrl 
-   * @param {LinkDraw} link  */
   drawLinkHighlight(ctrl: CanvasRenderingContext2D, link: LinkDraw) {
     const lr = link.r || this.r;
     this.drawLine(ctrl,
@@ -344,9 +322,6 @@ export default class Calculator {
     }
   }
 
-  /**
-   * @param {CanvasRenderingContext2D} ctrl 
-   * @param {BundleDraw} bundle */
   drawBundleHighlight(ctrl: CanvasRenderingContext2D, bundle: BundleDraw) {
     const { s, d, l, lr, c, r } = bundle
     for (let i = 0; i < l!.length; ++i) {
@@ -377,9 +352,6 @@ export default class Calculator {
       this.shadeColor
     )
   }
-
-  /** @type {{ ctrl: CanvasRenderingContext2D, nodes: CanvasRenderingContext2D, bundles: CanvasRenderingContext2D, animations: CanvasRenderingContext2D, links: CanvasRenderingContext2D }}  */
-  contexts: { [key: string]: CanvasRenderingContext2D } = {};
 
   drawNodes() {
     this.indexes = {};
@@ -452,7 +424,7 @@ export default class Calculator {
     this.tick = tick;
     this.timeout = setTimeout(this.onAnimate, this.animationTimer);
   }
-  /** @param {NodeEl} node */
+
   drawNode(node: NodeEl) {
     const opts = this.nodeOpts[node.o];
     const { nodes } = this.contexts;
@@ -463,7 +435,7 @@ export default class Calculator {
       this.drawBox(nodes, node, opts.c || '');
     }
   }
-  /** @param {LinkSet} ls */
+
   drawLink(ls: LinkSet) {
     const { l, n, b } = ls;
     if (l.length == 0) return;
@@ -543,7 +515,6 @@ export default class Calculator {
     }
   }
 
-
   drawAinimation(context: CanvasRenderingContext2D, animation: Animation) {
     const { a, c, f, r, s, w, o } = animation
     const { tick, tickSlots, ticks, tickSpace } = this;
@@ -554,34 +525,6 @@ export default class Calculator {
     }
   }
 
-
-
-
-
-  links: LinkSets = {};
-
-  nodes: { [id: string]: NodeEl } = {};
-
-  /** @type {NodeLinks} */
-  nodeLinks: NodeLinks = {};
-
-  /** @type {{[id:string]:LinkEl}} */
-  rawLinks: { [id: string]: LinkEl } = {};
-
-  nodeOpts: { [optId: string]: NodeElOpt } = {}
-
-  alpha = 1;
-  shadeAlpha = .5;
-
-  linkOpts: { [option: string]: LinkElOpt } = {}
-
-  /** @type {{[key:string]:{img:HTMLImageElement,n:NodeEl[],loaded:boolean}}} */
-  images: { [key: string]: { img: HTMLImageElement, n: NodeEl[], loaded: boolean } } = {};
-
-  imgSize = 24;
-  fontSize = 10;
-
-
   setR(r = this.r) {
     this.r = r;
     this.imgSize = r * 2;
@@ -591,7 +534,6 @@ export default class Calculator {
     this.shadeR = .5 * this.getDistance(0, 0, this.imgSize, this.imgSize);
     this.fontSize = Math.round(r * 5 / 6);
   }
-
 
   createNodeBox(c: Cordinate, r: number) {
     const o: ContainerBox = { ne: { x: 0, y: 0 }, nw: { x: 0, y: 0 }, se: { x: 0, y: 0 }, sw: { x: 0, y: 0 }, };
@@ -619,13 +561,11 @@ export default class Calculator {
     return cb;
   }
 
-
   insideSquare(n: Cordinate, p: Cordinate, r = this.r) {
     const dx = Math.abs(p.x - n.x);
     const dy = Math.abs(p.y - n.y);
     return (dx > r || dy > r) ? false : true;
   }
-
 
   lookupPoint(p: Cordinate,) {
     const el = this.getIndex(p);
@@ -690,19 +630,13 @@ export default class Calculator {
     return res;
   }
 
-  /** @param {Cordinate} p  
-   * @param {Cordinate} c
-   * @param {number} r  
-  */
   insideCircle(p: Cordinate, c: Cordinate, r: number) {
     return (p.x - c.x) ** 2 + (p.y - c.y) ** 2 <= r ** 2;
   }
 
-
   triangleArea(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
     return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) * .5)
   }
-
 
   insideBox(cb: ContainerBox, p: Cordinate) {
     const { ne, nw, se, sw, } = cb;
@@ -711,30 +645,6 @@ export default class Calculator {
     const height = this.getDistance(ne.x, ne.y, se.x, se.y);
     const boxArea = width * height * TRIANGLE_MARGINE_FOR_ERROR;
 
-    /*
-      How this works..
-      
-      1. we get the distance between ne and nw as width
-      2. we get the distance between ne and se as height
-      3. then get the area of the square: area=width * height
-      
-      4. We calculate a triangle for each side of the box and input. Then we sum all triangle areas.
-        If the sum of all 4 triangles area is the same as the area of the box,
-          then the mouse input value is inside the box.
-      
-            INSIDE
-         ne      nw           
-           \     /
-            \   /
-             \ /
-              p
-             / \ 
-            /   \
-           /     \
-          se      sw
-      
-
-    */
     let triangleSum = 0;
     const order = [ne, nw, sw, se, ne];
     for (let id = 0; id < 4; ++id) {
@@ -746,25 +656,13 @@ export default class Calculator {
     }
     return true;
   }
-  /** @param {Cordinate} s Source
-   * @param {number} r distance
-   * @param {number} a angle
-   * @param {number} slots how many slots
-   * @param {number} pos which slot
-  */
+
   computeLinePoint(s: Cordinate, r: number, a: number, slots: number, pos: number) {
     const scale = 1 / (slots + 1);
     const next = r * (pos + 1) * scale;
     return this.getXY(s.x, s.y, next, a)
   }
 
-  /** @param {CanvasRenderingContext2D} context  
-   * @param {number} w - width
-   * @param {Cordinate} s - source
-   * @param {Cordinate} d - destination
-   * @param {string} c - color
-   * @param {number} w - width
-  */
   drawLine(context: CanvasRenderingContext2D, s: Cordinate, d: Cordinate, c: string, w: number) {
     context.beginPath();
     context.lineWidth = w;
@@ -775,10 +673,7 @@ export default class Calculator {
     context.closePath();
     context.stroke();
   }
-  /** @param {CanvasRenderingContext2D} context
-   * @param {NodeEl} node 
-   * @param {string} src - image source 
-   */
+
   drawImage(context: CanvasRenderingContext2D, node: NodeEl, src: string) {
     if (this.images[src]) {
       if (this.images[src].loaded) {
@@ -807,7 +702,6 @@ export default class Calculator {
     }
   }
 
-
   drawCircle(context: CanvasRenderingContext2D, n: Cordinate, c: string, r = this.r, f?: string) {
     context.beginPath();
     if (f) context.fillStyle = f;
@@ -819,14 +713,11 @@ export default class Calculator {
     context.closePath();
   }
 
-
   drawBox(context: CanvasRenderingContext2D, n: Cordinate, c: string, r = this.r, imgSize = this.imgSize) {
     context.fillStyle = c;
     context.rect(n.x - r, n.y - r, imgSize, imgSize)
     context.fill();
-    //context.stroke();
   }
-
 
   drawText(context: CanvasRenderingContext2D, n: Cordinate, l: string) {
     context.fillStyle = this.color;
@@ -835,8 +726,6 @@ export default class Calculator {
     const yo = (meta.actualBoundingBoxAscent + meta.actualBoundingBoxDescent) / 2 + this.r;
     context.fillText(l, n.x + xo, n.y - yo);
   }
-
-
 
   GetAngle(x1: number, y1: number, x2: number, y2: number) {
     const dx = x1 - x2,
@@ -871,7 +760,6 @@ export default class Calculator {
   rad(degree: number) {
     return degree * Math.PI / 180;
   }
-
 
   buildData() {
     this.indexes = {};
@@ -958,14 +846,9 @@ export default class Calculator {
     this.draw();
   }
 
-
   translateCanvasYX(p: Cordinate, t = this.transform) {
-    // position on the page
-    // poition in the transformed canvas
     const x = (p.x - t.x) / t.k;
     const y = (p.y - t.y) / t.k;
     return { x, y } as Cordinate
   }
 }
-
-

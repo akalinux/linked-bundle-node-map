@@ -1,3 +1,4 @@
+interface ToolTipData{[key:string]:{label:string,data:string[]}}
 interface CoreSize {
   width: number;
   height: number;
@@ -149,7 +150,12 @@ interface PointLookupResult  {
     link: null | LinkDraw;
     bundle: null | BundleDraw;
 }
+
+type DrawToolTipArgs={ id: string } & Cordinate|null
+
 export {
+  ToolTipData,
+  DrawToolTipArgs,
   PointLookupResult,
   NodeLinks,
   HasIdEl,

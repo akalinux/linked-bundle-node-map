@@ -1,18 +1,36 @@
 .SearchContainer {
-  position:relative;
+  position: relative;
   font-size: 12px;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .SearchBox {
-  position:absolute;
-  top:0;
+  position: absolute;
+  top: 0;
   display: none;
- 
 }
 
-.SearchContainer:hover div, .SearchBox:hover div {
+.SearchBarDD {
+  width: 100%;
+  max-height: 200px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.SearchContainer:hover div,
+.SearchBox:hover div {
   display: block;
 }
+
+.ToolBarPosition {
+  min-height: 100px;
+  position: absolute;
+  top: calc(50% - 90px);
+  right: 5;
+}
+
 .dark {
   border-color: white;
   background-color: black;
@@ -20,9 +38,61 @@
 }
 
 
-.light{
+.light {
   border-color: black;
   background-color: white;
   color: black;
 }
 
+.relativeTag {
+  position: relative;
+}
+
+.ddRowStyle {
+  padding-left: 5px;
+  cursor: pointer;
+}
+
+.ZoomButton,
+.ResetButton {
+  cursor: pointer;
+  text-align: center;
+  border: solid 1.5px;
+  border-radius: '7px';
+}
+
+.ResetButton {
+  display: inline-block;
+  width: 35px;
+  font-size: 9px;
+}
+
+.Tooltip {
+  overflow: auto;
+  scrollbar-width: thin;
+  max-height: 250px;
+  border-radius: 6px;
+  padding: 3px 3px;
+  font-size: 10px;
+  background-color: rgba(255, 255, 255,0.95);
+  color: black;
+  box-shadow: 1px 1px 5px #63738A;
+  border: 1px solid #D8DDE6;
+  white-space: pre-wrap;
+  overflow: auto;
+  font-weight: normal !important;
+  position: absolute;
+}
+
+.TooltipHeading {
+    border-bottom: 1px solid #63738A;
+    font-size: inherit;
+    text-transform: capitalize;
+    white-space: nowrap;
+    padding-right: 4px;
+}
+
+.TooltipRow {
+    color: black;
+    white-space: nowrap;
+}

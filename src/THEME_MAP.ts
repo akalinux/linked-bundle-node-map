@@ -6,13 +6,18 @@ interface ColorOptionSet {
   lineColor:string;
   fillColor:string;
   mouseOverColor:string;
+  fill:string;
+  stroke:string;
 }
+
 interface ThemeOptionSets {
   [theme: string]: ColorOptionSet;
 }
 
 const THEME_MAP:ThemeOptionSets = {
   light: {
+    stroke: 'black',
+    fill: 'black',
     lineColor: 'black',
     fillColor: 'white',
     color: 'black',
@@ -29,6 +34,8 @@ const THEME_MAP:ThemeOptionSets = {
     bgColor: 'black',
     bundleColor: 'darkgrey',
     shadeColor: 'lightgrey',
+    stroke: 'white',
+    fill: 'white'
   }
 }
 
