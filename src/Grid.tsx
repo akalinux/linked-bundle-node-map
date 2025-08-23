@@ -13,16 +13,18 @@ const GRID_OPTS = {
   height: 1080,
 }
 
-interface RenderCanvasProps {
+interface CoreGridOpts {
+  lineWidth?: number;
+  gridSize?: number;
+  gridSlots?: number;
+  dark?: string;
+  light?: string;
+  dividerWidth?: number;
+  width?: number;
+  height?: number; 
+}
+interface GridRenderCanvasProps extends CoreGridOpts{
   m: ManageInstance<null | HTMLCanvasElement>;
-  lineWidth: number;
-  gridSize: number;
-  gridSlots: number;
-  dark: string;
-  light: string;
-  dividerWidth: number;
-  width: number;
-  height: number;
 }
 
 const drawLine = (context: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, w: number) => {
@@ -35,8 +37,8 @@ const drawLine = (context: CanvasRenderingContext2D, x1: number, y1: number, x2:
   context.stroke();
 };
 
-const RenderCanvas: React.FC<RenderCanvasProps> = (props) => {
-  const { dividerWidth, lineWidth, gridSize, gridSlots, width, height, m, light, dark } = props;
+const RenderCanvas: React.FC<GridRenderCanvasProps> = (props) => {
+  const { dividerWidth, lineWidth, gridSize, gridSlots, width, height, m, light, dark } = {...GRID_OPTS,...props};
   const canvas = useSyncExternalStore(...m.subscribe());
   const theme = useContext(ThemeContext);
   if (!canvas) return;
@@ -68,7 +70,7 @@ const RenderCanvas: React.FC<RenderCanvasProps> = (props) => {
 }
 
 const STYLE = { width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }
-export default function Grid(inArgs = GRID_OPTS) {
+export default function Grid(inArgs:CoreGridOpts = GRID_OPTS) {
   const props = { ...GRID_OPTS, ...inArgs };
   const style: { [key: string]: any } = { ...STYLE }
   const ref: React.RefObject<null | HTMLCanvasElement> = useRef(null);

@@ -1,8 +1,9 @@
-import React, { useContext, useSyncExternalStore, useRef } from "react";
+import React, { useContext, useSyncExternalStore, useRef, ReactElement } from "react";
 import FormContext from "./FormContext";
 import CalculatorContext from "./CalculatorContext";
 import ManageInstance from './ManageInstance';
 import ToolTip from './ToolTip';
+import { DrawToolTipArgs } from "./CommonTypes";
 interface ToolTipsProps {
   id?: string;
   x?: number;
@@ -46,7 +47,7 @@ function ToolTips(props: ToolTipsProps) {
 
 function WatchTT(props: { m: ManageInstance<null | { [key: string]: any }> }) {
   const tt = useSyncExternalStore(...props.m.subscribe()) as ToolTipsProps;
-  if (!tt) return;
+  if (!tt) return '';
   return <ToolTips {...tt} />
 }
 
@@ -54,13 +55,18 @@ function WatchTT(props: { m: ManageInstance<null | { [key: string]: any }> }) {
 function CreateTT(opts = DEFAULT_OPTIONS) {
   const safe = { ...DEFAULT_OPTIONS, ...(opts || {}) };
   const m: ManageInstance<any> = new ManageInstance(null);
-  return [(arg: { [key: string]: any } | undefined) => {
-    if (arg) {
-      m.publish({ ...safe, ...(arg || {}) });
-    } else {
-      m.publish(arg);
-    }
-  }, <WatchTT m={m} />, m]
+  const res:[(arg:DrawToolTipArgs)=>void,ReactElement,ManageInstance<any>]=[
+    (arg: DrawToolTipArgs) => {
+      if (arg) {
+        m.publish({ ...safe, ...(arg || {}) });
+      } else {
+        m.publish(arg);
+      }
+    },
+    <WatchTT m={m} />,
+    m
+  ];
+  return res;
 }
 
 export default CreateTT;

@@ -17,6 +17,7 @@ interface SetCalculatorData {
   links: LinkEl[];
   nodeOpts?: { [optId: string]: NodeElOpt };
   linkOpts?: { [option: string]: LinkElOpt };
+  noTools?:boolean;
 }
 
 const Rad2Deg = 180.0 / Math.PI;
