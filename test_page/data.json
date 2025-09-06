@@ -1,0 +1,120 @@
+{
+  "toolTipData":{
+    "w":{
+      "label":"West me baby ya!",
+      "data":[
+        "test"
+      ]
+    }
+  },
+  "nodes":[
+    {
+      "i": "n",
+      "o": "img1",
+      "x": 150,
+      "y": 25,
+      "l": "Northern Node",
+      "h":0
+    },
+    {
+      "i": "s",
+      "o": "img2",
+      "x": 150,
+      "y": 125,
+      "h":1,
+      "l": "Southern Node"
+    },
+    {
+      "i": "w",
+      "o": "default",
+      "x": 25,
+      "y": 75,
+      "l": "Western Node"
+    }, 
+    {
+      "i": "e",
+      "o": "default",
+      "x": 250,
+      "y": 75,
+      "l": "Eastern Node"
+    }
+  ],
+  "nodeOpts":{
+    "default":{"c":"#ADD8E6"},
+    "img1":{"i":"./images/telemetrylander.png"},
+    "img2":{"i":"./images/underProgress.gif"}
+  },
+  "linkOpts":{
+    "default":{"c":"#ADD8E6"}
+  },
+  "noTools":false,
+  "size":{"width":1920,"height":1080},
+  "noChange":false,
+  "autoFit":true,
+  "grid":true,
+  "transform":{"x":0,"y":0,"k":1},
+  "links":[
+    {
+      "i":"1",
+      "s":"n",
+      "d":"s",
+      "o":"default",
+      "a":"d",
+      "b":["test1"]
+    },
+    {
+      "i":"2",
+      "s":"n",
+      "d":"w",
+      "o":"default",
+      "a":"s"
+    },
+    {
+      "i":"3",
+      "s":"n",
+      "d":"e",
+      "o":"default",
+      "b":["x"],
+      "a":"b"
+    },
+    {
+      "i":"4",
+      "s":"e",
+      "d":"s",
+      "o":"default",
+      "a":"n"
+    },
+    {
+      "i":"5",
+      "s":"s",
+      "d":"w",
+      "o":"default",
+      "b":["xxx"],
+      "a":"n"
+    },
+    {
+      "i":"6",
+      "s":"s",
+      "d":"w",
+      "b":["xxx"],
+      "o":"default",
+      "a":"b"
+    },
+    {
+      "i":"7",
+      "s":"s",
+      "d":"w",
+      "b":["xxx"],
+      "o":"default",
+      "a":"s"
+    },
+    {
+      "i":"8",
+      "s":"w",
+      "d":"s",
+      "b":["yyy","xxx"],
+      "o":"default",
+      "a":"s"
+    }
+  ]
+}
