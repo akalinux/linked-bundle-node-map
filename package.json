@@ -1,10 +1,14 @@
 {
   "name": "linked-bundle-node-map",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
+  "type": "commonjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "dev": "webpack -c ./webpack-dev.config.ts",
+    "watch": "webpack -w -c ./webpack-dev.config.ts",
+    "build": "webpack -c ./webpack-prod.config.ts",
+    "clean": "rm -rf dist||/bin/true",
     "test": "jest"
   },
   "files": [
@@ -19,11 +23,17 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/register": "^7.28.3",
     "@types/jest": "^30.0.0",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.0",
-    "typescript": "^5.9.2"
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.2",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
   }
 }

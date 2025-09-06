@@ -1,4 +1,23 @@
-import { ToolTipData, DrawToolTipArgs, CoreSize, CanvasSets, CoreTransform, ContainerBox, NavIndex, MapChanges, NodeEl, LinkEl, LinkSet, NodeElOpt, LinkElOpt, Animation, HasIdEl, Cordinate, NodeLinks, LinkDraw, PointLookupResult, BundleDraw, } from "./CommonTypes"; import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
+import { ToolTipData, 
+  DrawToolTipArgs, 
+  CoreSize, CanvasSets, 
+  CoreTransform, 
+  ContainerBox, 
+  NavIndex, 
+  MapChanges, 
+  NodeEl, 
+  LinkEl, 
+  LinkSet, 
+  NodeElOpt, 
+  LinkElOpt, 
+  Animation, 
+  HasIdEl, 
+  Cordinate, 
+  NodeLinks, 
+  LinkDraw, 
+  PointLookupResult, 
+  BundleDraw, } from "./CommonTypes"; 
+import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 
 type NodeLinkChoice = 'links' | 'nodes';
 interface LinkSets { [key: string]: LinkSet }
