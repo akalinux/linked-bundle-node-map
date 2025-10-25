@@ -13,6 +13,10 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
+  "private":true,
+  "workspaces":[
+    "../*"
+  ],
   "devDependencies": {
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-typescript": "^7.27.1",
