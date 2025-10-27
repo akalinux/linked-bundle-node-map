@@ -3,12 +3,11 @@ import fs from 'fs';
 if(!fs.existsSync(path.resolve(__dirname,'dist'))) { fs.mkdirSync(path.resolve(__dirname,'dist')); }
 fs.copyFile(path.resolve(__dirname, 'src','LinkedSet.css'), path.resolve(__dirname, 'dist','LinkedSet.css'), (err) => {
   if (err) {
-    throw new Error(err);
-    return;
+    throw new Error(err.message);
   }
 });
 export default {
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   mode: 'development',
   module: {
     rules: [
@@ -28,6 +27,7 @@ export default {
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'LinkedNodeMap',
+	globalObject: 'this', 
     umdNamedDefine: true,
   },
 };
