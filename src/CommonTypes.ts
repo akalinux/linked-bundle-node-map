@@ -41,8 +41,8 @@ interface ContainerBox {
 }
 
 interface NodeElOpt {
-  i: undefined | string;
-  c: undefined | string;
+  i?: string;
+  c?: string;
 }
 
 interface LinkElOpt {
