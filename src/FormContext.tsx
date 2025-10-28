@@ -1,11 +1,8 @@
 import {MapChanges,PointLookupResult} from './CommonTypes';
 import { createContext } from 'react';
 import ManageInstance from './ManageInstance';
-interface CoreEvent<T> {
-  name:string;  
-  tag:string;
-  getData():T;
-}
+import CoreEvent from './CoreEvent';
+import StatusContextInterface from './StatusContextInterface';
 
 class OnChange implements CoreEvent<MapChanges> {
   data:MapChanges;
@@ -33,12 +30,7 @@ class OnClick implements CoreEvent<PointLookupResult> {
   }
 }
 
-interface StatusContextInterface {
-  sendEvent(event:CoreEvent<any>):void;
-  setFormValue(data:MapChanges):void;
-  getSlotRefWatcher():ManageInstance<React.RefObject<HTMLDivElement>>|undefined;
-  setSlotRefWatcher(m:ManageInstance<React.RefObject<HTMLDivElement>>|undefined):void;
-}
+
 
 class LinkedMapStatus implements StatusContextInterface {
   m:ManageInstance<React.RefObject<HTMLDivElement>>|undefined;
@@ -57,6 +49,6 @@ class LinkedMapStatus implements StatusContextInterface {
 }
 
 const FormContext:React.Context<StatusContextInterface>=createContext(new LinkedMapStatus() as StatusContextInterface);
-export {StatusContextInterface,OnChange,CoreEvent,OnClick,LinkedMapStatus}
+export {OnChange,OnClick,LinkedMapStatus}
 export default FormContext;
 

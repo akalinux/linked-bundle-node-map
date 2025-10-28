@@ -1,7 +1,7 @@
 {
   "name": "linked-bundle-node-map",
   "version": "1.0.0",
-  "main": "dist/main.jsx",
+  "main": "index.js",
   "type": "commonjs",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -30,6 +30,7 @@
     "@types/jest": "^30.0.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "babel-loader": "^10.0.0",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.0",
     "ts-loader": "^9.5.4",

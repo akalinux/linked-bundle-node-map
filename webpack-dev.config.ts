@@ -12,9 +12,9 @@ export default {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
+       test: /\.tsx?$/,
+       use: 'babel-loader',
+       exclude: /node_modules/,
       },
     ],
   },
@@ -27,7 +27,7 @@ export default {
     filename: 'index.js',
     libraryTarget: 'umd',
     library: 'LinkedNodeMap',
-	globalObject: 'this', 
+	  globalObject: 'this', 
     umdNamedDefine: true,
   },
 };

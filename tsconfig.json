@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "es2022",
+    "module": "esnext",
     "jsx": "react",
     "declaration": true,
     "sourceMap": true,
