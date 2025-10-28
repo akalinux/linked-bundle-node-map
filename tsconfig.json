@@ -1,23 +1,19 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "esnext",
+    "module": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
     "jsx": "react-jsx",
     "outDir":"./dist",
     "outDir": "./dist",
     "declaration": true,
     "declarationMap": true, // Optional: generates source maps for declaration files
     "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "esModuleInterop": true
   },
   "include": ["src"], 
-  "exclude": ["node_modules","dist"]
+  "exclude": [ "node_modules","dist/*"
+  ]
 }

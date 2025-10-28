@@ -1,7 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/LinkedBundleNodeMap.tsx',
+  entry: './src/StandAlone.tsx',
+  //entry: './src/LinkedBundleNodeMap.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -10,7 +11,7 @@ module.exports = {
     globalObject: 'this', // Ensures UMD works in various environments
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.ts', '.tsx',],
   },
   module: {
     rules: [
@@ -21,6 +22,7 @@ module.exports = {
       },
     ],
   },
+  devtool: 'eval-source-map',
   externals: {
     react: {
       root: 'React', // Global variable name for React
