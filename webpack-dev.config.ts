@@ -23,8 +23,8 @@ export default {
   },
   devtool: 'eval-source-map',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
+    path: path.resolve(__dirname),
+    filename: 'index.js',
     libraryTarget: 'umd',
     library: 'LinkedNodeMap',
 	globalObject: 'this', 

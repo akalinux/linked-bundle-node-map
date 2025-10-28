@@ -10,7 +10,7 @@ interface NodeEl {
   y: number;
   o: string;
   i: string;
-  h?:boolean;
+  h?:boolean|number;
 }
 
 interface Cordinate {
@@ -65,7 +65,7 @@ interface LinkEl {
   d: string;
   a: string;
   o: string;
-  b: undefined | string[];
+  b?: string[];
   n?:{
     s: NodeEl;
     d: NodeEl;
