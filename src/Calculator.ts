@@ -50,7 +50,7 @@ const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 export { type SetCalculatorData}
 
 export default class Calculator {
-  toolTipData:{[key:string]:{label:string,data:string[]}}={};
+  toolTipData:ToolTipData={};
   linkCache: { [nodeId: string]: ContainerBox } = {}
   highlight = false;
   textAlign: string = 'center';
@@ -388,7 +388,7 @@ export default class Calculator {
     // always force the fit state to false
     this.fit = false;
     const contexts: { [key: string]: CanvasRenderingContext2D } = {};
-
+		this.contexts=contexts;
     const { x, y, k } = this.transform
     const { r, nodes } = this;
     for (const [name, canvas] of Object.entries(this.canvases)) {

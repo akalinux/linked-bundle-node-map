@@ -1,5 +1,4 @@
 import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore, Fragment, useMemo } from 'react';
-import StatusContextInterface from './StatusContextInterface';
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';
 import CalculatorContext from './CalculatorContext';
@@ -12,6 +11,7 @@ import Grid from './Grid';
 import Tools from './Tools';
 import ToggleFullScreen from './ToggleFullScreen';
 import Search from './Search';
+import './LinkedSet.css';
 
 const COMPASS_MAP = {
   n: { x: 0, y: -1 },
@@ -82,8 +82,10 @@ const ShowGrid = (args: { props: SetCalculatorData, wg: ManageInstance<boolean |
   return show ? <Grid {...size} /> : '';
 }
 
-const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props, slotRef) => {
+const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props, ref) => {
   const theme = useContext(ThemeContext);
+	const conditionalRef=useRef<HTMLDivElement>(null);
+	const slotRef=ref||conditionalRef;
   const fw = useContext(FormContext)
   const [setTT, tooltips] = useMemo(
     () => {
@@ -119,6 +121,7 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
       Promise.resolve().then(() => m.publish(null));
       return;
     }
+		calc.canvases=online;
     Promise.resolve().then(() => m.publish(calc));
   };
 
@@ -159,8 +162,8 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
           />
         </Tools>
         }
-      </CalculatorContext.Provider>
       {tooltips}
+      </CalculatorContext.Provider>
     </div>
   );
 });

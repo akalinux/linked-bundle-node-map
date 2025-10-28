@@ -1,4 +1,4 @@
-interface ToolTipData{[key:string]:{label:string,data:string[]}}
+interface ToolTipData{[key:string]:{label:string,data?:string[]}}
 interface CoreSize {
   width: number;
   height: number;

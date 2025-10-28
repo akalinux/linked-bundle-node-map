@@ -1,8 +1,14 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   //entry: './src/StandAlone.tsx',
   entry: './src/LinkedBundleNodeMap.tsx',
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'linked-bundle-node.css',
+    }),
+  ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -15,6 +21,13 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+        ],
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
