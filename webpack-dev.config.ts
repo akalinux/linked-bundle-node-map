@@ -7,9 +7,9 @@ fs.copyFile(path.resolve(__dirname, 'src','LinkedSet.css'), path.resolve(__dirna
   }
 });
 export default {
-  entry: './src/index.tsx',
+  entry: './src/LinkedBundleNodeMap.tsx',
   mode: 'development',
-  externals: { react: 'React', 'react-dom': 'ReactDOM', },
+  //externals: { react: 'react', 'react-dom': 'ReactDOM', },
   module: {
     rules: [
       {

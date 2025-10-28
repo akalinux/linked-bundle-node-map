@@ -5,7 +5,7 @@
   "type": "commonjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "webpack -c ./webpack-dev.config.ts",
+    "dev": "webpack -c webpack-dev.config.ts",
     "watch": "webpack -w -c ./webpack-dev.config.ts",
     "build": "webpack -c ./webpack-prod.config.ts",
     "clean": "rm -rf dist||/bin/true",
@@ -19,11 +19,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@babel/preset-react": "^7.28.5",
-    "react": "^19.2.0",
-    "@types/react": "^19.2.2"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.28.5",
+    "react": "^19.2.0",
+    "@types/react": "^19.2.2",
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
