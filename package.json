@@ -19,6 +19,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@babel/preset-react": "^7.28.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
