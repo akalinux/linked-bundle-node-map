@@ -1,4 +1,5 @@
 import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore, Fragment, useMemo } from 'react';
+import StatusContextInterface from './StatusContextInterface';
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';
 import CalculatorContext from './CalculatorContext';
@@ -11,6 +12,7 @@ import Grid from './Grid';
 import Tools from './Tools';
 import ToggleFullScreen from './ToggleFullScreen';
 import Search from './Search';
+
 const COMPASS_MAP = {
   n: { x: 0, y: -1 },
   s: { x: 0, y: 1 },

@@ -20,7 +20,8 @@
   "description": "",
   "dependencies": {
     "@babel/preset-react": "^7.28.5",
-    "react": "^19.2.0"
+    "react": "^19.2.0",
+    "@types/react": "^19.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -28,7 +29,6 @@
     "@babel/preset-typescript": "^7.28.5",
     "@babel/register": "^7.28.3",
     "@types/jest": "^30.0.0",
-    "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "babel-loader": "^10.0.0",
     "jest": "^30.0.5",

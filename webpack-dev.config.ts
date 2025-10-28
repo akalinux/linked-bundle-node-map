@@ -9,11 +9,12 @@ fs.copyFile(path.resolve(__dirname, 'src','LinkedSet.css'), path.resolve(__dirna
 export default {
   entry: './src/index.tsx',
   mode: 'development',
+  externals: { react: 'React', 'react-dom': 'ReactDOM', },
   module: {
     rules: [
       {
        test: /\.tsx?$/,
-       use: 'babel-loader',
+       use: 'ts-loader',
        exclude: /node_modules/,
       },
     ],
