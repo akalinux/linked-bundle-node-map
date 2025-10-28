@@ -1,8 +1,8 @@
 {
   "name": "linked-bundle-node-map",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "commonjs",
+  "main": "dist/bundle.js",
+  "type": "umd",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "webpack -c webpack-dev.config.ts",

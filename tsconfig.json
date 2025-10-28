@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "jsxImportSource": "react",
-    "target": "es6",
+    "target": "es5",
+    "module": "esnext",
     "jsx": "react-jsx",
-    "declaration": true,
-    "sourceMap": true,
-    "module":"NodeNext",
-    "moduleResolution":"nodenext",
-    "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib":["dom"],
-    "types": ["jest", "node"]
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "include": ["./src/*"]
+  "include": ["src"]
 }

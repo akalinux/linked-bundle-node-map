@@ -1,34 +1,29 @@
-import path from 'path';
-import fs from 'fs';
-if(!fs.existsSync(path.resolve(__dirname,'dist'))) { fs.mkdirSync(path.resolve(__dirname,'dist')); }
-fs.copyFile(path.resolve(__dirname, 'src','LinkedSet.css'), path.resolve(__dirname, 'dist','LinkedSet.css'), (err) => {
-  if (err) {
-    throw new Error(err.message);
-  }
-});
-export default {
-  entry: './src/LinkedBundleNodeMap.tsx',
-  mode: 'development',
-  //externals: { react: 'react', 'react-dom': 'ReactDOM', },
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.tsx',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    library: 'MyReactComponent', // Global variable name for the UMD module
+    libraryTarget: 'umd',
+    globalObject: 'this', // Ensures UMD works in various environments
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
   module: {
     rules: [
       {
-       test: /\.tsx?$/,
-       use: 'ts-loader',
-       exclude: /node_modules/,
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
     ],
   },
-  resolve: {
-    extensions: ['.ts','.tsx','.jsx', '.js','.css','.scss', '...'],
+  externals: {
+    react: 'React', // Treat React as an external dependency
+    'react-dom': 'ReactDOM', // Treat ReactDOM as an external dependency
   },
-  devtool: 'eval-source-map',
-  output: {
-    path: path.resolve(__dirname),
-    filename: 'index.js',
-    libraryTarget: 'umd',
-    library: 'LinkedNodeMap',
-	  globalObject: 'this', 
-    umdNamedDefine: true,
-  },
+  mode: 'development', // or 'development'
 };
