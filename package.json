@@ -20,17 +20,16 @@
   "description": "",
   "dependencies": {
     "@babel/preset-react": "^7.28.5",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "@babel/preset-env": "^7.28.3",
-    "@babel/preset-typescript": "^7.27.1",
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
     "@babel/register": "^7.28.3",
     "@types/jest": "^30.0.0",
-    "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.7",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.0",
     "ts-loader": "^9.5.4",
