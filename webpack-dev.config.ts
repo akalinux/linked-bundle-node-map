@@ -1,8 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/StandAlone.tsx',
-  //entry: './src/LinkedBundleNodeMap.tsx',
+  //entry: './src/StandAlone.tsx',
+  entry: './src/LinkedBundleNodeMap.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',

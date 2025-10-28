@@ -796,7 +796,7 @@ export default class Calculator {
       if (typeof node.i == "undefined") throw new Error(`Bad node, no i in srcNodes[${i}]`)
       if (typeof node.x != 'number' || typeof node.y != "number") throw (new Error(`invalid x or y value in srcNodes[${i}]`));
       if (!node.l) throw new Error(`Bad node, no l in srcNodes[${i}]`)
-      if (!node.o || !nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}]`)
+      if (!node.o || !nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
       if (nodes[node.i]) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
       nodes[node.i] = node;

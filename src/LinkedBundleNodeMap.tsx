@@ -1,4 +1,5 @@
 import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore, Fragment, useMemo } from 'react';
+import StatusContextInterface from './StatusContextInterface';
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';
 import CalculatorContext from './CalculatorContext';
@@ -11,8 +12,6 @@ import Grid from './Grid';
 import Tools from './Tools';
 import ToggleFullScreen from './ToggleFullScreen';
 import Search from './Search';
-export { default as ThemeContext } from './ThemeContext';
-export { default as FormContext, OnChange, OnClick, LinkedMapStatus } from './FormContext'
 
 const COMPASS_MAP = {
   n: { x: 0, y: -1 },
@@ -83,7 +82,7 @@ const ShowGrid = (args: { props: SetCalculatorData, wg: ManageInstance<boolean |
   return show ? <Grid {...size} /> : '';
 }
 
-const LinkedBundleNodeMap: React.FC<SetCalculatorData>=(props: SetCalculatorData) => {
+const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props, slotRef) => {
   const theme = useContext(ThemeContext);
   const fw = useContext(FormContext)
   const [setTT, tooltips] = useMemo(
@@ -93,8 +92,8 @@ const LinkedBundleNodeMap: React.FC<SetCalculatorData>=(props: SetCalculatorData
   );
   const online: CanvasSets = { ctrl: null, bundles: null, links: null, animations: null, nodes: null };
   const calc = new Calculator();
-  //const slotM = new ManageInstance(slotRef as React.RefObject<HTMLDivElement>);
-  //fw.setSlotRefWatcher(slotM);
+  const slotM = new ManageInstance(slotRef as React.RefObject<HTMLDivElement>);
+  fw.setSlotRefWatcher(slotM);
   const m = new ManageInstance<Calculator | null>(null);
   const onRef = (args: CanvasWatchNames) => {
     const { name, ref } = args;
@@ -130,8 +129,8 @@ const LinkedBundleNodeMap: React.FC<SetCalculatorData>=(props: SetCalculatorData
       onRef(useSyncExternalStore(...m.subscribe()));
       return '';
     }
-     // <WatchCanvas key={idx} style={styleAbs} m={m} name={name} />
     return <Fragment key={idx}>
+      <WatchCanvas key={idx} style={styleAbs} m={m} name={name} />
       <WatchOnRef />
     </Fragment>
   });
@@ -140,9 +139,8 @@ const LinkedBundleNodeMap: React.FC<SetCalculatorData>=(props: SetCalculatorData
   const wg = new ManageInstance(props.grid);
 
 
-//    <div style={containerStyle} className={theme} ref={slotRef}>
   return (
-    <div style={containerStyle} className={theme}>
+    <div style={containerStyle} className={theme} ref={slotRef}>
       <CalculatorContext.Provider value={calc}>
         <div style={canvasStyle}>
           <div style={canvasStyle}>
@@ -152,13 +150,19 @@ const LinkedBundleNodeMap: React.FC<SetCalculatorData>=(props: SetCalculatorData
           <Draw m={m} props={props} />
           <div ref={dw} style={styleAbs} />
         </div>
-
-   
-        
+        {props.noTools ? '' : <Tools>
+          <ToggleFullScreen m={slotM} />
+          <Search nodes={props.nodes} onClick={(node) => {
+            calc.drawCenteredOnNode(node);
+            const data = calc.getChanges();
+          }}
+          />
+        </Tools>
+        }
       </CalculatorContext.Provider>
       {tooltips}
     </div>
   );
-};
+});
 
 export default LinkedBundleNodeMap;
