@@ -49,6 +49,11 @@ class LinkedMapStatus implements StatusContextInterface {
 }
 
 const FormContext:React.Context<StatusContextInterface>=createContext(new LinkedMapStatus() as StatusContextInterface);
-export {OnChange,OnClick,LinkedMapStatus,StatusContextInterface}
+export {
+	 OnChange,
+	 OnClick,
+	 LinkedMapStatus,
+	 type StatusContextInterface
+}
 export default FormContext;
 

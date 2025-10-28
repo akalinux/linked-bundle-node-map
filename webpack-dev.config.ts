@@ -1,11 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.tsx',
+  entry: './src/LinkedBundleNodeMap.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    library: 'MyReactComponent', // Global variable name for the UMD module
+    library: 'LinkedBundleNodeMap', // Global variable name for the UMD module
     libraryTarget: 'umd',
     globalObject: 'this', // Ensures UMD works in various environments
   },
@@ -22,8 +22,18 @@ module.exports = {
     ],
   },
   externals: {
-    react: 'React', // Treat React as an external dependency
-    'react-dom': 'ReactDOM', // Treat ReactDOM as an external dependency
+    react: {
+      root: 'React', // Global variable name for React
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
+    },
+    'react-dom': {
+      root: 'ReactDOM', // Global variable name for ReactDOM
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+    },
   },
   mode: 'development', // or 'development'
 };

@@ -14,7 +14,7 @@ interface ThemeOptionSets {
   [theme: string]: ColorOptionSet;
 }
 
-const THEME_MAP:ThemeOptionSets = {
+export const THEME_MAP:ThemeOptionSets = {
   light: {
     stroke: 'black',
     fill: 'black',
@@ -39,4 +39,7 @@ const THEME_MAP:ThemeOptionSets = {
   }
 }
 
-export {THEME_MAP,ColorOptionSet,ThemeOptionSets}
+export {
+	type ColorOptionSet,
+	type ThemeOptionSets,
+}

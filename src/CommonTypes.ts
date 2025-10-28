@@ -153,17 +153,26 @@ interface PointLookupResult  {
 
 type DrawToolTipArgs={ id: string } & Cordinate|null
 
-export {
-  ToolTipData,
-  DrawToolTipArgs,
-  PointLookupResult,
-  NodeLinks,
-  HasIdEl,
-  NavIndex,
-  Animation,
-  LinkElOpt,
-  LinkSet, BundleDraw, LinkDraw, CoreSize, CanvasSets,
-  CoreTransform, Cordinate, ContainerBox, MapChanges,
-  NodeEl, NodeElOpt, LinkEl
+export { 
+	type ToolTipData,
+  type DrawToolTipArgs,
+  type PointLookupResult,
+  type NodeLinks,
+  type HasIdEl,
+  type NavIndex,
+  type Animation,
+  type LinkElOpt,
+  type LinkSet, 
+	type BundleDraw, 
+	type LinkDraw, 
+	type CoreSize, 
+	type CanvasSets,
+  type CoreTransform, 
+	type Cordinate, 
+	type ContainerBox, 
+	type MapChanges,
+  type NodeEl, 
+	type NodeElOpt, 
+	type LinkEl
 }
 

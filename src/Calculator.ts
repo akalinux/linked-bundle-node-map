@@ -47,7 +47,7 @@ const CORE_SIZE = { width: 1920, height: 1080 }
 const CORE_R = 12;
 const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 
-export {SetCalculatorData}
+export { type SetCalculatorData}
 
 export default class Calculator {
   toolTipData:{[key:string]:{label:string,data:string[]}}={};

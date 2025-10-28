@@ -59,5 +59,5 @@ const GridToggle:React.FC<CoreToggleGrid>=(props) => {
 }
 
 export default GridToggle;
-export {CoreToggleGrid};
+export { type CoreToggleGrid};
 

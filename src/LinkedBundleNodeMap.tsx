@@ -11,6 +11,8 @@ import Grid from './Grid';
 import Tools from './Tools';
 import ToggleFullScreen from './ToggleFullScreen';
 import Search from './Search';
+export { default as ThemeContext } from './ThemeContext';
+export { default as FormContext, OnChange, OnClick, LinkedMapStatus } from './FormContext'
 
 const COMPASS_MAP = {
   n: { x: 0, y: -1 },

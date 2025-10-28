@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "esnext",
     "jsx": "react-jsx",
+    "outDir":"./dist",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true, // Optional: generates source maps for declaration files
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -12,8 +16,8 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true
+    "isolatedModules": true
   },
-  "include": ["src"]
+  "include": ["src"], 
+  "exclude": ["node_modules","dist"]
 }
