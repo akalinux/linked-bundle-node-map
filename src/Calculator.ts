@@ -478,7 +478,7 @@ export default class Calculator {
 		const ne = this.getXY(c.x, c.y, boxR, angle);
 		const nw = this.getXY(p.x, p.y, boxR, angle);
 		const sa = angle + 180;
-		const { links, animations, bundles } = this.contexts
+		const { links, bundles } = this.contexts
 		const incBy = w + boxWidth / (2 * l.length + 1);
 		const o = w + w * .5;
 		const ll = ls.ll = [] as LinkDraw[];
