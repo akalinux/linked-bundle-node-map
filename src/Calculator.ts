@@ -356,14 +356,14 @@ export default class Calculator {
 			)
 		}
 		if (!this.nodes[s].h) {
-  		const { r,imgSize } = this;
+			const { r, imgSize } = this;
 			const n = this.nodes[s]
 			ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
 			this.drawNodeHighlght(ctrl, n)
 		}
 
 		if (!this.nodes[d].h) {
-  		const { r,imgSize } = this;
+			const { r, imgSize } = this;
 			const n = this.nodes[d]
 			ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
 			this.drawNodeHighlght(ctrl, n)
@@ -508,7 +508,6 @@ export default class Calculator {
 						o: i,
 					}
 					this.animations.push(animate);
-					//this.drawAinimation(animations, animate);
 
 				} else if (a == 'b') {
 					for (let i = 0; i < SD.length; ++i) {
@@ -523,7 +522,6 @@ export default class Calculator {
 							w: w * .75,
 						}
 						this.animations.push(animate);
-						// this.drawAinimation(animations, animate);
 					}
 				}
 			}
