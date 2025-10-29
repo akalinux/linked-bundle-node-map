@@ -92,7 +92,12 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	const fw = useContext(FormContext)
 	const [setTT, tooltips] = useMemo(
 		() => {
-			return CreateTT({ absolute: true, needsOffset: true, offsetLeft: -5, offsetTop: -5 })
+			return CreateTT({
+				absolute: true,
+				needsOffset: true,
+				offsetLeft: 10,
+				offsetTop: -5,
+			})
 		}, []
 	);
 	const online: CanvasSets = { ctrl: null, bundles: null, links: null, animations: null, nodes: null };
@@ -171,7 +176,7 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 							calc.setTransform(t);
 						} else {
 							calc.redoMinMax();
-							const t=calc.createCenertTransform();
+							const t = calc.createCenertTransform();
 							calc.setTransform(t);
 						}
 					}} />

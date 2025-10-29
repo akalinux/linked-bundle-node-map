@@ -51,6 +51,10 @@
 	cursor: pointer;
 }
 
+.ddRowStyle:hover {
+	background-color: lightgrey;
+}
+
 .ZoomButton, .ResetButton {
 	cursor: pointer;
 	text-align: center;

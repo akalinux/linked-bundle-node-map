@@ -15,7 +15,7 @@ export default class MouseWatcher {
   /** @type {FormContextSet} */
   SC:StatusContextInterface;
   mounted = false;
-  timer = 800;
+  timer = 400;
 
   /** @type {Calulator} */
   calc:Calculator;
