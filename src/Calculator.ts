@@ -69,6 +69,7 @@ export default class Calculator {
 	stroke: string = 'black';
 	fill: string = 'black';
 	contexts: { [key: string]: CanvasRenderingContext2D } = {};
+	needsMinMax: boolean = false;
 	minMax = {
 		minX: NaN,
 		minY: NaN,
@@ -135,6 +136,7 @@ export default class Calculator {
 			Object.assign(this.changes, changes);
 			this.changes.transform = this.transform = changes.transform;
 		}
+		this.needsMinMax = false;
 		this.buildData();
 	}
 
@@ -222,6 +224,8 @@ export default class Calculator {
 	}
 
 	redoMinMax() {
+		if (!this.needsMinMax) return;
+		this.needsMinMax = false;
 		const { minMax, nodes } = this;
 		let i = 0;
 		for (let id in nodes) {
@@ -594,16 +598,23 @@ export default class Calculator {
 		return (dx > r || dy > r) ? false : true;
 	}
 
-	lookupPoint(p: Cordinate,) {
-		const el = this.getIndex(p);
-
+	defaultLookupResult(tp?: Cordinate) {
+		let co: Cordinate = { x: NaN, y: NaN };
+		if (typeof tp != 'undefined') co = tp;
 		const res: PointLookupResult = {
 			type: 'none',
 			bundle: null,
 			node: null,
 			link: null,
-			tp: el.tp,
+			tp: co,
 		}
+		return res;
+	}
+
+	lookupPoint(p: Cordinate,) {
+		const el = this.getIndex(p);
+		const res = this.defaultLookupResult(el.tp);
+
 		if (Object.keys(el).length == 1) return res;
 		const { tp, nodes, links } = el;
 		for (let i = 0; nodes && i < nodes.length; ++i) {
@@ -861,6 +872,7 @@ export default class Calculator {
 		this.changes.nodes[id] = p;
 		this.nodes[id] = { ...node, x: p.x, y: p.y };
 
+		this.needsMinMax = true;
 		this.draw();
 	}
 

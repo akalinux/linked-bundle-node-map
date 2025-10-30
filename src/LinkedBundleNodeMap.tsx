@@ -2,7 +2,7 @@ import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore,
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';
 import CalculatorContext from './CalculatorContext';
-import FormContext from './FormContext';
+import FormContext, { Reset, OnChange } from './FormContext';
 import { CanvasSets } from './CommonTypes';
 import ThemeContext from './ThemeContext';
 import MouseWatcher from './MouseWatcher';
@@ -22,15 +22,6 @@ const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
 	e: { x: 1, y: 0 },
 	w: { x: -1, y: 0 },
 }
-const containerStyle: React.CSSProperties = { position: 'relative', width: '100%', height: '100%' }
-const canvasStyle: React.CSSProperties = { ...containerStyle, overflow: 'hidden' }
-const styleAbs: React.CSSProperties = {
-	width: '100%',
-	height: '100%',
-	position: 'absolute',
-	top: 0,
-	left: 0,
-};
 
 
 type KnownNames = 'ctrl' | 'nodes' | 'bundles' | 'links' | 'animations';
@@ -46,11 +37,10 @@ interface CanvasWatchNames { ref: HTMLCanvasElement | null, name: KnownNames }
 interface RefWatch {
 	name: KnownNames,
 	m: ManageInstance<CanvasWatchNames>,
-	style?: { [key: string]: any },
 }
 
 function WatchCanvas(props: RefWatch) {
-	const { m, style, name } = props;
+	const { m, name } = props;
 	const ref = useRef<HTMLCanvasElement>(null);
 	useEffect(() => {
 		const send = { ref: (ref && ref.current ? ref.current : null), name }
@@ -58,8 +48,9 @@ function WatchCanvas(props: RefWatch) {
 	}, [ref])
 	const send = { ref: (ref && ref.current ? ref.current : null), name }
 	m.publish(send);
-	return <canvas style={style} ref={ref} />
+	return <canvas className='linked-node-map-canvas' ref={ref} />
 }
+
 const Draw = (args: { m: ManageInstance<Calculator | null>, props: SetCalculatorData }) => {
 	const { m, props } = args;
 	const calc = useSyncExternalStore(...m.subscribe())
@@ -141,7 +132,7 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 			return '';
 		}
 		return <Fragment key={idx}>
-			<WatchCanvas key={idx} style={styleAbs} m={m} name={name} />
+			<WatchCanvas key={idx} m={m} name={name} />
 			<WatchOnRef />
 		</Fragment>
 	});
@@ -151,19 +142,21 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 
 
 	return (
-		<div style={containerStyle} className={theme} ref={slotRef}>
+		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`} ref={slotRef}>
 			<CalculatorContext.Provider value={calc}>
-				<div style={canvasStyle}>
-					<div style={canvasStyle}>
+				<div className={'linked-node-map-canvas-div-container'}>
+					<div className={'linked-node-map-canvas-div-container'}>
 						<ShowGrid wg={wg} props={props} />
 						{list}
 					</div>
 					<Draw m={m} props={props} />
-					<div ref={dw} style={styleAbs} />
+					<div ref={dw} className='linked-node-map-canvas' />
 				</div>
 				{props.noTools ? '' : <Tools>
 					<Search nodes={props.nodes} onClick={(node) => {
 						calc.drawCenteredOnNode(node);
+						const event = new OnChange({ data: calc.getChanges(), tag: node.i});
+						fw.sendEvent(event, event.data);
 					}}
 					/>
 					<Compass onClick={(key: string) => {
@@ -179,20 +172,27 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 							const t = calc.createCenertTransform();
 							calc.setTransform(t);
 						}
+						const event = new OnChange({ data: calc.getChanges(), tag: key });
+						fw.sendEvent(event, event.data);
 					}} />
 					<GridToggle onClick={() => {
 						wg.publish(calc.changes.grid = !calc.changes.grid)
+						const event = new OnChange({ data: calc.getChanges(), tag: 'gtid'});
+						fw.sendEvent(event, event.data);
 					}} />
 					<ToggleFullScreen m={slotM} />
 					<ZoomAndRestore onClick={(value: string) => {
 						if (value === 'r') {
-							console.log('todo')
+						  const event = new Reset({ data: null, tag: 'reset'});
+						  fw.sendEvent(event, event.data);
 							return;
 						}
 						const k = value === '+' ? .1 : -.1
 						const t = { ...calc.transform };
 						t.k -= k;
 						calc.setTransform(t);
+						const event = new OnChange({ data: calc.getChanges(), tag: value});
+						fw.sendEvent(event, event.data);
 					}} />
 				</Tools>
 				}
@@ -201,5 +201,5 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 		</div>
 	);
 });
-
+export{ FormContext};
 export default LinkedBundleNodeMap;

@@ -1,4 +1,21 @@
-.SearchContainer {
+.linked-node-map-RootContainer, .linked-node-map-canvas-div-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.linked-node-map-canvas-div-container {
+	overflow: hidden;
+}
+
+.linked-node-map-canvas {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.linked-node-map-SearchContainer {
 	position: relative;
 	font-size: 12px;
 	position: relative;
@@ -6,56 +23,57 @@
 	height: 100%;
 }
 
-.SearchBox {
+.linked-node-map-SearchBox {
 	position: absolute;
 	top: 0;
 	display: none;
 }
 
-.SearchBarDD {
+.linked-node-map-SearchBarDD {
 	width: 100%;
 	max-height: 200px;
 	overflow: auto;
 	scrollbar-width: thin;
 }
 
-.SearchContainer:hover div, .SearchBox:hover div {
+.linked-node-map-SearchContainer:hover div, .linked-node-map-SearchBox:hover div
+	{
 	display: block;
 }
 
-.ToolBarPosition {
+.linked-node-map-ToolBarPosition {
 	min-height: 100px;
 	position: absolute;
 	top: 30px;
 	right: 5px;
 }
 
-.dark {
+.linked-node-map-dark {
 	border-color: white;
 	background-color: black;
 	color: white;
 }
 
-.light {
+.linked-node-map-light {
 	border-color: black;
 	background-color: white;
 	color: black;
 }
 
-.relativeTag {
+.linked-node-map-relativeTag {
 	position: relative;
 }
 
-.ddRowStyle {
+.linked-node-map-ddRowStyle {
 	padding-left: 5px;
 	cursor: pointer;
 }
 
-.ddRowStyle:hover {
+.linked-node-map-ddRowStyle:hover {
 	background-color: lightgrey;
 }
 
-.ZoomButton, .ResetButton {
+.linked-node-map-ZoomButton, .linked-node-map-ResetButton {
 	cursor: pointer;
 	text-align: center;
 	border: solid 1.5px;
@@ -64,13 +82,13 @@
 	width: 50%;
 }
 
-.ResetButton {
+.linked-node-map-ResetButton {
 	display: block;
 	width: 35px;
 	font-size: 9px;
 }
 
-.Tooltip {
+.linked-node-map-Tooltip {
 	overflow: auto;
 	scrollbar-width: thin;
 	max-height: 250px;
@@ -84,10 +102,10 @@
 	white-space: pre-wrap;
 	overflow: auto;
 	font-weight: normal !important;
-	position: absolute;
+	position: absolutelinked-node-map-theme-;
 }
 
-.TooltipHeading {
+.linked-node-map-TooltipHeading {
 	border-bottom: 1px solid #63738A;
 	font-size: inherit;
 	text-transform: capitalize;
@@ -95,7 +113,7 @@
 	padding-right: 4px;
 }
 
-.TooltipRow {
+.linked-node-map-TooltipRow {
 	color: black;
 	white-space: nowrap;
 }
