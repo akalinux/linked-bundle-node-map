@@ -49,7 +49,7 @@ const GridToggle:React.FC<CoreToggleGrid>=(props) => {
   }
 
   return (
-    <div title={title}>
+    <div title={title} className="linked-node-map-svg-container">
     <svg onClick={onClick} xmlns="http://www.w3.org/2000/svg" width={side + 'px'} height={side + 'px'}>
       <rect x="0" y="0" strokeWidth={lineWidth * 2} width={side} height={side} stroke={lineColor} fill={bgColor} />
       {lines}

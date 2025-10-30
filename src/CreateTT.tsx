@@ -2,7 +2,7 @@ import React, { useContext, useSyncExternalStore, useRef, ReactElement } from "r
 import FormContext from "./FormContext";
 import CalculatorContext from "./CalculatorContext";
 import ManageInstance from './ManageInstance';
-import ToolTip from './ToolTip';
+import ToolTipContext from "./ToolTipContext";
 import { DrawToolTipArgs } from "./CommonTypes";
 interface ToolTipsProps {
   id?: string;
@@ -18,6 +18,7 @@ const DEFAULT_OPTIONS: ToolTipsProps = { absolute: true, needsOffset: true, offs
 function ToolTips(props: ToolTipsProps) {
   const { id, offsetTop, offsetLeft, absolute, needsOffset, x, y } = { ...DEFAULT_OPTIONS, ...props };
   const { toolTipData } = useContext(CalculatorContext);
+	const ToolTip=useContext(ToolTipContext);
   const fc = useContext(FormContext);
   const w: ManageInstance<any> = fc.getSlotRefWatcher() || new ManageInstance(useRef(null));
   const slotRef = useSyncExternalStore(...w.subscribe()) as React.RefObject<HTMLDivElement>;
@@ -39,10 +40,7 @@ function ToolTips(props: ToolTipsProps) {
   style.top += 'px'
   style.left += 'px'
 
-  const { label, data } = toolTipData[id]
-  return <div style={style} key={id} >
-    <ToolTip label={label} data={data} />
-  </div>
+  return  <ToolTip id={id} toolTipData={toolTipData} style={style} />
 }
 
 function WatchTT(props: { m: ManageInstance<null | { [key: string]: any }> }) {

@@ -1,7 +1,7 @@
 import { Cordinate, PointLookupResult, DrawToolTipArgs } from './CommonTypes';
 import { MouseEvent } from 'react';
 import Calculator from './Calculator';
-import { StatusContextInterface, OnChange, OnClick } from './FormContext';
+import { StatusContextInterface, OnChange, OnClick, NodeChange } from './FormContext';
 
 export default class MouseWatcher {
 
@@ -50,7 +50,7 @@ export default class MouseWatcher {
 		}
 		return cor;
 	}
-	
+
 	onMouseLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		this.pd(e);
 		if (this.down) {
@@ -187,12 +187,19 @@ export default class MouseWatcher {
 	}
 
 	onDragEnd() {
+		const dt = this.dragTarget;
 		this.dragTarget = null;
 		this.tp = null;
 		this.calc.forceDraw();
 		if (this.calc.noChange) return;
 		const data = this.calc.getChanges();
-		const event = new OnChange({ data, tag: 'onDrag' });
+		let event;
+		if (dt !== null && typeof dt != 'undefined' && dt.node!==null) {
+			event = new NodeChange({ data: dt, tag: `node-${dt.node.i}`});
+			event.name='NodeDrag';
+		} else {
+			event = new OnChange({ data, tag: 'onMapDrag' });
+		}
 		this.SC.sendEvent(event, data);
 	}
 

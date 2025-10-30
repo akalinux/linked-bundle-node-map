@@ -2,7 +2,7 @@ import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore,
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';
 import CalculatorContext from './CalculatorContext';
-import FormContext, { Reset, OnChange } from './FormContext';
+import FormContext, { Reset, OnChange, LinkedMapStatus } from './FormContext';
 import { CanvasSets } from './CommonTypes';
 import ThemeContext from './ThemeContext';
 import MouseWatcher from './MouseWatcher';
@@ -14,6 +14,7 @@ import Search from './Search';
 import Compass from './Compass';
 import GridToggle from './GridToggle';
 import ZoomAndRestore from './ZoomAndRestore';
+import ToolTipContext from './ToolTipContext';
 import './LinkedSet.css';
 
 const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
@@ -152,10 +153,11 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 					<Draw m={m} props={props} />
 					<div ref={dw} className='linked-node-map-canvas' />
 				</div>
-				{props.noTools ? '' : <Tools>
+				{!props.noTools && <Tools>
 					<Search nodes={props.nodes} onClick={(node) => {
 						calc.drawCenteredOnNode(node);
-						const event = new OnChange({ data: calc.getChanges(), tag: node.i});
+						const event = new OnChange({ data: calc.getChanges(), tag: `node-${node.i}` });
+						event.name = 'CenterOnNode';
 						fw.sendEvent(event, event.data);
 					}}
 					/>
@@ -177,21 +179,21 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 					}} />
 					<GridToggle onClick={() => {
 						wg.publish(calc.changes.grid = !calc.changes.grid)
-						const event = new OnChange({ data: calc.getChanges(), tag: 'gtid'});
+						const event = new OnChange({ data: calc.getChanges(), tag: 'gtid' });
 						fw.sendEvent(event, event.data);
 					}} />
 					<ToggleFullScreen m={slotM} />
 					<ZoomAndRestore onClick={(value: string) => {
 						if (value === 'r') {
-						  const event = new Reset({ data: null, tag: 'reset'});
-						  fw.sendEvent(event, event.data);
+							const event = new Reset({ data: null, tag: 'reset' });
+							fw.sendEvent(event, event.data);
 							return;
 						}
 						const k = value === '+' ? .1 : -.1
 						const t = { ...calc.transform };
 						t.k -= k;
 						calc.setTransform(t);
-						const event = new OnChange({ data: calc.getChanges(), tag: value});
+						const event = new OnChange({ data: calc.getChanges(), tag: value });
 						fw.sendEvent(event, event.data);
 					}} />
 				</Tools>
@@ -201,5 +203,5 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 		</div>
 	);
 });
-export{ FormContext};
+export { FormContext, LinkedMapStatus, ToolTipContext };
 export default LinkedBundleNodeMap;

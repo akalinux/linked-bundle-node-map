@@ -55,7 +55,7 @@ const Compass:React.FC<CompassProps>=(props = CORE_PROPS) =>{
   const fill = mouseOver == -2 ? mouseOverColor : "none";
   const onMouseEnter = () => setMouseOver(-2);
   const onMouseLeave = () => setMouseOver(-1);
-  return <div title={title}>
+  return <div title={title} className="linked-node-map-svg-container">
     <svg xmlns="http://www.w3.org/2000/svg" width={side + 'px'} height={side + 'px'}>
       <circle cx="50%" cy="50%" r="48.2%" fill={fillColor} stroke={lineColor} strokeWidth={lineWidth} />
       {list}
