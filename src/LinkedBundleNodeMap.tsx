@@ -8,14 +8,9 @@ import ThemeContext from './ThemeContext';
 import MouseWatcher from './MouseWatcher';
 import CreateTT from './CreateTT';
 import Grid from './Grid';
-import Tools from './Tools';
-import ToggleFullScreen from './ToggleFullScreen';
-import Search from './Search';
-import Compass from './Compass';
-import GridToggle from './GridToggle';
-import ZoomAndRestore from './ZoomAndRestore';
 import ToolTipContext from './ToolTipContext';
 import './LinkedSet.css';
+import ToolsContext from './ToolsContext';
 
 const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
 	n: { x: 0, y: -1 },
@@ -79,6 +74,7 @@ const ShowGrid = (args: { props: SetCalculatorData, wg: ManageInstance<boolean |
 
 const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props, ref) => {
 	const theme = useContext(ThemeContext);
+	const {Compass,Tools,GridToggle,ZoomAndRestore,Search,ToggleFullScreen }=useContext(ToolsContext);
 	const conditionalRef = useRef<HTMLDivElement>(null);
 	const slotRef = ref || conditionalRef;
 	const fw = useContext(FormContext)
@@ -203,5 +199,5 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 		</div>
 	);
 });
-export { FormContext, LinkedMapStatus, ToolTipContext };
+export { FormContext, LinkedMapStatus, ToolTipContext, ToolsContext };
 export default LinkedBundleNodeMap;

@@ -1,19 +1,13 @@
-import React, { useContext, useSyncExternalStore } from "react";
+import { useContext, useSyncExternalStore } from "react";
 import CalculatorContext from "./CalculatorContext";
-import ManageInstance from "./ManageInstance";
-
-interface ToggleFsProps {
-  side?: number;
-  title?: string;
-  m: ManageInstance<React.RefObject<HTMLDivElement>>
-}
+import ToggleFsProps from "./ToggleFsProps";
 
 const CORE_OPT = {
   side: 35,
   title: 'Toggle Full Screen Mode On/Off',
 }
 
-const ToggleFullScreen: React.FC<ToggleFsProps> = (props) => {
+const ToggleFullScreen =(props: ToggleFsProps) => {
   const { lineColor } = useContext(CalculatorContext);
 
   const { side, title, m } = { ...CORE_OPT, ...props }

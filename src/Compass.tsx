@@ -1,11 +1,6 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import CalculatorContext from "./CalculatorContext";
-interface CompassProps {
-  side?: number;
-  onClick?(key: string): void;
-  cStyle?: { [key: string]: any };
-  title?: string;
-}
+import CompassProps from "./CompasProps";
 
 const CORE_PROPS: CompassProps = {
   side: 35,
@@ -16,7 +11,7 @@ const CORE_PROPS: CompassProps = {
 
 
 const CLICKMAP: string[] = ['n', 'e', 's', 'w'];
-const Compass:React.FC<CompassProps>=(props = CORE_PROPS) =>{
+const Compass=(props: CompassProps = CORE_PROPS) =>{
 
   const icalc = useContext(CalculatorContext);
   const [mouseOver, setMouseOver] = useState(-1);
