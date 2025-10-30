@@ -287,14 +287,14 @@ export default class Calculator {
 		ctrl.globalAlpha = this.shadeAlpha;
 		if (res.node) {
 			this.drawNodeHighlght(ctrl, res.node);
-			this.drawToolTip({ id: res.node.i, ...p })
+			this.drawToolTip({ id: 'node-'+res.node.i, ...p })
 		} else if (res.link) {
 			this.drawLinkHighlight(ctrl, res.link);
-			this.drawToolTip({ id: res.link.l.i, ...p });
+			this.drawToolTip({ id: 'link-'+res.link.l.i, ...p });
 		} else if (res.bundle) {
 			const { bundle } = res;
 			this.drawBundleHighlight(ctrl, bundle);
-			this.drawToolTip({ id: bundle.i, ...p });
+			this.drawToolTip({ id: 'bundle-'+bundle.i, ...p });
 		} else {
 			this.highlight = false;
 		}
