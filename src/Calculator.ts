@@ -39,6 +39,7 @@ interface SetCalculatorData {
 	nodeOpts?: { [optId: string]: NodeElOpt };
 	linkOpts?: { [option: string]: LinkElOpt };
 	noTools?: boolean;
+	autoToolTip?: boolean;
 }
 
 const Rad2Deg = 180.0 / Math.PI;
@@ -52,6 +53,8 @@ const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 export { type SetCalculatorData }
 
 export default class Calculator {
+	autoToolTip: boolean = true;
+	needsIndexing: boolean=false;
 	toolTipData: ToolTipData = {};
 	linkCache: { [nodeId: string]: ContainerBox } = {}
 	highlight = false;
@@ -114,7 +117,7 @@ export default class Calculator {
 	animationTimer = 500;
 
 	setData(dataSet: SetCalculatorData) {
-		const { toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
+		const { autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
 		this.theme = theme || 'light'
 		const theme_choices = themes || THEME_MAP;
 		Object.assign(this, theme_choices[this.theme]);
@@ -130,6 +133,7 @@ export default class Calculator {
 		this.setR();
 		this.changes.nodes = {};
 		this.changes.grid = grid || false;
+		if (typeof autoToolTip !== 'undefined') this.autoToolTip = true;
 		this.changes.transform = this.transform;
 		this.toolTipData = toolTipData || {};
 		if (changes) {
@@ -140,34 +144,47 @@ export default class Calculator {
 		this.buildData();
 	}
 
-	buildIndex(Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl) {
-		const { ne, nw, se, sw } = Cs;
-		if (this.drag) return;
-		let minX = ne.x, maxX = ne.x, maxY = ne.y, minY = ne.y;
-		const list = [nw, se, sw];
-		for (let i = 0; i < 3; ++i) {
-			const c = list[i];
-			if (c.x < minX) minX = c.x
-			if (c.y < minY) minY = c.y
-			if (c.x > maxX) maxX = c.x
-			if (c.y > maxY) maxY = c.y
-		}
-		const sx = Math.round(minX);
-		const ex = Math.round(maxX)
-		const { indexSize, indexes } = this;
-		const startX = sx - sx % indexSize;
-		const endX = ex - ex % indexSize;
-		const sy = Math.round(minY);
-		const ey = Math.round(maxY);
-		const startY = sy - sy % indexSize;
-		const endY = ey - ey % indexSize;
-		for (let x = startX; x <= endX; x += indexSize) {
-			const index = indexes[x] || (indexes[x] = {});
-			for (let y = startY; y <= endY; y += indexSize) {
-				const set = index[y] || (index[y] = { nodes: [], links: [] })
-				set[target].push(obj.i);
+	indexTodo: { Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl }[] = [];
+
+	buildFullIndex() {
+		const indexTodo = this.indexTodo;
+		if(!this.needsIndexing) return;
+		this.needsIndexing=false;
+		this.indexTodo = [];
+		for (let tid = 0; tid < indexTodo.length; ++tid) {
+			const { Cs, target, obj } = indexTodo[tid];
+			const { ne, nw, se, sw } = Cs;
+			let minX = ne.x, maxX = ne.x, maxY = ne.y, minY = ne.y;
+			const list = [nw, se, sw];
+			for (let i = 0; i < 3; ++i) {
+				const c = list[i];
+				if (c.x < minX) minX = c.x
+				if (c.y < minY) minY = c.y
+				if (c.x > maxX) maxX = c.x
+				if (c.y > maxY) maxY = c.y
+			}
+			const sx = Math.round(minX);
+			const ex = Math.round(maxX)
+			const { indexSize, indexes } = this;
+			const startX = sx - sx % indexSize;
+			const endX = ex - ex % indexSize;
+			const sy = Math.round(minY);
+			const ey = Math.round(maxY);
+			const startY = sy - sy % indexSize;
+			const endY = ey - ey % indexSize;
+			for (let x = startX; x <= endX; x += indexSize) {
+				const index = indexes[x] || (indexes[x] = {});
+				for (let y = startY; y <= endY; y += indexSize) {
+					const set = index[y] || (index[y] = { nodes: [], links: [] })
+					set[target].push(obj.i);
+				}
 			}
 		}
+	}
+	
+	buildIndex(Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl) {
+		if (this.drag) return;
+		this.indexTodo.push({Cs,target,obj});
 	}
 
 	getIndex(p: Cordinate, t = this.transform) {
@@ -287,14 +304,14 @@ export default class Calculator {
 		ctrl.globalAlpha = this.shadeAlpha;
 		if (res.node) {
 			this.drawNodeHighlght(ctrl, res.node);
-			this.drawToolTip({ id: 'node-'+res.node.i, ...p })
+			this.drawToolTip({ id: 'node-' + res.node.i, ...p })
 		} else if (res.link) {
 			this.drawLinkHighlight(ctrl, res.link);
-			this.drawToolTip({ id: 'link-'+res.link.l.i, ...p });
+			this.drawToolTip({ id: 'link-' + res.link.l.i, ...p });
 		} else if (res.bundle) {
 			const { bundle } = res;
 			this.drawBundleHighlight(ctrl, bundle);
-			this.drawToolTip({ id: 'bundle-'+bundle.i, ...p });
+			this.drawToolTip({ id: 'bundle-' + bundle.i, ...p });
 		} else {
 			this.highlight = false;
 		}
@@ -383,6 +400,8 @@ export default class Calculator {
 	}
 
 	drawNodes() {
+		this.needsIndexing=true;
+		this.indexTodo = [];
 		this.indexes = {};
 		this.linkCache = {};
 		this.animations = [];
@@ -612,6 +631,7 @@ export default class Calculator {
 	}
 
 	lookupPoint(p: Cordinate,) {
+		this.buildFullIndex();
 		const el = this.getIndex(p);
 		const res = this.defaultLookupResult(el.tp);
 
@@ -805,7 +825,8 @@ export default class Calculator {
 		const links: LinkSets = {};
 		const nodes: { [id: string]: NodeEl } = {};
 		const nodeLinks: NodeLinks = {};
-		const { linkOpts, nodeOpts, minMax, srcNodes, srcLinks } = this;
+		const { linkOpts, nodeOpts, minMax, srcNodes, srcLinks, autoToolTip, toolTipData } = this;
+
 		for (const img of Object.values(this.images)) {
 			img.n = [];
 		}
@@ -831,7 +852,12 @@ export default class Calculator {
 				if (node.x < minMax.minX) minMax.minX = node.x;
 				if (node.y < minMax.minY) minMax.minY = node.y;
 			}
+			const ttKey = `node-${node.i}`;
+			if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
+				toolTipData[ttKey] = { label: node.l }
+			}
 		}
+		const autBundleTT: { [key: string]: boolean } = {};
 		const sane: { [id: string]: LinkEl } = this.rawLinks = {};
 		for (let i = 0; i < srcLinks.length; ++i) {
 			const link = srcLinks[i];
@@ -848,16 +874,28 @@ export default class Calculator {
 				sets[key] = set;
 				order.push(key);
 			}
+			const ttKey = `link-${link.i}`;
+			if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
+				toolTipData[ttKey] = { label: link.l || link.i };
+			}
 			const { l, b, s } = set;
 			l.push(link);
 			if (!link.b) continue;
 			if (!Array.isArray(link.b)) throw new Error(`Bad Bundle in srcLinks[${i}], b must be an array of strings`);
 			for (const tb of link.b) {
+				const ttKey = `bundle-${key},${tb}`;
+				if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
+					toolTipData[ttKey] = { label: tb, data: [] };
+					autBundleTT[ttKey] = true;
+				}
 				if (!s[tb]) {
 					b.push(tb);
 				}
 				s[tb] || (s[tb] = [])
 				s[tb].push(link.i);
+				if (autBundleTT[ttKey]) {
+					toolTipData[ttKey].data?.push(link.l || link.i);
+				}
 			}
 		}
 		this.links = links;

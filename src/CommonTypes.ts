@@ -66,6 +66,7 @@ interface LinkEl {
   a: string;
   o: string;
   b?: string[];
+	l?: string;
   n?:{
     s: NodeEl;
     d: NodeEl;
