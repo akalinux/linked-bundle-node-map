@@ -9,7 +9,6 @@ import MouseWatcher from './MouseWatcher';
 import CreateTT from './CreateTT';
 import Grid from './Grid';
 import ToolTipContext from './ToolTipContext';
-import './LinkedSet.css';
 import ToolsContext from './ToolsContext';
 
 const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
@@ -17,6 +16,13 @@ const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
 	s: { x: 0, y: 1 },
 	e: { x: 1, y: 0 },
 	w: { x: -1, y: 0 },
+}
+const COMPASS_TAGS: {[key:string]: string}={
+	n: 'compass-north',
+	e: 'compass-east',
+	s: 'compass-south',
+	w: 'compass-west',
+	c: 'compass-center',
 }
 
 
@@ -170,7 +176,8 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 							const t = calc.createCenertTransform();
 							calc.setTransform(t);
 						}
-						const event = new OnChange({ data: calc.getChanges(), tag: key });
+						const tag=COMPASS_TAGS.hasOwnProperty(key) ? COMPASS_TAGS[key] : key;
+						const event = new OnChange({ data: calc.getChanges(), tag });
 						fw.sendEvent(event, event.data);
 					}} />
 					<GridToggle onClick={() => {

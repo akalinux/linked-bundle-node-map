@@ -2,12 +2,15 @@
   "name": "linked-bundle-node-map",
   "version": "1.0.0",
   "main": "dist/bundle.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/LinkedBundleNodeMap.d.ts",
   "scripts": {
     "dev": "webpack -c webpack-dev.config.ts",
     "watch": "webpack -w -c ./webpack-dev.config.ts",
+    "watchta": "webpack -w -c webpack-testapp-dev.ts",
     "build": "webpack -c ./webpack-prod.config.ts",
+    "testapp": "webpack -c ./webpack-testapp.ts",
     "clean": "rm -rf dist||/bin/true",
+    "server": "node ./demo_app/server.js",
     "test": "jest"
   },
   "files": [
@@ -21,7 +24,6 @@
   },
   "devDependencies": {
     "css-loader": "^7.1.2",
-    "mini-css-extract-plugin": "^2.9.4",
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
@@ -30,8 +32,12 @@
     "@types/jest": "^30.0.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "express": "^5.1.0",
     "jest": "^30.0.5",
+    "mini-css-extract-plugin": "^2.9.4",
     "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "style-loader": "^4.0.0",
     "ts-jest": "^29.4.0",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",

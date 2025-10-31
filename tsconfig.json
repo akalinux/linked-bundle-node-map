@@ -11,6 +11,7 @@
     "declarationMap": true, // Optional: generates source maps for declaration files
     "strict": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true
   },
   "include": ["src"], 

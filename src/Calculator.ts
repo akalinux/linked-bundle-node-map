@@ -147,8 +147,8 @@ export default class Calculator {
 	indexTodo: { Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl }[] = [];
 
 	buildFullIndex() {
+		if (!this.needsIndexing) return;
 		const indexTodo = this.indexTodo;
-		if(!this.needsIndexing) return;
 		this.needsIndexing=false;
 		this.indexTodo = [];
 		for (let tid = 0; tid < indexTodo.length; ++tid) {
@@ -192,6 +192,7 @@ export default class Calculator {
 		const tp = this.translateCanvasYX(p, t);
 		const rx = Math.round(tp.x);
 		const x = rx - rx % indexSize;
+		this.buildFullIndex();
 		if (!indexes.hasOwnProperty(x)) return { tp };
 		const lx = indexes[x];
 		const ry = Math.round(tp.y);

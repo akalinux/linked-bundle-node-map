@@ -139,11 +139,12 @@ it('validate data strucutre tests', () => {
 })
 
 it('index builder test',()=>{
-  const sl=new Calculator();
+  const sl:Calculator=new Calculator();
   sl.setR(1.25);
   expect(sl.indexSize).toBe(5);
   let node=sl.createNodeBox({x:2.5,y:2.5},1);
   sl.buildIndex(node,'nodes',{i:'test-node'});
+	sl.needsIndexing=true;
   console.log(sl.indexes)
   let check=sl.getIndex({x:0,y:0});
   console.log(check)
@@ -153,6 +154,7 @@ it('index builder test',()=>{
 
   node=sl.createNodeBox({x:2.5,y:2.5},10);
   sl.buildIndex(node,'nodes',{i:'test-node'});
+	sl.needsIndexing=true;
 
   check=sl.getIndex({x:0,y:0});
   expect(check.nodes!).toBeDefined();
