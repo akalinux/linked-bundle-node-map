@@ -1,4 +1,4 @@
-// See: https://github.com/facebook/create-react-app/tree/main/packages/cra-template/template
+// See:https://www.npmjs.com/package/gh-pages
 import ReactDOM from 'react-dom/client';
 import React from 'react';
 import LinkedNodeMap, { FormContext,LinkedMapStatus } from '../src/LinkedBundleNodeMap'
