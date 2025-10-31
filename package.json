@@ -21,7 +21,7 @@
   ],
   "keywords": [],
   "author": "AKALINUX<akalinux@cpan.org>",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "devDependencies": {
     "@babel/core": "^7.28.5",
