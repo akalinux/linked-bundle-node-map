@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname, '..','public'))); // Adjust 'build' 
 
 // For any other route, serve the main index.html file
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..','public', 'loopback.html')); // Adjust 'build' as per your SPA framework
+  res.sendFile(path.join(__dirname, '..','public', 'index.html')); // Adjust 'build' as per your SPA framework
 });
 
 app.listen(PORT, () => {

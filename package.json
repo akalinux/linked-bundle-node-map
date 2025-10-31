@@ -1,6 +1,6 @@
 {
   "name": "linked-bundle-node-map",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/bundle.js",
   "types": "dist/LinkedBundleNodeMap.d.ts",
   "homepage":"https://github.com/akalinux/linked-bundle-node-map",
@@ -13,7 +13,7 @@
     "tw": "webpack -w -c ./webpack-testapp.ts",
     "clean": "rm -rf dist||/bin/true",
     "server": "node ./demo_app/server.js",
-    "ghpages":"node ./demo_app/publish.js",
+    "deploy":"webpack -c ./webpack-testapp.ts && gh-pages -d public",
     "test": "jest"
   },
   "files": [
