@@ -1,0 +1,7 @@
+dist/*
+node_modules/*
+.project
+yarn.lock
+package-lock.json
+index.js
+.settings/*
