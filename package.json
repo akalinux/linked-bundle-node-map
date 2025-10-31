@@ -13,7 +13,7 @@
     "tw": "webpack -w -c ./webpack-testapp.ts",
     "clean": "rm -rf dist||/bin/true",
     "server": "node ./demo_app/server.js",
-    "thpages":"",
+    "ghpages":"node ./demo_app/publish.js",
     "test": "jest"
   },
   "files": [
