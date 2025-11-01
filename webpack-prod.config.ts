@@ -23,7 +23,6 @@ module.exports = {
     filename: 'bundle.js',
     library: 'LinkedBundleNodeMap', // Global variable name for the UMD module
     libraryTarget: 'umd',
-    clean: true,
     globalObject: 'this', // Ensures UMD works in various environments
   },
   resolve: {

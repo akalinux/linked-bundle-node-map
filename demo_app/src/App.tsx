@@ -1,7 +1,7 @@
 // See:https://www.npmjs.com/package/gh-pages
 import ReactDOM from 'react-dom/client';
 import React from 'react';
-import '../src/LinkedSet.css'
+import 'linked-bundle-node-map/dist/linked-bundle-node.css'
 import MinimalDemo from './demos/MinimalDemo'
 const el = document.getElementById('app');
 if (el !== null) {
