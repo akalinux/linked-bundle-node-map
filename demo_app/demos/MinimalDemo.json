@@ -2,7 +2,7 @@
 	"autoFit":true,
 	"grid":true,
 	"nodeOpts":{
-	  "router":{"i":"./images/router_up.png"},
+	  "router":{"i":"./images/router_up.svg"},
 	  "firewall":{"i":"./images/fwl_up.png"},
 	  "server":{"i":"./images/server.svg"}
 	},
@@ -18,7 +18,7 @@
 	],
 	"links":[
 	  { "i":"l1", "s":"s", "d":"r", "o":"up", "a":"b","l":"Vlan Network-1"},
-	  { "i":"l2", "s":"s", "d":"r", "o":"up", "a":"b","l":"Vlan Area Network-2"},
+	  { "i":"l2", "s":"s", "d":"r", "o":"up", "a":"b","l":"Vlan Network-2"},
 	  { "i":"w1", "s":"r", "d":"f", "o":"up", "a":"b","l":"Intranet 1"},
 	  { "i":"w2", "s":"r", "d":"f", "o":"down", "a":"n","l":"Intranet 2"}
 	]

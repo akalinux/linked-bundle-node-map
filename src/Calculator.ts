@@ -38,8 +38,16 @@ interface SetCalculatorData {
 	links: LinkEl[];
 	nodeOpts?: { [optId: string]: NodeElOpt };
 	linkOpts?: { [option: string]: LinkElOpt };
-	noTools?: boolean;
 	autoToolTip?: boolean;
+
+	// toolbar control
+	noTools?: boolean;
+	hideCompass?: boolean;
+	hideFullScreen?: boolean;
+	showReset?: boolean;
+	hideGridToggle?: boolean;
+	hideSearch?: boolean;
+	hideZoomAndRestore?: boolean;
 }
 
 const Rad2Deg = 180.0 / Math.PI;
@@ -53,8 +61,9 @@ const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 export { type SetCalculatorData }
 
 export default class Calculator {
+	showReset: boolean = false;
 	autoToolTip: boolean = true;
-	needsIndexing: boolean=false;
+	needsIndexing: boolean = false;
 	toolTipData: ToolTipData = {};
 	linkCache: { [nodeId: string]: ContainerBox } = {}
 	highlight = false;
@@ -117,7 +126,7 @@ export default class Calculator {
 	animationTimer = 500;
 
 	setData(dataSet: SetCalculatorData) {
-		const { autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
+		const { showReset, autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
 		this.theme = theme || 'light'
 		const theme_choices = themes || THEME_MAP;
 		Object.assign(this, theme_choices[this.theme]);
@@ -133,7 +142,8 @@ export default class Calculator {
 		this.setR();
 		this.changes.nodes = {};
 		this.changes.grid = grid || false;
-		if (typeof autoToolTip !== 'undefined') this.autoToolTip = true;
+		if (typeof autoToolTip !== 'undefined') this.autoToolTip = autoToolTip;
+		if (typeof showReset !== 'undefined') this.showReset = showReset;
 		this.changes.transform = this.transform;
 		this.toolTipData = toolTipData || {};
 		if (changes) {
@@ -149,7 +159,7 @@ export default class Calculator {
 	buildFullIndex() {
 		if (!this.needsIndexing) return;
 		const indexTodo = this.indexTodo;
-		this.needsIndexing=false;
+		this.needsIndexing = false;
 		this.indexTodo = [];
 		for (let tid = 0; tid < indexTodo.length; ++tid) {
 			const { Cs, target, obj } = indexTodo[tid];
@@ -181,10 +191,10 @@ export default class Calculator {
 			}
 		}
 	}
-	
+
 	buildIndex(Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl) {
 		if (this.drag) return;
-		this.indexTodo.push({Cs,target,obj});
+		this.indexTodo.push({ Cs, target, obj });
 	}
 
 	getIndex(p: Cordinate, t = this.transform) {
@@ -401,7 +411,7 @@ export default class Calculator {
 	}
 
 	drawNodes() {
-		this.needsIndexing=true;
+		this.needsIndexing = true;
 		this.indexTodo = [];
 		this.indexes = {};
 		this.linkCache = {};

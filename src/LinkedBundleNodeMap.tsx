@@ -17,7 +17,7 @@ const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
 	e: { x: 1, y: 0 },
 	w: { x: -1, y: 0 },
 }
-const COMPASS_TAGS: {[key:string]: string}={
+const COMPASS_TAGS: { [key: string]: string } = {
 	n: 'compass-north',
 	e: 'compass-east',
 	s: 'compass-south',
@@ -80,7 +80,7 @@ const ShowGrid = (args: { props: SetCalculatorData, wg: ManageInstance<boolean |
 
 const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props, ref) => {
 	const theme = useContext(ThemeContext);
-	const {Compass,Tools,GridToggle,ZoomAndRestore,Search,ToggleFullScreen }=useContext(ToolsContext);
+	const { Compass, Tools, GridToggle, ZoomAndRestore, Search, ToggleFullScreen } = useContext(ToolsContext);
 	const conditionalRef = useRef<HTMLDivElement>(null);
 	const slotRef = ref || conditionalRef;
 	const fw = useContext(FormContext)
@@ -142,7 +142,19 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 
 	const dw = MouseWatcher.startup(calc, fw, setTT).onNode;
 	const wg = new ManageInstance(props.grid);
-
+	const zoomAndRestorOnClick = (value: string) => {
+		if (value === 'r') {
+			const event = new Reset({ data: null, tag: 'reset' });
+			fw.sendEvent(event, event.data);
+			return;
+		}
+		const k = value === '+' ? .1 : -.1
+		const t = { ...calc.transform };
+		t.k -= k;
+		calc.setTransform(t);
+		const event = new OnChange({ data: calc.getChanges(), tag: value });
+		fw.sendEvent(event, event.data);
+	};
 
 	return (
 		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`} ref={slotRef}>
@@ -156,49 +168,49 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 					<div ref={dw} className='linked-node-map-canvas' />
 				</div>
 				{!props.noTools && <Tools>
-					<Search nodes={props.nodes} onClick={(node) => {
-						calc.drawCenteredOnNode(node);
-						const event = new OnChange({ data: calc.getChanges(), tag: `node-${node.i}` });
-						event.name = 'CenterOnNode';
-						fw.sendEvent(event, event.data);
-					}}
-					/>
-					<Compass onClick={(key: string) => {
-						if (COMPASS_MAP.hasOwnProperty(key)) {
-							const t = { ...calc.transform };
-							const size = calc.boxR * 2;
-							const { x, y } = COMPASS_MAP[key];
-							t.x += x * size;
-							t.y += y * size;
-							calc.setTransform(t);
-						} else {
-							calc.redoMinMax();
-							const t = calc.createCenertTransform();
-							calc.setTransform(t);
-						}
-						const tag=COMPASS_TAGS.hasOwnProperty(key) ? COMPASS_TAGS[key] : key;
-						const event = new OnChange({ data: calc.getChanges(), tag });
-						fw.sendEvent(event, event.data);
-					}} />
-					<GridToggle onClick={() => {
-						wg.publish(calc.changes.grid = !calc.changes.grid)
-						const event = new OnChange({ data: calc.getChanges(), tag: 'gtid' });
-						fw.sendEvent(event, event.data);
-					}} />
-					<ToggleFullScreen m={slotM} />
-					<ZoomAndRestore onClick={(value: string) => {
-						if (value === 'r') {
-							const event = new Reset({ data: null, tag: 'reset' });
+					{!props.hideSearch &&
+						<Search nodes={props.nodes} onClick={(node) => {
+							calc.drawCenteredOnNode(node);
+							const event = new OnChange({ data: calc.getChanges(), tag: `node-${node.i}` });
+							event.name = 'CenterOnNode';
 							fw.sendEvent(event, event.data);
-							return;
-						}
-						const k = value === '+' ? .1 : -.1
-						const t = { ...calc.transform };
-						t.k -= k;
-						calc.setTransform(t);
-						const event = new OnChange({ data: calc.getChanges(), tag: value });
-						fw.sendEvent(event, event.data);
-					}} />
+						}}
+						/>
+					}
+					{!props.hideCompass &&
+						<Compass onClick={(key: string) => {
+							if (COMPASS_MAP.hasOwnProperty(key)) {
+								const t = { ...calc.transform };
+								const size = calc.boxR * 2;
+								const { x, y } = COMPASS_MAP[key];
+								t.x += x * size;
+								t.y += y * size;
+								calc.setTransform(t);
+							} else {
+								calc.redoMinMax();
+								const t = calc.createCenertTransform();
+								calc.setTransform(t);
+							}
+							const tag = COMPASS_TAGS.hasOwnProperty(key) ? COMPASS_TAGS[key] : key;
+							const event = new OnChange({ data: calc.getChanges(), tag });
+							fw.sendEvent(event, event.data);
+						}} />
+					}
+					{!props.hideGridToggle &&
+						<GridToggle onClick={() => {
+							wg.publish(calc.changes.grid = !calc.changes.grid)
+							const event = new OnChange({ data: calc.getChanges(), tag: 'gtid' });
+							fw.sendEvent(event, event.data);
+						}} />
+					}
+					{!props.hideFullScreen && <ToggleFullScreen m={slotM} />}
+					<ZoomAndRestore onClick={zoomAndRestorOnClick} />
+					{props.showReset && 
+						<div 
+						title={'Undo Changes'} 
+						className={`linked-node-map-ResetButton linked-node-map-${theme}`} 
+						onClick={()=>zoomAndRestorOnClick('r')}>Reset</div> 
+					}
 				</Tools>
 				}
 				{tooltips}
