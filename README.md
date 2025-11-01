@@ -6,7 +6,7 @@ This npm package was created to solve a few problems. This widget provides good 
 
 - [Installation](#Installation)
 - [Usage](#Usage)
-- [LinkedNodeMap Types](#LinkedNodeMap%20Types)
+- [LinkedNodeMap Types](#LinkedNodeMapTypes)
 - [Todo](#TODO)
 
 
@@ -58,7 +58,7 @@ npm install linked-bundle-node-map
 
 ```
 
-## LinkedNodeMap Types
+## LinkedNodeMapTypes
 
 LinkedNodeMap supports the following properties (see the source for the final word on this):
 
