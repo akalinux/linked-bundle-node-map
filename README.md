@@ -21,8 +21,8 @@ This npm package was created to solve a few problems. This widget provides good 
 - Tool tip support
 - Overloadable UI Components(including tooltips)
 - Status mapping for nodes and links
-- Milti dirrectional Link animations.
-- Data Meging utilities
+- Milti directional Link animations.
+- Data Merging utilities
 - Dynamically scale connections between nodes
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
@@ -107,6 +107,9 @@ interface NodeEl {
   o: string;
   // Unique Internal ID
   i: string;
+  
+  // user tagged data set ( internals never look at or touch this value )
+  t?:any;
   
   // Hide this node
   h?:boolean|number;

@@ -5,7 +5,6 @@ const dist=path.resolve(__dirname, 'dist');
 const src=path.resolve(__dirname, 'src');
 
 try {
-  fs.rmdirSync(dst,{recursive:true});
   fs.mkdirSync(dist);
 } catch (e) {
   // don't care

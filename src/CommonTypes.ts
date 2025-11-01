@@ -11,6 +11,7 @@ interface NodeEl {
   o: string;
   i: string;
   h?:boolean|number;
+	t?:any;
 }
 
 interface Cordinate {
