@@ -2,10 +2,12 @@
 import ReactDOM from 'react-dom/client';
 import React from 'react';
 import 'linked-bundle-node-map/dist/linked-bundle-node.css'
-import MinimalDemo from './demos/MinimalDemo/MinimalDemo'
+import MinimalDemo from './demos/MinimalDemo/MinimalDemo';
+import ManualToolTipsAndBundles from './demos/ManualToolTipsAndBundles/ManualToolTipsAndBundles';
 
 const maps: {[key:string]: ()=>React.ReactElement}={
 	min: MinimalDemo,
+	ttb: ManualToolTipsAndBundles,
 };
 const el = document.getElementById('app');
 if (el !== null) {
