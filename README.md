@@ -13,7 +13,7 @@ This npm package was created to solve a few problems. This widget provides good 
 ## Features
 
 - Pan & Zoom support, enabled by default, but can be disabled via props.
-- Toggle fullscreen mode ( enabled by default can be disabled via props )
+- Toggle full screen mode ( enabled by default can be disabled via props )
 - Node/Map Dragging support ( enabled by default, can be disabled vi props )
 - Stack multiple connections between nodes 
 - Bundle connections between nodes together
@@ -26,12 +26,12 @@ This npm package was created to solve a few problems. This widget provides good 
 - Dynamically scale connections between nodes
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
-- Nodes, links, and bundles are rendered in a determinstic order
+- Nodes, links, and bundles are rendered in a deterministic order
 - Map is drawn using canvas not svg ( even when loading custom images )
-- Defered indexing, only created when needed
+- Deferred indexing, only created when needed
 - No Square roots are applied when looking up what a user is interacting with
 - Ref forwarding support allowing for screen shots, pdf generation etc..
-- Extensable Theme support, ( default light and dark ) add more as you see fit
+- Extensible Theme support, ( default light and dark ) add more as you see fit
 
 ## Demos
 
