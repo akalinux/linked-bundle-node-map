@@ -13,14 +13,18 @@ This npm package was created to solve a few problems. This widget provides good 
 ## Features
 
 - Pan & Zoom: Out of the box supports panning and zooming
-- Dragging: Out of the box, supports dragging
-- Stack multiple connections between objects
-- Bundle connections together
+- Toggle fullscreen mode
+- Node/Map Dragging support
+- Stack multiple connections between nodes 
+- Bundle connections between nodes together
 - Tool tip support
 - Overloadable UI Components
-- Status mapping
+- Status mapping for nodes and links
+- Milti dirrectional Link animations.
 - Data Meging utilities
-
+- Dynamically scale connections between nodes
+- Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
+- Nodes can be disabled with the connections still showing
 
 ## Demos
 
@@ -75,7 +79,6 @@ npm install linked-bundle-node-map
 LinkedNodeMap supports the following properties (see the source for the final word on this):
 
 ```ts
-
 
 // Tool tip data structure
 interface ToolTipData{[key:string]:{label:string,data?:string[]}}

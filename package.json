@@ -14,7 +14,8 @@
     "clean": "rm -rf dist||/bin/true",
     "server": "node ./demo_app/server.js",
     "deploy": "webpack -c ./webpack-testapp.ts && gh-pages -d public",
-    "test": "jest"
+    "test": "jest",
+    "push":"npm run test && npm run build && npm run publish"
   },
   "files": [
     "dist"
