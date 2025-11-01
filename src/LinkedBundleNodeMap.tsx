@@ -84,7 +84,8 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	const theme = useContext(ThemeContext);
 	const { Compass, Tools, GridToggle, ZoomAndRestore, Search, ToggleFullScreen } = useContext(ToolsContext);
 	const conditionalRef = useRef<HTMLDivElement>(null);
-	const slotRef = ref || conditionalRef;
+	const scRef = ref || conditionalRef;
+	const slotRef =  useRef<HTMLDivElement>(null);
 	const calc = useContext(CreateCalculatorContext)();
 	const fw = useContext(FormContext)
 	const [setTT, tooltips] = useMemo(
@@ -159,10 +160,10 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	};
 
 	return (
-		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`}>
+		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`} ref={slotRef}>
 			<CalculatorContext.Provider value={calc}>
-				<div className={'linked-node-map-canvas-div-container'} ref={slotRef}>
-					<div className={'linked-node-map-canvas-div-container'}>
+				<div className={'linked-node-map-canvas-div-container'}>
+					<div className={'linked-node-map-canvas-div-container'} ref={scRef}>
 						<ShowGrid wg={wg} props={props} />
 						{list}
 					</div>
