@@ -5,7 +5,17 @@ import './min.css';
 export default function MinimalDemo() {
 
 	return <div className='container'>
-	<div className='infoBlock'>Linked Bundle NodeMap Minimal Demo</div>
+	<div className='infoBlock'>
+	  <div>Linked Bundle NodeMap Minimal Demo</div>
+		<ul>
+		  <li><a href="https://github.com/akalinux/linked-bundle-node-map/">Back to the githib prject</a></li>
+		  <li>
+			<a href="https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/MinimalDemo/MinimalDemo.tsx">
+			  View this example's source
+			</a>
+			</li>
+		</ul>
+		</div>
 	<div className='mapContainer'><LinkedNodeMap {...data} /></div>
 	</div>
 }
