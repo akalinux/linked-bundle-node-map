@@ -35,7 +35,7 @@ This npm package was created to solve a few problems. This widget provides good 
 
 ## Demos
 
-Basic Example: [Demo Page](https://akalinux.github.io/linked-bundle-node-map/)
+Basic Example: [Demo Page](https://akalinux.github.io/linked-bundle-node-map/?demo=min)
 
 ## Installation
 
