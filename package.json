@@ -3,17 +3,17 @@
   "version": "0.0.3",
   "main": "dist/bundle.js",
   "types": "dist/LinkedBundleNodeMap.d.ts",
-  "homepage":"https://github.com/akalinux/linked-bundle-node-map",
+  "homepage": "https://github.com/akalinux/linked-bundle-node-map",
   "scripts": {
     "dev": "webpack -c webpack-dev.config.ts",
     "watch": "webpack -w -c ./webpack-dev.config.ts",
     "watchta": "webpack -w -c webpack-testapp-dev.ts",
     "build": "webpack -c ./webpack-prod.config.ts",
     "testapp": "webpack -c ./webpack-testapp.ts",
-    "tw": "webpack -w -c ./webpack-testapp.ts",
+    "tw": "webpack -w -c ./webpack-testapp-dev.ts",
     "clean": "rm -rf dist||/bin/true",
     "server": "node ./demo_app/server.js",
-    "deploy":"webpack -c ./webpack-testapp.ts && gh-pages -d public",
+    "deploy": "webpack -c ./webpack-testapp.ts && gh-pages -d public",
     "test": "jest"
   },
   "files": [
@@ -44,6 +44,9 @@
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "webpack": "^5.102.1",
+    "nocache": "^4.0.0",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
   }
 }

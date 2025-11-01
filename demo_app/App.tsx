@@ -2,7 +2,7 @@
 import ReactDOM from 'react-dom/client';
 import React from 'react';
 import LinkedNodeMap, { FormContext,LinkedMapStatus } from '../src/LinkedBundleNodeMap'
-import RawData from './data.json'
+import RawData from './small_wan.json'
 const el = document.getElementById('app');
 import '../src/LinkedSet.css'
 import CoreEvent from '../src/CoreEvent';

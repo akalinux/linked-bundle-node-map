@@ -46,7 +46,8 @@ export default {
   },
   devtool: 'source-map',
   output: {
-    path: path.resolve(__dirname, 'public'),
-    filename: 'index.js',
+    path: path.resolve(__dirname, 'public','js'),
+    filename: 'main.js',
+    clean: true,
   },
 };

@@ -1,8 +1,10 @@
 const express = require('express');
+const nocache = require("nocache");
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(nocache());
 // Serve static files from the 'build' directory (or 'dist')
 app.use(express.static(path.join(__dirname, '..','public'))); // Adjust 'build' as per your SPA framework
 
