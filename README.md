@@ -1,6 +1,6 @@
 # Linked Bundle Node Map
 
-This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than React.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. The core design is fairly easy to subclass and extend with without changing the core code.
+This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than React.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. The core design is fairly easy to subclass and extend with without changing the core code.  The internals are written in TypeScript and the dist folder is uglified/minified es6.
 
 ## Table of Contents
 
