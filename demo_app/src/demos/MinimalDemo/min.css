@@ -12,8 +12,7 @@
 }
 .mapContainer {
 	border: solid black 2px;
-	height: calc(100% - 80px);
+	height: calc(100% - 100px);
 	width: calc(100% - 80px);
 	margin-left: 40px;
-	margin-bottom:20px
 }
