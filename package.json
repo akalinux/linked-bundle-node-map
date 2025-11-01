@@ -19,7 +19,7 @@
   "files": [
     "dist"
   ],
-  "keywords": ["diagram","network","map","interactive"],
+  "keywords": ["diagram","network","map","interactive","workflow"],
   "author": "AKALINUX<akalinux@cpan.org>",
   "license": "MIT",
   "description": "",

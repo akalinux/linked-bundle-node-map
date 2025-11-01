@@ -5,9 +5,21 @@ This npm package was created to solve a few problems. This widget provides good 
 ## Table of Contents
 
 - [Installation](#Installation)
+- [Features](#Features)
 - [Usage](#Usage)
 - [LinkedNodeMap Types](#LinkedNodeMapTypes)
 - [Todo](#TODO)
+
+## Features
+
+- Pan & Zoom: Out of the box supports panning and zooming
+- Dragging: Out of the box, supports dragging
+- Stack multiple connections between objects
+- Bundle connections together
+- Tool tip support
+- Overloadable UI Components
+- Status mapping
+- Data Meging utilities
 
 
 ## Demos
@@ -221,4 +233,3 @@ interface SetCalculatorData {
 
 1. Provide More examples
 2. Fully Document the code
-3. Add an exported node/transform merge method

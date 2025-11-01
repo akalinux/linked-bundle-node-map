@@ -10,6 +10,8 @@ import CreateTT from './CreateTT';
 import Grid from './Grid';
 import ToolTipContext from './ToolTipContext';
 import ToolsContext from './ToolsContext';
+import MergeMapChanges from './MergeMapChanges';
+import CreateCalculatorContext from './CreateCalculatorContext';
 
 const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
 	n: { x: 0, y: -1 },
@@ -83,6 +85,7 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	const { Compass, Tools, GridToggle, ZoomAndRestore, Search, ToggleFullScreen } = useContext(ToolsContext);
 	const conditionalRef = useRef<HTMLDivElement>(null);
 	const slotRef = ref || conditionalRef;
+	const calc = useContext(CreateCalculatorContext)();
 	const fw = useContext(FormContext)
 	const [setTT, tooltips] = useMemo(
 		() => {
@@ -95,7 +98,6 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 		}, []
 	);
 	const online: CanvasSets = { ctrl: null, bundles: null, links: null, animations: null, nodes: null };
-	const calc = new Calculator();
 	const slotM = new ManageInstance(slotRef as React.RefObject<HTMLDivElement>);
 	fw.setSlotRefWatcher(slotM);
 	const m = new ManageInstance<Calculator | null>(null);
@@ -218,5 +220,12 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 		</div>
 	);
 });
-export { FormContext, LinkedMapStatus, ToolTipContext, ToolsContext };
+export { 
+	FormContext, 
+	LinkedMapStatus, 
+	ToolTipContext, 
+	ToolsContext, 
+	MergeMapChanges, 
+	CreateCalculatorContext, 
+};
 export default LinkedBundleNodeMap;
