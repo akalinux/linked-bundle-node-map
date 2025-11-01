@@ -84,6 +84,7 @@ interface MapChanges {
   nodes: { [nodeId: string]: Cordinate; };
   transform: CoreTransform;
   grid: boolean;
+	tick: number;
 }
 
 interface LinkSet {

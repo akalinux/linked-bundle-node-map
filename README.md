@@ -13,10 +13,11 @@ This npm package was created to solve a few problems. This widget provides good 
 ## Features
 
 - Pan & Zoom support, enabled by default, but can be disabled via props.
-- Toggle fullscreen mode
-- Node/Map Dragging support
+- Toggle fullscreen mode ( enabled by default can be disabled via props )
+- Node/Map Dragging support ( enabled by default, can be disabled vi props )
 - Stack multiple connections between nodes 
 - Bundle connections between nodes together
+- Stack multiple bundles between nodes
 - Tool tip support
 - Overloadable UI Components(including tooltips)
 - Status mapping for nodes and links
@@ -25,6 +26,12 @@ This npm package was created to solve a few problems. This widget provides good 
 - Dynamically scale connections between nodes
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
+- Nodes, links, and bundles are rendered in a determinstic order
+- Map is drawn using canvas not svg ( even when loading custom images )
+- Defered indexing, only created when needed
+- No Square roots are applied when looking up what a user is interacting with
+- Ref forwarding support allowing for screen shots, pdf generation etc..
+- Extensable Theme support, ( default light and dark ) add more as you see fit
 
 ## Demos
 
@@ -166,6 +173,7 @@ interface MapChanges {
   nodes: { [nodeId: string]: Cordinate; };
   transform: CoreTransform;
   grid: boolean;
+  tick: number;
 }
 
 // Color options used for canvas rendering
@@ -220,6 +228,9 @@ interface SetCalculatorData {
 	// link options structure, maps to "o" value of link
 	linkOpts?: { [option: string]: LinkElOpt };
 	autoToolTip?: boolean;
+
+    // sets the animation tick number ( starts at 0 )
+    tick?: number;
 
 	// toolbar control
 	noTools?: boolean;

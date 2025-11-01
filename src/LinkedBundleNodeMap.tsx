@@ -159,9 +159,9 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	};
 
 	return (
-		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`} ref={slotRef}>
+		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`}>
 			<CalculatorContext.Provider value={calc}>
-				<div className={'linked-node-map-canvas-div-container'}>
+				<div className={'linked-node-map-canvas-div-container'} ref={slotRef}>
 					<div className={'linked-node-map-canvas-div-container'}>
 						<ShowGrid wg={wg} props={props} />
 						{list}

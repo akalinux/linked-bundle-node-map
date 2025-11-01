@@ -1,7 +1,7 @@
 import { MapChanges } from './CommonTypes'
 import { SetCalculatorData } from './Calculator';
 export default function MergeMapChanges(changes: MapChanges, data: SetCalculatorData) {
-	const { nodes, transform, grid } = data;
+	const { nodes, transform, grid,tick } = data;
 	const nc = changes.nodes;
 	for (let id = 0; id < nodes.length; ++id) {
 		const node = nodes[id];
@@ -13,4 +13,5 @@ export default function MergeMapChanges(changes: MapChanges, data: SetCalculator
 	}
 	data.transform = transform;
 	data.grid = grid;
+	data.tick=tick;
 }
