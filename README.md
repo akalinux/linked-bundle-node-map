@@ -4,6 +4,7 @@
 
 - [Installation](#Installation)
 - [Usage](#Usage)
+- [Todo](#TODO)
 
 ## Demos
 
@@ -52,3 +53,10 @@ npm install linked-bundle-node-map
   }
 
 ```
+
+
+## TODO
+
+1. Provide More examples
+2. Fully Document the code
+3. Add an exported cordinate and transform merge method
