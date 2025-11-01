@@ -6,6 +6,7 @@ This npm package was created to solve a few problems. This widget provides good 
 
 - [Installation](#Installation)
 - [Usage](#Usage)
+- [LinkedNodeMap Types](#LinkedNodeMap%20Types)
 - [Todo](#TODO)
 
 
