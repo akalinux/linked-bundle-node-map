@@ -1,6 +1,6 @@
 # Linked Bundle Node Map
 
-This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than the version of React that comes with your build.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. Indexing is deffered until a user tries to interact with the top level canvas.  The core design is fairly easy to subclass and extend without changing the core code.  The internals are written in TypeScript and the dist folder is uglified/minified es6. The widgets were developed using functional React, which makes the code simpler to read and manage.
+This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than the version of React that comes with your build.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. Indexing is deferred until a user tries to interact with the top level canvas.  The core design is fairly easy to subclass.  The internals are written in TypeScript and the dist folder is uglified/minified es6. The widgets were developed using functional React, which makes the code simple to read and manage.
 
 ## Table of Contents
 
@@ -35,7 +35,7 @@ This npm package was created to solve a few problems. This widget provides good 
 
 ## Demos
 
-Basic Example: [Demo Page](https://akalinux.github.io/linked-bundle-node-map/)
+Basic Example: [Demo Page](https://akalinux.github.io/linked-bundle-node-map/?demo=min)
 
 ## Installation
 

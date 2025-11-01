@@ -11,7 +11,6 @@ const el = document.getElementById('app');
 if (el !== null) {
 	const root = ReactDOM.createRoot(el);
 	const key=window.location.href.replace(/^.*\?demo=/,'');
-	console.log(key)
 	const Demo=maps.hasOwnProperty(key) ? maps[key] : MinimalDemo;
 
 	root.render(<div style={{ width: '100%', height: '100%' }}>
