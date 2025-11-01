@@ -15,7 +15,7 @@
     "server": "node ./demo_app/server.js",
     "deploy": "webpack -c ./webpack-testapp.ts && gh-pages -d public",
     "test": "jest",
-    "push":"npm run test && npm run build && npm run publish"
+    "push":"npm run test && npm run build && npm run publish && npm run deploy"
   },
   "files": [
     "dist"
