@@ -1,0 +1,52 @@
+{
+  "toolTipData":{
+    "node-w":{ "label":"West", "data":[ "Never","Eat","a","Sour","Watermellon" ] },
+    "node-s":{ "label":"South", "data":[ "We shall rize again!"] },
+    "node-n":{ "label":"North", "data":[ "I can't find santa in his workshop!"] },
+    "node-e":{ "label":"East", "data":[ "Cold winters.. Warm summers.!"] },
+		"link-1":{ "label":"One","data":["Why is 6 afraid of 7?","Because seven ate nine!"] },
+		"link-2":{ "label":"Two","data":["Why is 6 afraid of 7?","Because seven ate nine!"] },
+		"link-3":{ "label":"Three","data":["Why is 6 afraid of 7?","Because seven ate nine!"] },
+		"link-4":{ "label":"Four","data":["Why is 6 afraid of 7?","Because seven ate nine!"] },
+		"link-5":{ "label":"Five","data":["Why is 6 afraid of 7?","Because seven ate nine!"] },
+		"link-6":{ "label":"Six","data":["You can't handle the truth!"] },
+		"link-7":{ "label":"Seven","data":["No one listens to the truth!"] },
+		"link-8":{ "label":"Eight","data":["He didn't eat me!.. but where is 9?"] },
+		"bundle-s,w,Outside":{"label":"South To West","data":["Bundle contains 2 outer links:","Five","Eight"]},
+		"bundle-s,w,Inside":{"label":"South To West","data":["Bundle contains 2 elements"]},
+		"bundle-n,s,Single":{"label":"Going stag!","data":["Because I can!"]},
+		"bundle-e,n,x":{"label":"Pirates","data":["X marks the spot!","Yarrg!"]}
+  },
+  "nodes":[
+    { "i": "n", "o": "img1", "x": 150, "y": 25, "l": "Northern Node", "h":0 },
+    { "i": "s", "o": "img2", "x": 150, "y": 125, "h":0, "l": "Southern Node" },
+    { "i": "w", "o": "img3", "x": 25, "y": 75, "l": "Western Node" }, 
+    { "i": "e", "o": "img4", "x": 250, "y": 75, "l": "Eastern Node" }
+  ],
+  "nodeOpts":{
+    "default":{"c":"#ADD8E6"},
+    "img1":{"i":"./images/router_up.png"},
+    "img2":{"i":"./images/fwl_up.png"},
+    "img3":{"i":"./images/router_down.svg"},
+    "img4":{"i":"./images/cloud_up.svg"}
+  },
+  "linkOpts":{
+    "default":{"c":"#ADD8E6"}
+  },
+  "noTools":false,
+  "size":{"width":1920,"height":1080},
+  "noChange":false,
+  "autoFit":true,
+  "grid":true,
+  "transform":{"x":0,"y":0,"k":1},
+  "links":[
+    { "i":"1", "s":"n", "d":"s", "o":"default", "a":"d", "b":["Single"] },
+    { "i":"2", "s":"n", "d":"w", "o":"default", "a":"s" },
+    { "i":"3", "s":"n", "d":"e", "o":"default", "b":["x"], "a":"b" },
+    { "i":"4", "s":"e", "d":"s", "o":"default", "a":"n" },
+    { "i":"5", "s":"s", "d":"w", "o":"default", "b":["Outside"], "a":"n" },
+    { "i":"6", "s":"s", "d":"w", "b":["Inside"], "o":"default", "a":"b" },
+    { "i":"7", "s":"s", "d":"w", "b":["Inside"], "o":"default", "a":"s" },
+    { "i":"8", "s":"w", "d":"s", "b":["Outside"], "o":"default", "a":"s" }
+  ]
+}
