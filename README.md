@@ -1,14 +1,37 @@
 # Linked Bundle Node Map
 
-This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than React.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. The core design is fairly easy to subclass and extend with without changing the core code.  The internals are written in TypeScript and the dist folder is uglified/minified es6.
+This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than the version of React that comes with your build.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. Indexing is deffered until a user tries to interact with the top level canvas.  The core design is fairly easy to subclass and extend without changing the core code.  The internals are written in TypeScript and the dist folder is uglified/minified es6. The widgets were developed using functional React, which makes the code simpler to read and manage.
 
 ## Table of Contents
 
 - [Installation](#Installation)
+- [Features](#Features)
 - [Usage](#Usage)
 - [LinkedNodeMap Types](#LinkedNodeMapTypes)
 - [Todo](#TODO)
 
+## Features
+
+- Pan & Zoom support, enabled by default, but can be disabled via props.
+- Toggle full screen mode ( enabled by default can be disabled via props )
+- Node/Map Dragging support ( enabled by default, can be disabled vi props )
+- Stack multiple connections between nodes 
+- Bundle connections between nodes together
+- Stack multiple bundles between nodes
+- Tool tip support
+- Overloadable UI Components(including tooltips)
+- Status mapping for nodes and links
+- Milti directional Link animations.
+- Data Merging utilities
+- Dynamically scale connections between nodes
+- Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
+- Nodes can be disabled with the connections still showing
+- Nodes, links, and bundles are rendered in a deterministic order
+- Map is drawn using canvas not svg ( even when loading custom images )
+- Deferred indexing, only created when needed
+- No Square roots are applied when looking up what a user is interacting with
+- Ref forwarding support allowing for screen shots, pdf generation etc..
+- Extensible Theme support, ( default light and dark ) add more as you see fit
 
 ## Demos
 
@@ -64,7 +87,6 @@ LinkedNodeMap supports the following properties (see the source for the final wo
 
 ```ts
 
-
 // Tool tip data structure
 interface ToolTipData{[key:string]:{label:string,data?:string[]}}
 
@@ -85,6 +107,9 @@ interface NodeEl {
   o: string;
   // Unique Internal ID
   i: string;
+  
+  // user tagged data set ( internals never look at or touch this value )
+  t?:any;
   
   // Hide this node
   h?:boolean|number;
@@ -151,6 +176,7 @@ interface MapChanges {
   nodes: { [nodeId: string]: Cordinate; };
   transform: CoreTransform;
   grid: boolean;
+  tick: number;
 }
 
 // Color options used for canvas rendering
@@ -206,6 +232,9 @@ interface SetCalculatorData {
 	linkOpts?: { [option: string]: LinkElOpt };
 	autoToolTip?: boolean;
 
+    // sets the animation tick number ( starts at 0 )
+    tick?: number;
+
 	// toolbar control
 	noTools?: boolean;
 	hideCompass?: boolean;
@@ -221,4 +250,3 @@ interface SetCalculatorData {
 
 1. Provide More examples
 2. Fully Document the code
-3. Add an exported node/transform merge method

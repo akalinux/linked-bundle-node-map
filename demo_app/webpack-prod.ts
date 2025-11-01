@@ -3,8 +3,8 @@ import webpack from 'webpack'
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 export default {
-  mode: 'development',
-  entry: './demo_app/App.tsx',
+  mode: 'production',
+  entry: './src/App.tsx',
 	plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -46,8 +46,7 @@ export default {
   },
   devtool: 'source-map',
   output: {
-    path: path.resolve(__dirname, 'public','js'),
+    path: path.resolve(__dirname,'..','public','js'),
     filename: 'main.js',
-    clean: true,
   },
 };

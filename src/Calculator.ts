@@ -48,6 +48,7 @@ interface SetCalculatorData {
 	hideGridToggle?: boolean;
 	hideSearch?: boolean;
 	hideZoomAndRestore?: boolean;
+	tick?: number;
 }
 
 const Rad2Deg = 180.0 / Math.PI;
@@ -116,7 +117,7 @@ export default class Calculator {
 	tickSlots = 3;
 	tickSpace = 4;
 	transform: CoreTransform = { ...CORE_TRANSFORM };
-	changes: MapChanges = { nodes: {}, transform: this.transform, grid: false };
+	changes: MapChanges = { nodes: {}, transform: this.transform, grid: false,tick:0 };
 	noChange: boolean = false;
 	lineWidth = 1;
 	boxWidth = 21.6;
@@ -126,8 +127,9 @@ export default class Calculator {
 	animationTimer = 500;
 
 	setData(dataSet: SetCalculatorData) {
-		const { showReset, autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
+		const { tick, showReset, autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
 		this.theme = theme || 'light'
+		if(tick) this.tick=this.changes.tick=tick;
 		const theme_choices = themes || THEME_MAP;
 		Object.assign(this, theme_choices[this.theme]);
 		this.srcNodes = nodes || [];
@@ -483,7 +485,7 @@ export default class Calculator {
 	}
 	onAnimate = () => {
 		clearTimeout(this.timeout);
-		++this.tick;
+		this.changes.tick=++this.tick;
 		this.drawAllAnimations();
 		this.timeout = setTimeout(this.onAnimate, this.animationTimer);
 	}

@@ -11,6 +11,7 @@ interface NodeEl {
   o: string;
   i: string;
   h?:boolean|number;
+	t?:any;
 }
 
 interface Cordinate {
@@ -84,6 +85,7 @@ interface MapChanges {
   nodes: { [nodeId: string]: Cordinate; };
   transform: CoreTransform;
   grid: boolean;
+	tick: number;
 }
 
 interface LinkSet {

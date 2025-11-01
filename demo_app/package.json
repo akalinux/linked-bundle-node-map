@@ -1,29 +1,24 @@
 {
-  "name": "linked-bundle-node-map",
+  "name": "linked-bundle-node-map-demo-app",
   "version": "0.0.5",
   "main": "dist/bundle.js",
   "types": "dist/LinkedBundleNodeMap.d.ts",
   "homepage": "https://github.com/akalinux/linked-bundle-node-map",
   "scripts": {
-    "dev": "webpack -c webpack-dev.config.ts",
-    "watch": "webpack -w -c ./webpack-dev.config.ts",
-    "build": "rm -rf dist;webpack -c ./webpack-prod.config.ts",
-    "server":"cd demo_app;npm run server",
-    "testapp": "cd demo_app;npm run build",
-    "tw": "cd demo_app;npm run watch",
-    "clean": "rm -rf dist public/js||/bin/true",
-    "deploy": "bash -c 'cd  demo_app;npm run build'; gh-pages -d public",
-    "test": "jest",
-    "push":"npm run clean && npm run test && npm run build && npm run publish && npm run deploy"
+    "watch": "webpack -w -c ./webpack-dev.ts",
+    "dev": "webpack -c ./webpack-dev.ts",
+    "build": "webpack -c ./webpack-prod.ts",
+    "server": "node ./src/server.js"
   },
   "files": [
     "dist"
   ],
-  "keywords": ["diagram","network","map","interactive","workflow"],
+  "keywords": [],
   "author": "AKALINUX<akalinux@cpan.org>",
   "license": "MIT",
   "description": "",
   "devDependencies": {
+    "linked-bundle-node-map":"*",
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
@@ -32,15 +27,16 @@
     "@types/jest": "^30.0.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "gh-pages": "^6.3.0",
-    "jest": "^30.0.5",
+    "css-loader": "^7.1.2",
+    "express": "^5.1.0",
+    "mini-css-extract-plugin": "^2.9.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "style-loader": "^4.0.0",
-    "ts-jest": "^29.4.0",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "webpack": "^5.102.1",
+    "nocache": "^4.0.0",
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
