@@ -315,7 +315,7 @@ Themse are managed via a ThemeContext, the theme applies to 2 things.
 
 The 2 css classes provided are: linked-node-map-dark and linked-node-map-light. See the css source file [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/LinkedSet.css).
 
-The default "themse" data structure source code is [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/THEME_MAP.ts).
+The default "themes" data structure source code is [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/THEME_MAP.ts).
 
 ## TODO
 
