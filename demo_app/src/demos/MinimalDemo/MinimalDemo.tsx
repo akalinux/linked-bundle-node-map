@@ -8,7 +8,7 @@ export default function MinimalDemo() {
 	<div className='infoBlock'>
 	  <div>Linked Bundle NodeMap Minimal Demo</div>
 		<ul>
-		  <li><a href="https://github.com/akalinux/linked-bundle-node-map/">Back to the githib prject</a></li>
+		  <li><a href="https://github.com/akalinux/linked-bundle-node-map/">Back to the githib project</a></li>
 		  <li>
 			<a href="https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/MinimalDemo/MinimalDemo.tsx">
 			  View this example's source

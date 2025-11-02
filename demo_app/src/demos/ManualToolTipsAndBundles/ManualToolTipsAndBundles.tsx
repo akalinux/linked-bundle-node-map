@@ -8,7 +8,7 @@ export default function ManualToolTipsAndBundles() {
 	<div className='infoBlock'>
 	  <div>Linked Bundle NodeMap, Manual Tool tips and Bundles</div>
 		<ul>
-		  <li><a href="https://github.com/akalinux/linked-bundle-node-map/">Back to the githib prject</a></li>
+		  <li><a href="https://github.com/akalinux/linked-bundle-node-map/">Back to the githib project</a></li>
 		  <li>
 			<a href="https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/ManualToolTipsAndBundles/ManualToolTipsAndBundles.tsx">
 			  View this example's source
