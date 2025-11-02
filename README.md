@@ -310,12 +310,14 @@ How to import MergeMapChanges
 
 Themse are managed via a ThemeContext, the theme applies to 2 things.
 
-1. Css Class
+1. Css Classes
 2. Data Structure
 
-The 2 css classes provided are: linked-node-map-dark and linked-node-map-light. See the css source file [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/LinkedSet.css).
+The 2 css classes provided are: linked-node-map-dark and linked-node-map-light. See the css source file [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/LinkedSet.css).  The default "themes" data structure source code is [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/THEME_MAP.ts).  The ThemeContext can be imported from 'linked-bundle-node-map'
 
-The default "themes" data structure source code is [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/THEME_MAP.ts).
+```tsx
+  import LinkedNodeMap, { ThemeContext } from 'linked-bundle-node-map'
+```
 
 ## TODO
 
