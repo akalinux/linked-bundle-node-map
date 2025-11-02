@@ -1,7 +1,7 @@
 {
   "toolTipData":{
-    "node-w":{ "label":"West", "data":[ "Never","Eat","a","Sour","Watermellon" ] },
-    "node-s":{ "label":"South", "data":[ "We shall rize again!"] },
+    "node-w":{ "label":"West", "data":[ "Never eat a sour watermellon!" ] },
+    "node-s":{ "label":"South", "data":[ "Heading south for the winter!"] },
     "node-n":{ "label":"North", "data":[ "I can't find santa in his workshop!"] },
     "node-e":{ "label":"East", "data":[ "Cold winters.. Warm summers.!"] },
 		"link-1":{ "label":"One","data":["Why is 6 afraid of 7?","Because seven ate nine!"] },
@@ -25,7 +25,7 @@
   ],
   "nodeOpts":{
     "default":{"c":"#ADD8E6"},
-    "img1":{"i":"./images/router_up.png"},
+    "img1":{"i":"./images/router_up.svg"},
     "img2":{"i":"./images/fwl_up.png"},
     "img3":{"i":"./images/router_down.svg"},
     "img4":{"i":"./images/cloud_up.svg"}

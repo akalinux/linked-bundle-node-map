@@ -16,3 +16,7 @@
 	width: calc(100% - 80px);
 	margin-left: 40px;
 }
+
+.noBlock {
+	display: inline-block;
+}
