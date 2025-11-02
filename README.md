@@ -9,7 +9,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Usage](#Usage)
 - [LinkedNodeMap Types](#LinkedNodeMapTypes)
 - [Managing Events](#Events)
-- [Merging Changes](#MergingChanges)
+- [Merging Data Sets](#MergingData)
 - [Todo](#TODO)
 
 ## Features
