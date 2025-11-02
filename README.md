@@ -8,6 +8,8 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Features](#Features)
 - [Usage](#Usage)
 - [LinkedNodeMap Types](#LinkedNodeMapTypes)
+- [Managing Events](#Events)
+- [Merging Changes](#MergingChanges)
 - [Todo](#TODO)
 
 ## Features
@@ -37,6 +39,7 @@ This npm package was created to solve a few problems. This widget provides good 
 
 - [Minimal Demo](https://akalinux.github.io/linked-bundle-node-map/?demo=min)
 - [Manual Tool tips & Bundles](https://akalinux.github.io/linked-bundle-node-map/?demo=ttb)
+- [Events and Themes](https://akalinux.github.io/linked-bundle-node-map/?demo=theme_reset_event)
 
 ## Installation
 
@@ -136,9 +139,9 @@ interface LinkEl {
   b?: string[];
   
   // Optional human readable string representing the link
-	l?: string;
-	
-	// Internally generated structure ( you can ignore this )
+  l?: string;
+  
+  // Internally generated structure ( you can ignore this )
   n?:{
     s: NodeEl;
     d: NodeEl;
@@ -200,51 +203,106 @@ interface ThemeOptionSets {
 
 // Full Props list
 interface SetCalculatorData {
-	toolTipData?: ToolTipData,
-	changes?: MapChanges;
-	
-	// Turns the grid on or off
-	grid?: boolean;
-	
-	// used by internals, set by ThemeContext ( you can this )
-	theme?: string;
-	transform?: CoreTransform;
-	themes?: ThemeOptionSets;
-	r?: number;
-	// tells the diagram to try to auto fit the page.. ( center on both x and y )
-	autoFit?: boolean,
-	
-	// prevent user changes
-	noChange?: boolean;
-	
-	// sets the canvas resolution, defaults to: 1920x1080
-	size?: CoreSize;
-	
-	// required list of nodes ( can be 0 elements long )
-	nodes: NodeEl[];
-	
-	// required list of links ( can be 0 elements long )
-	links: LinkEl[];
-	
-	// node options structure, maps to "o" value of node
-	nodeOpts?: { [optId: string]: NodeElOpt };
-	
-	// link options structure, maps to "o" value of link
-	linkOpts?: { [option: string]: LinkElOpt };
-	autoToolTip?: boolean;
+  toolTipData?: ToolTipData,
+  changes?: MapChanges;
+  
+  // Turns the grid on or off
+  grid?: boolean;
+  
+  // used by internals, set by ThemeContext ( you can this )
+  theme?: string;
+  transform?: CoreTransform;
+  themes?: ThemeOptionSets;
+  r?: number;
+  // tells the diagram to try to auto fit the page.. ( center on both x and y )
+  autoFit?: boolean,
+  
+  // prevent user changes
+  noChange?: boolean;
+  
+  // sets the canvas resolution, defaults to: 1920x1080
+  size?: CoreSize;
+  
+  // required list of nodes ( can be 0 elements long )
+  nodes: NodeEl[];
+  
+  // required list of links ( can be 0 elements long )
+  links: LinkEl[];
+  
+  // node options structure, maps to "o" value of node
+  nodeOpts?: { [optId: string]: NodeElOpt };
+  
+  // link options structure, maps to "o" value of link
+  linkOpts?: { [option: string]: LinkElOpt };
+  autoToolTip?: boolean;
 
     // sets the animation tick number ( starts at 0 )
     tick?: number;
 
-	// toolbar control
-	noTools?: boolean;
-	hideCompass?: boolean;
-	hideFullScreen?: boolean;
-	showReset?: boolean;
-	hideGridToggle?: boolean;
-	hideSearch?: boolean;
-	hideZoomAndRestore?: boolean;
+  // toolbar control
+  noTools?: boolean;
+  hideCompass?: boolean;
+  hideFullScreen?: boolean;
+  showReset?: boolean;
+  hideGridToggle?: boolean;
+  hideSearch?: boolean;
+  hideZoomAndRestore?: boolean;
 }
+
+// Represents the changes to the map
+interface MapChanges {
+
+  // the id of each node and the updated x and y values
+  nodes: { [nodeId: string]: Cordinate; };
+  
+  // the x,y,k transformations currently applied
+  transform: CoreTransform;
+  
+  // grid status
+  grid: boolean;
+  // animation tick 
+	tick: number;
+}
+
+// 
+interface StatusContextInterface {
+  sendEvent(event:CoreEvent<any>, data:MapChanges):void;
+  getSlotRefWatcher():ManageInstance<React.RefObject<HTMLDivElement>>|undefined;
+  setSlotRefWatcher(m:ManageInstance<React.RefObject<HTMLDivElement>>|undefined):void;
+}
+
+```
+## Events
+
+Events are managed by the FormContext export.  The simplest way to access ad or manage events is to create a new LinkedMapStatus and overwrite the default sendEvent(event,changes) method.
+
+Example showing how to get Events
+
+```tsx
+  import LinkedNodeMap, { FormContext, LinkedMapStatus } from 'linked-bundle-node-map'
+  import data './local.json'; 
+  
+  function MyWidget() {
+
+    const fc=  const fc = new LinkedMapStatus();
+    fc.sendEvent = (event, mapChanges) => {
+      console.log(event, mapChanges);
+    }
+    
+    return <FormContext.Provider value={fc}>
+      <LinkedNodeMap {...data} />
+    </FormContext.Provider>
+  }
+```
+
+## MergingData
+
+The helper method "MergeMapChanges" can be imported from 'linked-bundle-node-map'.  For a detailed example [see](https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/ThemeEventsReset/ThemeEventsReset.tsx).
+
+Import Example
+
+```
+  import LinkedNodeMap, { FormContext, LinkedMapStatus, MergeMapChanges } from 'linked-bundle-node-map'
 ```
 
 ## TODO

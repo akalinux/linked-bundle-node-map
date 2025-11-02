@@ -2,8 +2,8 @@ import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore,
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';
 import CalculatorContext from './CalculatorContext';
-import FormContext, { Reset, OnChange, LinkedMapStatus } from './FormContext';
-import { CanvasSets } from './CommonTypes';
+import FormContext, { Reset, OnChange, LinkedMapStatus,StatusContextInterface } from './FormContext';
+import { CanvasSets, MapChanges } from './CommonTypes';
 import ThemeContext from './ThemeContext';
 import MouseWatcher from './MouseWatcher';
 import CreateTT from './CreateTT';
@@ -12,6 +12,7 @@ import ToolTipContext from './ToolTipContext';
 import ToolsContext from './ToolsContext';
 import MergeMapChanges from './MergeMapChanges';
 import CreateCalculatorContext from './CreateCalculatorContext';
+import { DefaultToolTipOptions } from './ToolTipsProps';
 
 const COMPASS_MAP: { [key: string]: { x: number, y: number } } = {
 	n: { x: 0, y: -1 },
@@ -85,16 +86,16 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	const { Compass, Tools, GridToggle, ZoomAndRestore, Search, ToggleFullScreen } = useContext(ToolsContext);
 	const conditionalRef = useRef<HTMLDivElement>(null);
 	const scRef = ref || conditionalRef;
-	const slotRef =  useRef<HTMLDivElement>(null);
+	const slotRef = useRef<HTMLDivElement>(null);
 	const calc = useContext(CreateCalculatorContext)();
+	calc.theme = theme;
+	calc.setTheme(props.theme, props.themes);
 	const fw = useContext(FormContext)
 	const [setTT, tooltips] = useMemo(
 		() => {
 			return CreateTT({
-				absolute: true,
-				needsOffset: true,
-				offsetLeft: 10,
-				offsetTop: -5,
+				...(props.renderToolTipOptions || {}),
+				...DefaultToolTipOptions,
 			})
 		}, []
 	);
@@ -160,73 +161,78 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
 	};
 
 	return (
-		<div className={`linked-node-map-RootContainer linked-node-map-${theme}`} ref={slotRef}>
-			<CalculatorContext.Provider value={calc}>
-				<div className={'linked-node-map-canvas-div-container'}>
-					<div className={'linked-node-map-canvas-div-container'} ref={scRef}>
+		<CalculatorContext.Provider value={calc}>
+			<div className={`linked-node-map-RootContainer linked-node-map-${theme}`} >
+				<div className={`linked-node-map-canvas-div-container linked-node-map-${theme}`} ref={slotRef}>
+					<div className={'linked-node-map-canvas-div-container'} ref={scRef} >
 						<ShowGrid wg={wg} props={props} />
 						{list}
 					</div>
 					<Draw m={m} props={props} />
 					<div ref={dw} className='linked-node-map-canvas' />
+					{!props.noTools && <Tools>
+						{!props.hideSearch &&
+							<Search nodes={props.nodes} onClick={(node) => {
+								calc.drawCenteredOnNode(node);
+								const event = new OnChange({ data: calc.getChanges(), tag: `node-${node.i}` });
+								event.name = 'CenterOnNode';
+								fw.sendEvent(event, event.data);
+							}}
+							/>
+						}
+						{!props.hideCompass &&
+							<Compass onClick={(key: string) => {
+								if (COMPASS_MAP.hasOwnProperty(key)) {
+									const t = { ...calc.transform };
+									const size = calc.boxR * 2;
+									const { x, y } = COMPASS_MAP[key];
+									t.x += x * size;
+									t.y += y * size;
+									calc.setTransform(t);
+								} else {
+									calc.redoMinMax();
+									const t = calc.createCenertTransform();
+									calc.setTransform(t);
+								}
+								const tag = COMPASS_TAGS.hasOwnProperty(key) ? COMPASS_TAGS[key] : key;
+								const event = new OnChange({ data: calc.getChanges(), tag });
+								fw.sendEvent(event, event.data);
+							}} />
+						}
+						{!props.hideGridToggle &&
+							<GridToggle onClick={() => {
+								wg.publish(calc.changes.grid = !calc.changes.grid)
+								const event = new OnChange({ data: calc.getChanges(), tag: 'gtid' });
+								fw.sendEvent(event, event.data);
+							}} />
+						}
+						{!props.hideFullScreen && <ToggleFullScreen m={slotM} />}
+						<ZoomAndRestore onClick={zoomAndRestorOnClick} />
+						{props.showReset &&
+							<div
+								title={'Undo Changes'}
+								className={`linked-node-map-ResetButton linked-node-map-${theme}`}
+								onClick={() => zoomAndRestorOnClick('r')}>Reset</div>
+						}
+					</Tools>
+					}
+					{tooltips}
 				</div>
-				{!props.noTools && <Tools>
-					{!props.hideSearch &&
-						<Search nodes={props.nodes} onClick={(node) => {
-							calc.drawCenteredOnNode(node);
-							const event = new OnChange({ data: calc.getChanges(), tag: `node-${node.i}` });
-							event.name = 'CenterOnNode';
-							fw.sendEvent(event, event.data);
-						}}
-						/>
-					}
-					{!props.hideCompass &&
-						<Compass onClick={(key: string) => {
-							if (COMPASS_MAP.hasOwnProperty(key)) {
-								const t = { ...calc.transform };
-								const size = calc.boxR * 2;
-								const { x, y } = COMPASS_MAP[key];
-								t.x += x * size;
-								t.y += y * size;
-								calc.setTransform(t);
-							} else {
-								calc.redoMinMax();
-								const t = calc.createCenertTransform();
-								calc.setTransform(t);
-							}
-							const tag = COMPASS_TAGS.hasOwnProperty(key) ? COMPASS_TAGS[key] : key;
-							const event = new OnChange({ data: calc.getChanges(), tag });
-							fw.sendEvent(event, event.data);
-						}} />
-					}
-					{!props.hideGridToggle &&
-						<GridToggle onClick={() => {
-							wg.publish(calc.changes.grid = !calc.changes.grid)
-							const event = new OnChange({ data: calc.getChanges(), tag: 'gtid' });
-							fw.sendEvent(event, event.data);
-						}} />
-					}
-					{!props.hideFullScreen && <ToggleFullScreen m={slotM} />}
-					<ZoomAndRestore onClick={zoomAndRestorOnClick} />
-					{props.showReset && 
-						<div 
-						title={'Undo Changes'} 
-						className={`linked-node-map-ResetButton linked-node-map-${theme}`} 
-						onClick={()=>zoomAndRestorOnClick('r')}>Reset</div> 
-					}
-				</Tools>
-				}
-				{tooltips}
-			</CalculatorContext.Provider>
-		</div>
+			</div>
+		</CalculatorContext.Provider>
 	);
 });
-export { 
-	FormContext, 
-	LinkedMapStatus, 
-	ToolTipContext, 
-	ToolsContext, 
-	MergeMapChanges, 
-	CreateCalculatorContext, 
+export {
+	FormContext,
+	LinkedMapStatus,
+	ToolTipContext,
+	ToolsContext,
+	MergeMapChanges,
+	CreateCalculatorContext,
+	ThemeContext,
+	ManageInstance,
+	type SetCalculatorData,
+	type MapChanges,
+	type StatusContextInterface,
 };
 export default LinkedBundleNodeMap;

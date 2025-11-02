@@ -19,10 +19,13 @@ import {
 	PointLookupResult,
 	BundleDraw,
 } from "./CommonTypes";
+import ManageInstance from "./ManageInstance";
 import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
+import ToolTipsProps from "./ToolTipsProps";
 
 type NodeLinkChoice = 'links' | 'nodes';
 interface LinkSets { [key: string]: LinkSet }
+
 interface SetCalculatorData {
 	toolTipData?: ToolTipData,
 	changes?: MapChanges;
@@ -49,6 +52,7 @@ interface SetCalculatorData {
 	hideSearch?: boolean;
 	hideZoomAndRestore?: boolean;
 	tick?: number;
+	renderToolTipOptions?: ToolTipsProps;
 }
 
 const Rad2Deg = 180.0 / Math.PI;
@@ -125,13 +129,21 @@ export default class Calculator {
 	mounted = false;
 	timeout: NodeJS.Timeout | undefined;
 	animationTimer = 500;
+	themes: ThemeOptionSets=THEME_MAP;
+	watchMe: ManageInstance<[Calculator]>=new ManageInstance<[Calculator]>([this],true);
+	
+	setTheme(theme: string=this.theme, themes: ThemeOptionSets=this.themes) {
+		this.themes=themes;
+		this.theme=theme;
+		Object.assign(this, themes[theme]);
+	}
 
 	setData(dataSet: SetCalculatorData) {
 		const { tick, showReset, autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
-		this.theme = theme || 'light'
+		if(typeof theme!='undefined') this.theme =theme;
 		if(tick) this.tick=this.changes.tick=tick;
-		const theme_choices = themes || THEME_MAP;
-		Object.assign(this, theme_choices[this.theme]);
+		if(typeof themes!=='undefined') this.themes=themes;
+		Object.assign(this, this.themes[this.theme]);
 		this.srcNodes = nodes || [];
 		this.srcLinks = links || [];
 		this.r = r || CORE_R;
@@ -914,6 +926,7 @@ export default class Calculator {
 		this.links = links;
 		this.nodes = nodes;
 		this.nodeLinks = nodeLinks;
+		this.watchMe.publish([this]);
 	}
 
 	moveNode(id: string, p: Cordinate) {
