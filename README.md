@@ -9,7 +9,8 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Usage](#Usage)
 - [LinkedNodeMap Types](#LinkedNodeMapTypes)
 - [Managing Events](#Events)
-- [Merging Changes](#MergingChanges)
+- [Merging Data Sets](#MergingData)
+- [Themes](#ThemeContext)
 - [Todo](#TODO)
 
 ## Features
@@ -299,11 +300,22 @@ Example showing how to get Events
 
 The helper method "MergeMapChanges" can be imported from 'linked-bundle-node-map'.  For a detailed example [see](https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/ThemeEventsReset/ThemeEventsReset.tsx).
 
-Import Example
+How to import MergeMapChanges
 
 ```
   import LinkedNodeMap, { FormContext, LinkedMapStatus, MergeMapChanges } from 'linked-bundle-node-map'
 ```
+
+## ThemeContext
+
+Themse are managed via a ThemeContext, the theme applies to 2 things.
+
+1. Css Class
+2. Data Structure
+
+The 2 css classes provided are: linked-node-map-dark and linked-node-map-light. See the css source file [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/LinkedSet.css).
+
+The default "themse" data structure source code is [here](https://github.com/akalinux/linked-bundle-node-map/blob/master/src/THEME_MAP.ts).
 
 ## TODO
 
