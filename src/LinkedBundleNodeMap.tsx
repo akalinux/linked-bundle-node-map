@@ -1,4 +1,3 @@
-
 import React, { useContext, forwardRef, useRef, useEffect, useSyncExternalStore, Fragment, useMemo } from 'react';
 import Calculator, { SetCalculatorData } from './Calculator';
 import ManageInstance from './ManageInstance';

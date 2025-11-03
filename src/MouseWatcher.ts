@@ -182,6 +182,8 @@ export default class MouseWatcher {
 				x: (x + dx),
 				y: (y + dy),
 			}
+      console.log({p,np,x,y});
+      
 			calc.moveCanvas(np);
 		}
 	}

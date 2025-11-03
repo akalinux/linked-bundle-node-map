@@ -884,6 +884,7 @@ export default class Calculator extends CalculatorBase {
   moveCanvas(p: Cordinate) {
     if (this.noChange) return;
     const { x, y } = p;
+    console.log(p)
     this.transform.x = x
     this.transform.y = y;
     this.fit = false;
@@ -891,8 +892,9 @@ export default class Calculator extends CalculatorBase {
   }
 
   translateCanvasYX(p: Cordinate, t = this.transform) {
-    const x = (p.x - t.x) / t.k;
-    const y = (p.y - t.y) / t.k;
+    const mod=1/t.k;
+    const x = (p.x - t.x) * mod
+    const y = (p.y - t.y) * mod;
     return { x, y } as Cordinate
   }
 }

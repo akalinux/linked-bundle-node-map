@@ -1,0 +1,14 @@
+{
+  "autoFit":true,
+  "grid":true,
+  "nodeOpts":{
+    "router":{"i":"./images/router_up.svg"},
+    "firewall":{"i":"./images/fwl_up.png"},
+    "server":{"i":"./images/server.svg"}
+  },
+  "linkOpts":{
+    "default":{"c":"#ADD8E6"},
+    "up":{"c":"green"},
+    "down":{"c":"lightpink"}
+  }
+}
