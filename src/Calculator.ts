@@ -19,7 +19,7 @@ import {
 	PointLookupResult,
 	BundleDraw,
 } from "./CommonTypes";
-import CalculatorBase,{CORE_R, FULL_CIRCLE, Rad2Deg} from "./CalculatorBase";
+import CalculatorBase,{CORE_R, FULL_CIRCLE, } from "./CalculatorBase";
 import ManageInstance from "./ManageInstance";
 import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 import ToolTipsProps from "./ToolTipsProps";
@@ -57,7 +57,6 @@ interface SetCalculatorData {
 }
 
 
-const TRIANGLE_MARGINE_FOR_ERROR = 1.00004;
 const SD: ['s', 'd'] = ['s', 'd']
 const CORE_SIZE = { width: 1920, height: 1080 }
 
@@ -137,6 +136,13 @@ export default class Calculator extends CalculatorBase {
 		this.theme=theme;
 		Object.assign(this, themes[theme]);
 	}
+	
+	computeLinePoint(s: Cordinate, r: number, a: number, slots: number, pos: number) {
+		const scale = 1 / (slots + 1);
+		const next = r * (pos + 1) * scale;
+		return this.getXY(s.x, s.y, next, a)
+	}
+
 
 	setData(dataSet: SetCalculatorData) {
 		const { tick, showReset, autoToolTip, toolTipData, changes, themes, theme, autoFit, noChange, size, nodes, links, nodeOpts, linkOpts, r, transform, grid } = dataSet;
@@ -651,7 +657,7 @@ export default class Calculator extends CalculatorBase {
 		return res;
 	}
 
-	lookupPoint(p: Cordinate,) {
+	lookupPoint(p: Cordinate) {
 		this.buildFullIndex();
 		const el = this.getIndex(p);
 		const res = this.defaultLookupResult(el.tp);
@@ -709,38 +715,6 @@ export default class Calculator extends CalculatorBase {
 		return res;
 	}
 
-	insideCircle(p: Cordinate, c: Cordinate, r: number) {
-		return (p.x - c.x) ** 2 + (p.y - c.y) ** 2 <= r ** 2;
-	}
-
-	triangleArea(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
-		return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) * .5)
-	}
-
-	insideBox(cb: ContainerBox, p: Cordinate) {
-		const { ne, nw, se, sw, } = cb;
-		// calculate the area of the boxy first
-		const width = this.getDistance(ne.x, ne.y, nw.x, nw.y);
-		const height = this.getDistance(ne.x, ne.y, se.x, se.y);
-		const boxArea = width * height * TRIANGLE_MARGINE_FOR_ERROR;
-
-		let triangleSum = 0;
-		const order = [ne, nw, sw, se, ne];
-		for (let id = 0; id < 4; ++id) {
-			const left = order[id];
-			const right = order[id + 1];
-			const area = this.triangleArea(p.x, p.y, left.x, left.y, right.x, right.y);
-			triangleSum += area;
-			if (triangleSum > boxArea) return false;
-		}
-		return true;
-	}
-
-	computeLinePoint(s: Cordinate, r: number, a: number, slots: number, pos: number) {
-		const scale = 1 / (slots + 1);
-		const next = r * (pos + 1) * scale;
-		return this.getXY(s.x, s.y, next, a)
-	}
 
 	drawLine(context: CanvasRenderingContext2D, s: Cordinate, d: Cordinate, c: string, w: number) {
 		context.beginPath();
