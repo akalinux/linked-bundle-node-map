@@ -32,6 +32,7 @@ export default class CalculateNodeXY extends CalculatorBase {
       this.computeTiled();
     }
   }
+  
   computeTiled() {
     const { nodes, todo } = this;
     const maxColumns = Math.floor(todo.length);
