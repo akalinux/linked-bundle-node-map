@@ -19,6 +19,7 @@ import {
 	PointLookupResult,
 	BundleDraw,
 } from "./CommonTypes";
+import CalculatorBase,{CORE_R, FULL_CIRCLE, Rad2Deg} from "./CalculatorBase";
 import ManageInstance from "./ManageInstance";
 import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 import ToolTipsProps from "./ToolTipsProps";
@@ -55,17 +56,16 @@ interface SetCalculatorData {
 	renderToolTipOptions?: ToolTipsProps;
 }
 
-const Rad2Deg = 180.0 / Math.PI;
-const FULL_CIRCLE = 2 * Math.PI;
+
 const TRIANGLE_MARGINE_FOR_ERROR = 1.00004;
 const SD: ['s', 'd'] = ['s', 'd']
 const CORE_SIZE = { width: 1920, height: 1080 }
-const CORE_R = 12;
+
 const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 
 export { type SetCalculatorData }
 
-export default class Calculator {
+export default class Calculator extends CalculatorBase {
 	showReset: boolean = false;
 	autoToolTip: boolean = true;
 	needsIndexing: boolean = false;
@@ -81,7 +81,7 @@ export default class Calculator {
 	fillColor: string = 'white';
 	theme: string = 'light';
 	shadeColor: string = 'lightgrey';
-	r: number = CORE_R;
+
 	mouseOverColor: string = 'lightblue';
 	stroke: string = 'black';
 	fill: string = 'black';
@@ -636,11 +636,7 @@ export default class Calculator {
 		return cb;
 	}
 
-	insideSquare(n: Cordinate, p: Cordinate, r = this.r) {
-		const dx = Math.abs(p.x - n.x);
-		const dy = Math.abs(p.y - n.y);
-		return (dx > r || dy > r) ? false : true;
-	}
+
 
 	defaultLookupResult(tp?: Cordinate) {
 		let co: Cordinate = { x: NaN, y: NaN };
@@ -810,38 +806,9 @@ export default class Calculator {
 		context.fillText(l, n.x + xo, n.y - yo);
 	}
 
-	GetAngle(x1: number, y1: number, x2: number, y2: number) {
-		const dx = x1 - x2,
-			dy = y1 - y2;
-
-		const base = Math.atan2(dy, dx) * Rad2Deg;//- 180;
-		if (base < 0) return base + 360.0;
-		return base;
-	}
-
-	getXY(cx: number, cy: number, r: number, degree: number) {
-		const rad = this.rad(degree);
-
-		const x = cx + r * Math.cos(rad);
-		const y = cy + r * Math.sin(rad);
-		const cd: Cordinate = { x, y };
-		return cd;
-	}
-
-	getDistance(x1: number, y1: number, x2: number, y2: number) {
-		return Math.sqrt(this.getDistanceSquare(x1, y1, x2, y2))
-	}
-
-	getDistanceSquare(x1: number, y1: number, x2: number, y2: number) {
-		return (x1 - x2) ** 2 + (y1 - y2) ** 2
-	}
 
 	getLineWith(l: { l: any[], [key: string]: any }) {
 		return this.boxWidth / (l.l.length * 2 + 1);
-	}
-
-	rad(degree: number) {
-		return degree * Math.PI / 180;
 	}
 
 	buildData() {
