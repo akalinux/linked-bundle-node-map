@@ -7,7 +7,7 @@ export default class CalculateNodeXY extends CalculatorBase {
   nodeDistance = 8;
   boxDistance = 4;
   mode: XYMode = 'tiled';
-  tileBy = 4;
+  ratio = 16/9;
 
   processNodes(list: PreNodeEl[]) {
     const groups: { [key: string | number]: number } = {};
@@ -32,17 +32,18 @@ export default class CalculateNodeXY extends CalculatorBase {
       this.computeTiled();
     }
   }
-  
+
   computeTiled() {
     const { nodes, todo } = this;
-    const maxColumns = Math.floor(todo.length);
+    const maxColumns = Math.ceil(Math.sqrt(todo.length) * this.ratio);
     let column = 0;
     let minY = 0;
     let minX = 0;
+    let row=0;
+    let maxY = 0;
     const distance = this.r * this.nodeDistance;
     const pad = this.r * this.boxDistance;
     for (let id = 0; id < todo.length; ++id) {
-      let maxY = minY;
       let maxX = 0;
 
       const list = todo[id];
@@ -52,20 +53,16 @@ export default class CalculateNodeXY extends CalculatorBase {
         const cy = r + minY + pad;
         const inc = 360 / list.length;
         for (let i = 0; i < list.length; ++i) {
-          const node = { ...list[i] } as NodeEl;
           const { x, y } = this.getXY(cx, cy, r, inc * i);
+          const node = { ...list[i], x, y } as NodeEl;
           if (maxX < x) maxX = x;
           if (maxY < y) maxY = y;
-          node.x = x;
-          node.y = y;
           nodes.push(node);
         }
       } else {
-        const node = { ...list[0] } as NodeEl;
         const x = minX = minX + pad;
         const y = minY + pad;
-        node.x = x;
-        node.y = y;
+        const node = { ...list[0], x, y } as NodeEl;
         nodes.push(node);
         if (maxX < x) maxX = x;
         if (maxY < y) maxY = y;
@@ -74,7 +71,8 @@ export default class CalculateNodeXY extends CalculatorBase {
       if (++column >= maxColumns) {
         minX = 0;
         column = 0;
-        minY = maxY + distance;
+        minY = maxY;
+        ++row;
       }
     }
   }

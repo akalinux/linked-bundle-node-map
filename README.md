@@ -41,6 +41,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Minimal Demo](https://akalinux.github.io/linked-bundle-node-map/?demo=min)
 - [Manual Tool tips & Bundles](https://akalinux.github.io/linked-bundle-node-map/?demo=ttb)
 - [Events and Themes](https://akalinux.github.io/linked-bundle-node-map/?demo=theme_reset_event)
+- [Generate Tiled Node layout](https://akalinux.github.io/linked-bundle-node-map/?demo=genXY)
 
 ## Installation
 
