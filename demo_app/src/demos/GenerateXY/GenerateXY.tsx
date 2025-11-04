@@ -1,7 +1,7 @@
 import LinkedNodeMap, { SetCalculatorData, CalculateNodeXY } from 'linked-bundle-node-map'
-import React, { useState } from 'react';
+import React from 'react';
 import '../MinimalDemo/min.css';
-import { PreNodeEl } from '../../../../dist/CommonTypes';
+import { PreNodeEl } from 'linked-bundle-node-map/dist/CommonTypes';
 import BaseOptions from './BaseOptions.json'
 const RawNodes: PreNodeEl[] = [];
 
