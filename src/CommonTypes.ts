@@ -71,10 +71,6 @@ interface LinkEl {
   o: string;
   b?: string[];
 	l?: string;
-  n?:{
-    s: NodeEl;
-    d: NodeEl;
-  };
 }
 interface LinkDraw {
   r?: number;

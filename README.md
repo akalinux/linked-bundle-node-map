@@ -142,12 +142,6 @@ interface LinkEl {
   
   // Optional human readable string representing the link
   l?: string;
-  
-  // Internally generated structure ( you can ignore this )
-  n?:{
-    s: NodeEl;
-    d: NodeEl;
-  };
 }
 
 
