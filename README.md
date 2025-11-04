@@ -26,13 +26,10 @@ This npm package was created to solve a few problems. This widget provides good 
 - Status mapping for nodes and links
 - Milti directional Link animations.
 - Data Merging utilities
-- Dynamically scale connections between nodes
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
 - Nodes, links, and bundles are rendered in a deterministic order
-- Map is drawn using canvas not svg ( even when loading custom images )
 - Deferred indexing, only created when needed
-- No Square roots are applied when looking up what a user is interacting with
 - Ref forwarding support allowing for screen shots, pdf generation etc..
 - Extensible Theme support, ( default light and dark ) add more as you see fit
 
