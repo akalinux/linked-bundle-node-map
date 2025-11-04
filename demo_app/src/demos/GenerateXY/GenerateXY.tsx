@@ -77,8 +77,8 @@ export default function ThemeEventsReset() {
           </ul>
         </div>
         <div className='noBlock' style={{ marginLeft: "10px" }}>
-          <p>This example creates xy positions based on grouping, of nodes by the tag or "t" field in the PreNodeEl data structure.
-          The default ratio for drawing tiles of grouped nodes is 16/9, this can be changed by setting the ratio option on the instance of CalculateNodeXY. </p>
+          This example creates xy positions based on grouping, of nodes by the tag or "t" field in the PreNodeEl data structure.<br />
+          The default ratio for drawing tiles of grouped nodes is 16/9, this can be changed by setting the ratio option on the instance of CalculateNodeXY. 
         </div>
       </div>
     </div>
