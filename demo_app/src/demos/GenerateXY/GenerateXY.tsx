@@ -12,7 +12,7 @@ function CreateNodes() {
   let setPos = -1;
   let setCount = 1;
   let setSize=sets[setId];
-  for (let i = 1; i < 50; ++i) {
+  for (let i = 1; i < 40; ++i) {
     const id = i.toString();
     ++setPos;
     

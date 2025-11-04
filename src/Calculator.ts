@@ -466,8 +466,10 @@ export default class Calculator extends CalculatorBase {
 
       if (!node.h) {
         this.drawNode(node);
-        const box = this.createNodeBox(node, r);
-        this.buildIndex(box, 'nodes', node);
+        if (!this.drag) {
+          const box = this.createNodeBox(node, r);
+          this.buildIndex(box, 'nodes', node);
+        }
       }
       const links = this.nodeLinks[node.i];
       if (!links) continue;
@@ -583,8 +585,10 @@ export default class Calculator extends CalculatorBase {
     const se = this.getXY(c.x, c.y, boxR, sa);
     const sw = this.getXY(p.x, p.y, boxR, sa);
     const bl = ls.bl = [] as { c: Cordinate, b: string }[];
-    const box = ls.box = { ne, nw, se, sw }
-    this.buildIndex(box, 'links', { i: ls.key });
+    if (!this.drag) {
+      const box = ls.box = { ne, nw, se, sw }
+      this.buildIndex(box, 'links', { i: ls.key });
+    }
     const bR = boxR - w * .5;
     ls.br = bR;
     for (let i = 0; i < b.length; ++i) {
@@ -891,9 +895,9 @@ export default class Calculator extends CalculatorBase {
   }
 
   translateCanvasYX(p: Cordinate, t = this.transform) {
-    const mod=1/t.k;
-    const px=p.x-t.x;
-    const py=p.y-t.y;
+    const mod = 1 / t.k;
+    const px = p.x - t.x;
+    const py = p.y - t.y;
     const x = px * mod
     const y = py * mod;
     return { x, y } as Cordinate
