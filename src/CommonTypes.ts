@@ -4,14 +4,17 @@ interface CoreSize {
   height: number;
 }
 
-interface NodeEl {
-  l: string;
+interface PreNodeEl {
+	l: string;
+	o: string;
+	i: string;
+	h?:boolean|number;
+	t?:any;
+}
+
+interface NodeEl extends PreNodeEl {
   x: number;
   y: number;
-  o: string;
-  i: string;
-  h?:boolean|number;
-	t?:any;
 }
 
 interface Cordinate {
@@ -176,6 +179,7 @@ export {
 	type MapChanges,
   type NodeEl, 
 	type NodeElOpt, 
-	type LinkEl
+	type LinkEl,
+	type PreNodeEl
 }
 

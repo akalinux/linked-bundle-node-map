@@ -5,11 +5,13 @@ import 'linked-bundle-node-map/dist/linked-bundle-node.css'
 import MinimalDemo from './demos/MinimalDemo/MinimalDemo';
 import ManualToolTipsAndBundles from './demos/ManualToolTipsAndBundles/ManualToolTipsAndBundles';
 import ThemeEventsReset from './demos/ThemeEventsReset/ThemeEventsReset';
+import GenerateXY from './demos/GenerateXY/GenerateXY';
 
 const maps: { [key: string]: () => React.ReactElement } = {
 	min: MinimalDemo,
 	ttb: ManualToolTipsAndBundles,
 	theme_reset_event: ThemeEventsReset,
+  genXY: GenerateXY,
 };
 const el = document.getElementById('app');
 if (el !== null) {
