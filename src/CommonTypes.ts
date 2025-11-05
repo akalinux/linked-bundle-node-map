@@ -1,15 +1,17 @@
-interface ToolTipData{[key:string]:{label:string,data?:string[]}}
+interface ToolTipData { [key: string]: { label: string, data?: string[] } }
+
+type NodeLinkChoice = 'links' | 'nodes';
 interface CoreSize {
   width: number;
   height: number;
 }
 
 interface PreNodeEl {
-	l: string;
-	o: string;
-	i: string;
-	h?:boolean|number;
-	t?:any;
+  l: string;
+  o: string;
+  i: string;
+  h?: boolean | number;
+  t?: any;
 }
 
 interface NodeEl extends PreNodeEl {
@@ -70,21 +72,40 @@ interface LinkEl {
   a: string;
   o: string;
   b?: string[];
-	l?: string;
+  l?: string;
 }
 interface LinkDraw {
   r?: number;
   l: LinkEl;
   s: Cordinate;
   d: Cordinate;
-  i?:string;
+  i?: string;
 };
 
 interface MapChanges {
   nodes: { [nodeId: string]: Cordinate; };
   transform: CoreTransform;
   grid: boolean;
-	tick: number;
+  tick: number;
+}
+
+
+interface LinkRenderCache{
+  links:{
+    start:Cordinate,
+    end: Cordinate,
+    c: string, // color
+    w: number, // width
+    aid:number // animation id
+  }[]
+  bunldes:{
+    p:Cordinate,
+    c: string, // color
+    bR: number, // Bunlde Radius
+  }[]
+};
+interface LinkRenerIndex {
+  [key:string]:number;
 }
 
 interface LinkSet {
@@ -103,9 +124,9 @@ interface LinkSet {
     b: string;
   }[];
   ll: LinkDraw[];
-  lr?: number|undefined;
-  br?: number|undefined;
-  d?: number|undefined;
+  lr?: number | undefined;
+  br?: number | undefined;
+  d?: number | undefined;
   box?: ContainerBox;
   lm: {
     [linkId: string]: LinkDraw;
@@ -124,12 +145,17 @@ interface BundleDraw {
   lr: number;
 }
 
+
+interface IndexSet {
+  nodes: string[];
+  links: string[];
+}
+
+type IndexLookupResult =IndexSet|null;
+
 interface NavIndex {
   [x: string]: {
-    [y: string]: {
-      nodes: string[];
-      links: string[];
-    };
+    [y: string]: IndexSet,
   };
 }
 
@@ -145,18 +171,18 @@ interface NodeLinks {
     };
   };
 }
-interface PointLookupResult  {
-    tp: Cordinate;
-    type: string;
-    node: null | NodeEl;
-    link: null | LinkDraw;
-    bundle: null | BundleDraw;
+interface PointLookupResult {
+  tp: Cordinate;
+  type: string;
+  node: null | NodeEl;
+  link: null | LinkDraw;
+  bundle: null | BundleDraw;
 }
 
-type DrawToolTipArgs={ id: string } & Cordinate|null
+type DrawToolTipArgs = { id: string } & Cordinate | null
 
-export { 
-	type ToolTipData,
+export {
+  type ToolTipData,
   type DrawToolTipArgs,
   type PointLookupResult,
   type NodeLinks,
@@ -164,18 +190,23 @@ export {
   type NavIndex,
   type Animation,
   type LinkElOpt,
-  type LinkSet, 
-	type BundleDraw, 
-	type LinkDraw, 
-	type CoreSize, 
-	type CanvasSets,
-  type CoreTransform, 
-	type Cordinate, 
-	type ContainerBox, 
-	type MapChanges,
-  type NodeEl, 
-	type NodeElOpt, 
-	type LinkEl,
-	type PreNodeEl
+  type LinkSet,
+  type BundleDraw,
+  type LinkDraw,
+  type CoreSize,
+  type CanvasSets,
+  type CoreTransform,
+  type Cordinate,
+  type ContainerBox,
+  type MapChanges,
+  type NodeEl,
+  type NodeElOpt,
+  type LinkEl,
+  type PreNodeEl,
+  type NodeLinkChoice,
+  type IndexLookupResult,
+  type IndexSet,
+  type LinkRenerIndex,
+  type LinkRenderCache,
 }
 
