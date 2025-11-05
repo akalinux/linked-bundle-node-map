@@ -89,6 +89,25 @@ interface MapChanges {
   tick: number;
 }
 
+
+interface LinkRenderCache{
+  links:{
+    start:Cordinate,
+    end: Cordinate,
+    c: string, // color
+    w: number, // width
+    aid:number // animation id
+  }[]
+  bunldes:{
+    p:Cordinate,
+    c: string, // color
+    bR: number, // Bunlde Radius
+  }[]
+};
+interface LinkRenerIndex {
+  [key:string]:number;
+}
+
 interface LinkSet {
   key: string;
   n: {
@@ -187,5 +206,7 @@ export {
   type NodeLinkChoice,
   type IndexLookupResult,
   type IndexSet,
+  type LinkRenerIndex,
+  type LinkRenderCache,
 }
 

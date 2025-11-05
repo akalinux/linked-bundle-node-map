@@ -19,9 +19,10 @@ import {
   PointLookupResult,
   BundleDraw,
   NodeLinkChoice,
+  LinkRenderCache,
+  LinkRenerIndex
 } from "./CommonTypes";
 import CalculatorBase, { CORE_R, FULL_CIRCLE, } from "./CalculatorBase";
-import ManageInstance from "./ManageInstance";
 import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 import ToolTipsProps from "./ToolTipsProps";
 import Indexer from "./Indexer";
@@ -65,8 +66,16 @@ const CORE_SIZE = { width: 1920, height: 1080 }
 const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 
 export { type SetCalculatorData }
-
+interface NodeToLinkMap {
+  [key:string]: {[key:string]:LinkSet}
+}
 export default class Calculator extends CalculatorBase {
+  rebuild = false;
+  createCache = false;
+  doDraw=true;
+  nodeToLinkMap: NodeToLinkMap={}
+  linkRenderCache: LinkRenderCache[] = [];
+  linkRenderIndex: LinkRenerIndex = {};
   showReset: boolean = false;
   autoToolTip: boolean = true;
   needsIndexing: boolean = false;
@@ -82,7 +91,7 @@ export default class Calculator extends CalculatorBase {
   fillColor: string = 'white';
   theme: string = 'light';
   shadeColor: string = 'lightgrey';
-  indexer: Indexer=new Indexer();
+  indexer: Indexer = new Indexer();
 
   mouseOverColor: string = 'lightblue';
   stroke: string = 'black';
@@ -131,7 +140,6 @@ export default class Calculator extends CalculatorBase {
   timeout: NodeJS.Timeout | undefined;
   animationTimer = 500;
   themes: ThemeOptionSets = THEME_MAP;
-  watchMe: ManageInstance<[Calculator]> = new ManageInstance<[Calculator]>([this], true);
 
   setTheme(theme: string = this.theme, themes: ThemeOptionSets = this.themes) {
     this.themes = themes;
@@ -181,9 +189,9 @@ export default class Calculator extends CalculatorBase {
   buildFullIndex() {
     if (!this.needsIndexing) return;
     const indexTodo = this.indexTodo;
-    this.indexer.indexSize=this.indexSize;
+    this.indexer.indexSize = this.indexSize;
     this.indexer.buildIndexes(indexTodo);
-    this.indexTodo=[];
+    this.indexTodo = [];
   }
 
   buildIndex(Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl) {
@@ -194,9 +202,9 @@ export default class Calculator extends CalculatorBase {
   getIndex(p: Cordinate, t = this.transform) {
     const tp = this.translateCanvasYX(p, t);
     this.buildFullIndex()
-    const res=this.indexer.lookup(tp);
+    const res = this.indexer.lookup(tp);
 
-    return res!=null ? { ...res, tp } : { tp, nodes: undefined, links: undefined };
+    return res != null ? { ...res, tp } : { tp, nodes: undefined, links: undefined };
   }
 
   getChanges() {
@@ -400,11 +408,7 @@ export default class Calculator extends CalculatorBase {
   }
 
   drawNodes() {
-    this.needsIndexing = true;
-    this.indexTodo = [];
-    this.indexer.reset();
-    this.linkCache = {};
-    this.animations = [];
+
     const { width, height } = this.initSize;
     const { srcNodes } = this;
     if (this.fit && srcNodes.length != 0) {
@@ -429,26 +433,56 @@ export default class Calculator extends CalculatorBase {
       canvas.height = height;
       context.setTransform(k, 0, 0, k, x, y);
     }
-    const drawnLinks: { [key: string]: number } = {};
-    for (let i = srcNodes.length - 1; i > -1; --i) {
-      const node = nodes[srcNodes[i].i];
+    if (this.createCache) {
+      this.needsIndexing = true;
+      this.indexTodo = [];
+      this.linkCache = {};
+      this.animations = [];
+      const drawnLinks: { [key: string]: number } = {};
+      for (let i = srcNodes.length - 1; i > -1; --i) {
+        const node = nodes[srcNodes[i].i];
 
-      if (!node.h) {
-        this.drawNode(node);
-        if (!this.drag) {
-          const box = this.createNodeBox(node, r);
-          this.buildIndex(box, 'nodes', node);
+        if (!node.h) {
+          this.drawNode(node);
+          if (!this.drag) {
+            const box = this.createNodeBox(node, r);
+            this.buildIndex(box, 'nodes', node);
+          }
+        }
+        const links = this.nodeLinks[node.i];
+        if (!links) continue;
+        const { order, sets } = links;
+        for (let idx = order.length - 1; idx > -1; --idx) {
+          const key = order[idx];
+          if (drawnLinks[key]) continue;
+          drawnLinks[key] = 1;
+          this.drawLink(sets[key]);
         }
       }
-      const links = this.nodeLinks[node.i];
-      if (!links) continue;
-      const { order, sets } = links;
-      for (let idx = order.length - 1; idx > -1; --idx) {
-        const key = order[idx];
-        if (drawnLinks[key]) continue;
-        drawnLinks[key] = 1;
-        this.drawLink(sets[key]);
+      this.createCache = false;
+    } else {
+      for (let i = srcNodes.length - 1; i > -1; --i) {
+        const node = nodes[srcNodes[i].i];
+        if (!node.h) {
+          this.drawNode(node);
+        }
       }
+      const { links, bundles } = this.contexts;
+      const { linkRenderCache } = this;
+      for (let i = 0; i < linkRenderCache.length; ++i) {
+        const todo = linkRenderCache[i];
+        const l = todo.links;
+        const b = todo.bunldes;
+        for (let id = 0; id < l.length; ++id) {
+          const { start, end, c, w } = l[id];
+          this.drawLine(links, start, end, c, w);
+        }
+        for (let id = 0; id < b.length; ++id) {
+          const { c, p, bR } = b[id];
+          this.drawCircle(bundles, p, c, bR);
+        }
+      }
+
     }
     this.drawAllAnimations();
     clearTimeout(this.timeout);
@@ -491,8 +525,8 @@ export default class Calculator extends CalculatorBase {
   }
 
   drawLink(ls: LinkSet) {
+    if (ls.l.length == 0) return;
     const { l, n, b } = ls;
-    if (l.length == 0) return;
     const w = this.getLineWith(ls);
     const p = this.nodes[n.s]
     const c = this.nodes[n.d]
@@ -509,6 +543,10 @@ export default class Calculator extends CalculatorBase {
     const ll = ls.ll = [] as LinkDraw[];
     const d = this.getDistance(p.x, p.y, c.x, c.y);
     ls.lr = w * .5;
+    const renderSet: LinkRenderCache = {
+      links: [],
+      bunldes: [],
+    }
     for (let i = 0; i < l.length; ++i) {
       const link = l[i];
       const r = o + i * incBy;
@@ -516,10 +554,15 @@ export default class Calculator extends CalculatorBase {
       const end = this.getXY(nw.x, nw.y, r, sa);
       const c = linkOpts[link.o].c
 
-      this.drawLine(links, start, end, c, w);
+      if(this.doDraw) this.drawLine(links, start, end, c, w);
       const lmv: LinkDraw = { i: link.i, s: start, d: end, l: link };
       ll.push(ls.lm[link.i] = lmv);
       const as = { s: { a: ba, s: start }, d: { a: da, s: end } };
+      let aid = this.rebuild ?
+        this.linkRenderCache[this.linkRenderIndex[ls.key]].links[i].aid :
+        this.animations.length;
+
+      renderSet.links.push({ start, end, c, w, aid });
       if (link.a) {
         const { a } = link;
         if (a == 's' || a == 'd') {
@@ -532,7 +575,7 @@ export default class Calculator extends CalculatorBase {
             w: w * .75,
             o: i,
           }
-          this.animations.push(animate);
+          this.animations[aid++] = animate;
 
         } else if (a == 'b') {
           for (let i = 0; i < SD.length; ++i) {
@@ -546,7 +589,7 @@ export default class Calculator extends CalculatorBase {
               f: i ? c : this.bgColor,
               w: w * .75,
             }
-            this.animations.push(animate);
+            this.animations[aid++] = animate;
           }
         }
       }
@@ -563,10 +606,21 @@ export default class Calculator extends CalculatorBase {
     for (let i = 0; i < b.length; ++i) {
       const pos = this.computeLinePoint(p, d, ba + 180, b.length, i);
       bl.push({ c: pos, b: b[i] });
-      this.drawCircle(bundles, pos, this.bundleColor, bR)
-      this.drawCircle(bundles, pos, this.bundleColor, bR / 1.5)
-      this.drawCircle(bundles, pos, this.bundleColor, bR / 4,)
+
+      renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR })
+      if(this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bR)
+
+      const bi = bR / 1.5;
+      if(this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bi)
+      renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR: bi })
+
+      const bx = bR / 4;
+      if(this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bx)
+      renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR: bx })
     }
+    const next = this.rebuild ? this.linkRenderIndex[ls.key] : this.linkRenderCache.length;
+    this.linkRenderCache[next] = renderSet;
+    this.linkRenderIndex[ls.key]=next;
   }
 
   drawAinimation(context: CanvasRenderingContext2D, animation: Animation) {
@@ -760,7 +814,11 @@ export default class Calculator extends CalculatorBase {
 
   buildData() {
     this.indexer.reset();
-    /** @type {LinkSets} */
+    this.linkRenderCache = [];
+    this.linkRenderIndex = {};
+    const nodeLinkMap: NodeToLinkMap=this.nodeToLinkMap={};
+    this.rebuild = false;
+    this.createCache = true;
     const links: LinkSets = {};
     const nodes: { [id: string]: NodeEl } = {};
     const nodeLinks: NodeLinks = {};
@@ -771,10 +829,8 @@ export default class Calculator extends CalculatorBase {
     }
     for (let i = 0; i < srcNodes.length; ++i) {
       const node = srcNodes[i];
-      if (typeof node.i == "undefined") throw new Error(`Bad node, no i in srcNodes[${i}]`)
-      if (typeof node.x != 'number' || typeof node.y != "number") throw (new Error(`invalid x or y value in srcNodes[${i}]`));
-      if (!node.l) throw new Error(`Bad node, no l in srcNodes[${i}]`)
-      if (!node.o || !nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
+      nodeLinkMap[node.i]={};
+      if (!nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
       if (nodes[node.i]) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
       nodes[node.i] = node;
@@ -800,15 +856,19 @@ export default class Calculator extends CalculatorBase {
     const sane: { [id: string]: LinkEl } = this.rawLinks = {};
     for (let i = 0; i < srcLinks.length; ++i) {
       const link = srcLinks[i];
-      if (typeof link.i == 'undefined') throw new Error(`bad link in srcLinks[${i}], no i`);
       if (sane[link.i]) throw new Error(`Duplicate link.i ${link.i} in srcLinks[${i}`);
       sane[link.i] = link;
-      if (!link.o || !linkOpts[link.o] || !linkOpts[link.o].c) throw new Error(`missing inkin opions in: srcLinks[${i}]`)
-      if (typeof link.s == 'undefined' || !nodes[link.s] || typeof link.d == 'undefined' || !nodes[link.d] || link.s == link.d)
+      if (!linkOpts[link.o]) throw new Error(`missing linkOpt in: srcLinks[${i}]`)
+      if (!nodes[link.s] || !nodes[link.d] || link.s == link.d)
         throw new Error(`Bad link in srcNodes[${i}], missing node(s)`)
+   
       const key = link.s > link.d ? (link.d + ',' + link.s) : (link.s + ',' + link.d);
       const set = links[key] || (links[key] = { bl: [], ll: [], lm: {}, l: [], b: [], s: {}, key, n: { s: link.s, d: link.d } });
       const { sets, order } = (nodeLinks[link.s] || (nodeLinks[link.s] = { sets: {}, order: [] }));
+      
+      nodeLinkMap[link.s][link.i]=set
+      nodeLinkMap[link.d][link.i]=set;
+      
       if (!sets[key]) {
         sets[key] = set;
         order.push(key);
@@ -820,7 +880,6 @@ export default class Calculator extends CalculatorBase {
       const { l, b, s } = set;
       l.push(link);
       if (!link.b) continue;
-      if (!Array.isArray(link.b)) throw new Error(`Bad Bundle in srcLinks[${i}], b must be an array of strings`);
       for (const tb of link.b) {
         const ttKey = `bundle-${key},${tb}`;
         if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
@@ -840,8 +899,6 @@ export default class Calculator extends CalculatorBase {
     this.links = links;
     this.nodes = nodes;
     this.nodeLinks = nodeLinks;
-    console.log(nodeLinks)
-    this.watchMe.publish([this]);
   }
 
   moveNode(id: string, p: Cordinate) {
@@ -850,6 +907,27 @@ export default class Calculator extends CalculatorBase {
     const node = this.nodes[id];
     this.changes.nodes[id] = p;
     this.nodes[id] = { ...node, x: p.x, y: p.y };
+    if (!this.drag) {
+      this.needsIndexing = true;
+      const box = this.createNodeBox(p, this.r);
+      this.buildIndex(box, 'nodes', node);
+      this.rebuild = true;
+      for(const [key,link] of Object.entries(this.nodeToLinkMap[node.i])){
+        this.indexer.cleaIndex("links",key);
+        this.drawLink(link);
+        delete this.linkCache[key];
+      }
+      this.rebuild = false;
+    } else {
+      
+      this.doDraw=false;
+      this.rebuild=true;
+      for(const link of Object.values(this.nodeToLinkMap[node.i])){
+        this.drawLink(link);
+      }
+      this.rebuild=false;
+      this.doDraw=true;
+    }
 
     this.needsMinMax = true;
     this.draw();

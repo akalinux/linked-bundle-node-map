@@ -192,16 +192,18 @@ export default class MouseWatcher {
     const dt = this.dragTarget;
     this.dragTarget = null;
     this.tp = null;
-    this.calc.forceDraw();
     if (this.calc.noChange) return;
     const data = this.calc.getChanges();
     let event;
     if (dt !== null && typeof dt != 'undefined' && dt.node !== null) {
       event = new NodeChange({ data: dt, tag: `node-${dt.node.i}` });
       event.name = 'NodeDrag';
+      this.calc.drag=false;
+      this.calc.moveNode(dt.node.i,data.nodes[dt.node.i]);
     } else {
       event = new OnChange({ data, tag: 'onMapDrag' });
     }
+    this.calc.forceDraw();
     this.SC.sendEvent(event, data);
   }
 

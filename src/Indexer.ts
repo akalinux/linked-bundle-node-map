@@ -6,7 +6,7 @@ export default class Indexer extends CalculatorBase {
   indexSize: number = 48;
   indexes: NavIndex = {};
   indexMap: { nodes: IdxMaps, links: IdxMaps } = { links: {}, nodes: {} };
-  
+
   reset() {
     this.indexes = {};
     this.indexMap = { links: {}, nodes: {} };
@@ -30,8 +30,8 @@ export default class Indexer extends CalculatorBase {
       const { x, y, i } = todo[idx];
       const yIdx = indexes[x][y][target];
       yIdx.splice(i, 1);
-      if (yIdx.length == 0) delete indexes[x][y][target];
-      if (Object.keys(indexes[x][y]).length == 0) delete indexes[x][y];
+
+      if (indexes[x][y].links.length == 0 && indexes[x][y].nodes.length == 0) delete indexes[x][y];
       if (Object.keys(indexes[x]).length == 0) delete indexes[x];
     }
   }
@@ -60,7 +60,8 @@ export default class Indexer extends CalculatorBase {
     for (let x = startX; x <= endX; x += indexSize) {
       const index = indexes[x] || (indexes[x] = {});
       for (let y = startY; y <= endY; y += indexSize) {
-        const set = index[y] || (index[y] = { nodes: [], links: [] })
+        const set = index[y] || (index[y] = { nodes: [], links: [] });
+        set[target] || (set[target] = []);
         let idx = set[target].push(obj.i) - 1;
         const list = indexMap[target][obj.i] || (indexMap[target][obj.i] = []);
         list.push({ x, y, i: idx });
