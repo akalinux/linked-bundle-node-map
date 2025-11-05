@@ -18,13 +18,15 @@ import {
   LinkDraw,
   PointLookupResult,
   BundleDraw,
+  NodeLinkChoice,
 } from "./CommonTypes";
 import CalculatorBase, { CORE_R, FULL_CIRCLE, } from "./CalculatorBase";
 import ManageInstance from "./ManageInstance";
 import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 import ToolTipsProps from "./ToolTipsProps";
+import Indexer from "./Indexer";
 
-type NodeLinkChoice = 'links' | 'nodes';
+
 interface LinkSets { [key: string]: LinkSet }
 
 interface SetCalculatorData {
@@ -80,6 +82,7 @@ export default class Calculator extends CalculatorBase {
   fillColor: string = 'white';
   theme: string = 'light';
   shadeColor: string = 'lightgrey';
+  indexer: Indexer=new Indexer();
 
   mouseOverColor: string = 'lightblue';
   stroke: string = 'black';
@@ -94,7 +97,6 @@ export default class Calculator extends CalculatorBase {
   }
   animations: Animation[] = [];
   fit: boolean = false;
-  indexes: NavIndex = {};
   canvases: CanvasSets = {
     ctrl: null, nodes: null, bundles: null, animations: null, links: null
   }
@@ -179,37 +181,9 @@ export default class Calculator extends CalculatorBase {
   buildFullIndex() {
     if (!this.needsIndexing) return;
     const indexTodo = this.indexTodo;
-    this.needsIndexing = false;
-    this.indexTodo = [];
-    for (let tid = 0; tid < indexTodo.length; ++tid) {
-      const { Cs, target, obj } = indexTodo[tid];
-      const { ne, nw, se, sw } = Cs;
-      let minX = ne.x, maxX = ne.x, maxY = ne.y, minY = ne.y;
-      const list = [nw, se, sw];
-      for (let i = 0; i < 3; ++i) {
-        const c = list[i];
-        if (c.x < minX) minX = c.x
-        if (c.y < minY) minY = c.y
-        if (c.x > maxX) maxX = c.x
-        if (c.y > maxY) maxY = c.y
-      }
-      const sx = Math.round(minX);
-      const ex = Math.round(maxX)
-      const { indexSize, indexes } = this;
-      const startX = sx - sx % indexSize;
-      const endX = ex - ex % indexSize;
-      const sy = Math.round(minY);
-      const ey = Math.round(maxY);
-      const startY = sy - sy % indexSize;
-      const endY = ey - ey % indexSize;
-      for (let x = startX; x <= endX; x += indexSize) {
-        const index = indexes[x] || (indexes[x] = {});
-        for (let y = startY; y <= endY; y += indexSize) {
-          const set = index[y] || (index[y] = { nodes: [], links: [] })
-          set[target].push(obj.i);
-        }
-      }
-    }
+    this.indexer.indexSize=this.indexSize;
+    this.indexer.buildIndexes(indexTodo);
+    this.indexTodo=[];
   }
 
   buildIndex(Cs: ContainerBox, target: NodeLinkChoice, obj: HasIdEl) {
@@ -218,16 +192,11 @@ export default class Calculator extends CalculatorBase {
   }
 
   getIndex(p: Cordinate, t = this.transform) {
-    const { indexSize, indexes } = this;
     const tp = this.translateCanvasYX(p, t);
-    const rx = Math.round(tp.x);
-    const x = rx - rx % indexSize;
-    this.buildFullIndex();
-    if (!indexes.hasOwnProperty(x)) return { tp };
-    const lx = indexes[x];
-    const ry = Math.round(tp.y);
-    const y = ry - ry % indexSize;
-    return lx.hasOwnProperty(y) ? { ...lx[y], tp } : { tp, nodes: undefined, links: undefined };
+    this.buildFullIndex()
+    const res=this.indexer.lookup(tp);
+
+    return res!=null ? { ...res, tp } : { tp, nodes: undefined, links: undefined };
   }
 
   getChanges() {
@@ -433,7 +402,7 @@ export default class Calculator extends CalculatorBase {
   drawNodes() {
     this.needsIndexing = true;
     this.indexTodo = [];
-    this.indexes = {};
+    this.indexer.reset();
     this.linkCache = {};
     this.animations = [];
     const { width, height } = this.initSize;
@@ -790,7 +759,7 @@ export default class Calculator extends CalculatorBase {
   }
 
   buildData() {
-    this.indexes = {};
+    this.indexer.reset();
     /** @type {LinkSets} */
     const links: LinkSets = {};
     const nodes: { [id: string]: NodeEl } = {};
@@ -871,6 +840,7 @@ export default class Calculator extends CalculatorBase {
     this.links = links;
     this.nodes = nodes;
     this.nodeLinks = nodeLinks;
+    console.log(nodeLinks)
     this.watchMe.publish([this]);
   }
 

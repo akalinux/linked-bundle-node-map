@@ -145,7 +145,7 @@ it('index builder test',()=>{
   let node=sl.createNodeBox({x:2.5,y:2.5},1);
   sl.buildIndex(node,'nodes',{i:'test-node'});
 	sl.needsIndexing=true;
-  console.log(sl.indexes)
+  console.log(sl.indexer.indexes)
   let check=sl.getIndex({x:0,y:0});
   console.log(check)
   expect(check).not.toBeNull();
@@ -158,6 +158,7 @@ it('index builder test',()=>{
 
   check=sl.getIndex({x:0,y:0});
   expect(check.nodes!).toBeDefined();
+  console.log(check);
   expect(check.nodes!.length).toBe(2);
   check=sl.getIndex({x:10,y:10});
   expect(check).not.toBeNull();
