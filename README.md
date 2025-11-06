@@ -11,7 +11,6 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Managing Events](#Events)
 - [Merging Data Sets](#MergingData)
 - [Themes](#ThemeContext)
-- [Todo](#TODO)
 
 ## Features
 
@@ -311,7 +310,3 @@ The 2 css classes provided are: linked-node-map-dark and linked-node-map-light. 
   import LinkedNodeMap, { ThemeContext } from 'linked-bundle-node-map'
 ```
 
-## TODO
-
-1. Provide More examples
-2. Fully Document the code
