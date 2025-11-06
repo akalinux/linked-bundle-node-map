@@ -4,7 +4,6 @@ import {
   CoreSize, CanvasSets,
   CoreTransform,
   ContainerBox,
-  NavIndex,
   MapChanges,
   NodeEl,
   LinkEl,
@@ -29,6 +28,7 @@ import Indexer from "./Indexer";
 
 
 interface LinkSets { [key: string]: LinkSet }
+
 
 interface SetCalculatorData {
   toolTipData?: ToolTipData,
@@ -67,13 +67,13 @@ const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 
 export { type SetCalculatorData }
 interface NodeToLinkMap {
-  [key:string]: {[key:string]:LinkSet}
+  [key: string]: { [key: string]: LinkSet }
 }
 export default class Calculator extends CalculatorBase {
   rebuild = false;
   createCache = false;
-  doDraw=true;
-  nodeToLinkMap: NodeToLinkMap={}
+  doDraw = true;
+  nodeToLinkMap: NodeToLinkMap = {}
   linkRenderCache: LinkRenderCache[] = [];
   linkRenderIndex: LinkRenerIndex = {};
   showReset: boolean = false;
@@ -554,7 +554,7 @@ export default class Calculator extends CalculatorBase {
       const end = this.getXY(nw.x, nw.y, r, sa);
       const c = linkOpts[link.o].c
 
-      if(this.doDraw) this.drawLine(links, start, end, c, w);
+      if (this.doDraw) this.drawLine(links, start, end, c, w);
       const lmv: LinkDraw = { i: link.i, s: start, d: end, l: link };
       ll.push(ls.lm[link.i] = lmv);
       const as = { s: { a: ba, s: start }, d: { a: da, s: end } };
@@ -608,19 +608,19 @@ export default class Calculator extends CalculatorBase {
       bl.push({ c: pos, b: b[i] });
 
       renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR })
-      if(this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bR)
+      if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bR)
 
       const bi = bR / 1.5;
-      if(this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bi)
+      if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bi)
       renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR: bi })
 
       const bx = bR / 4;
-      if(this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bx)
+      if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bx)
       renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR: bx })
     }
     const next = this.rebuild ? this.linkRenderIndex[ls.key] : this.linkRenderCache.length;
     this.linkRenderCache[next] = renderSet;
-    this.linkRenderIndex[ls.key]=next;
+    this.linkRenderIndex[ls.key] = next;
   }
 
   drawAinimation(context: CanvasRenderingContext2D, animation: Animation) {
@@ -816,7 +816,7 @@ export default class Calculator extends CalculatorBase {
     this.indexer.reset();
     this.linkRenderCache = [];
     this.linkRenderIndex = {};
-    const nodeLinkMap: NodeToLinkMap=this.nodeToLinkMap={};
+    const nodeLinkMap: NodeToLinkMap = this.nodeToLinkMap = {};
     this.rebuild = false;
     this.createCache = true;
     const links: LinkSets = {};
@@ -829,7 +829,7 @@ export default class Calculator extends CalculatorBase {
     }
     for (let i = 0; i < srcNodes.length; ++i) {
       const node = srcNodes[i];
-      nodeLinkMap[node.i]={};
+      nodeLinkMap[node.i] = {};
       if (!nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
       if (nodes[node.i]) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
@@ -861,14 +861,14 @@ export default class Calculator extends CalculatorBase {
       if (!linkOpts[link.o]) throw new Error(`missing linkOpt in: srcLinks[${i}]`)
       if (!nodes[link.s] || !nodes[link.d] || link.s == link.d)
         throw new Error(`Bad link in srcNodes[${i}], missing node(s)`)
-   
+
       const key = link.s > link.d ? (link.d + ',' + link.s) : (link.s + ',' + link.d);
       const set = links[key] || (links[key] = { bl: [], ll: [], lm: {}, l: [], b: [], s: {}, key, n: { s: link.s, d: link.d } });
       const { sets, order } = (nodeLinks[link.s] || (nodeLinks[link.s] = { sets: {}, order: [] }));
-      
-      nodeLinkMap[link.s][link.i]=set
-      nodeLinkMap[link.d][link.i]=set;
-      
+
+      nodeLinkMap[link.s][link.i] = set
+      nodeLinkMap[link.d][link.i] = set;
+
       if (!sets[key]) {
         sets[key] = set;
         order.push(key);
@@ -909,28 +909,50 @@ export default class Calculator extends CalculatorBase {
     this.nodes[id] = { ...node, x: p.x, y: p.y };
     if (!this.drag) {
       this.needsIndexing = true;
-      const box = this.createNodeBox(p, this.r);
-      this.buildIndex(box, 'nodes', node);
+      if (!node.h) {
+        const box = this.createNodeBox(p, this.r);
+        this.buildIndex(box, 'nodes', node);
+      }
       this.rebuild = true;
-      for(const [key,link] of Object.entries(this.nodeToLinkMap[node.i])){
-        this.indexer.cleaIndex("links",key);
+      for (const [key, link] of Object.entries(this.nodeToLinkMap[node.i])) {
+        this.indexer.cleaIndex("links", key);
         this.drawLink(link);
         delete this.linkCache[key];
       }
       this.rebuild = false;
     } else {
-      
-      this.doDraw=false;
-      this.rebuild=true;
-      for(const link of Object.values(this.nodeToLinkMap[node.i])){
+
+      this.doDraw = false;
+      this.rebuild = true;
+      for (const link of Object.values(this.nodeToLinkMap[node.i])) {
         this.drawLink(link);
       }
-      this.rebuild=false;
-      this.doDraw=true;
+      this.rebuild = false;
+      this.doDraw = true;
     }
 
     this.needsMinMax = true;
     this.draw();
+  }
+
+  moveLink(res: PointLookupResult, o: Cordinate) {
+    const list: NodeEl[] = [];
+
+    if (res.type == 'link') {
+      list.push(this.nodes[res.link!.l.s]);
+      list.push(this.nodes[res.link!.l.d]);
+    } else {
+      list.push(this.nodes[res.bundle!.s]);
+      list.push(this.nodes[res.bundle!.d]);
+    }
+    for (let id = 0; id < list.length; ++id) {
+      const { x, y, i } = list[id];
+      const p: Cordinate = {
+        x: x + o.x,
+        y: y + o.y,
+      }
+      this.moveNode(i, p);
+    }
   }
 
   moveCanvas(p: Cordinate) {

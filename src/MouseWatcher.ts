@@ -4,8 +4,6 @@ import Calculator from './Calculator';
 import { StatusContextInterface, OnChange, OnClick, NodeChange } from './FormContext';
 
 export default class MouseWatcher {
-
-
   constructor(calc: Calculator, SC: StatusContextInterface) {
     this.calc = calc;
     this.SC = SC;
@@ -13,7 +11,7 @@ export default class MouseWatcher {
   SC: StatusContextInterface;
   mounted = false;
   timer = 400;
-  transform: CoreTransform={x:0,y:0,k:1}
+  transform: CoreTransform = { x: 0, y: 0, k: 1 }
 
   calc: Calculator;
   div: HTMLDivElement | undefined;
@@ -156,31 +154,49 @@ export default class MouseWatcher {
     }
   }
 
+  lastTp: Cordinate={x:0,y:0};
   onDragStart() {
     if (this.drag === null) return;
     const res = this.calc.lookupPoint(this.drag as Cordinate);
-    this.transform={...this.calc.transform}
+    this.transform = { ...this.calc.transform }
 
     this.calc.drag = true;
-    this.tp = res.tp;
+    this.lastTp=this.tp = res.tp;
     if (res.type != 'none') {
       this.dragTarget = res;
     }
   }
 
-  onDrag(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  getMoveDiff(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const pos = this.buildXY(e);
-    const { calc } = this;
+    const { drag } = this;
+    const xDiff = pos.x - drag!.x;
+    const yDiff = pos.y - drag!.y;
+    return { xDiff, yDiff, pos };
+  }
 
-    if (this.dragTarget && this.dragTarget.type == 'node') {
+  onDrag(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    const { calc, dragTarget } = this;
+
+    if (dragTarget) {
+      const pos = this.buildXY(e);
       const p = calc.translateCanvasYX(pos);
-      calc.moveNode(this.dragTarget.node!.i, p);
+      if (dragTarget.type == 'node') {
+        calc.moveNode(dragTarget.node!.i, p);
+      } else {
+        const p = calc.translateCanvasYX(pos);
+        const {lastTp}=this;
+        const diff: Cordinate={
+          x: p.x - lastTp.x,
+          y: p.y - lastTp.y,
+        }
+        calc.moveLink(dragTarget, diff);
+        this.lastTp=p;
+      }
     } else {
-      const { drag} = this;
-      const {x,y}=this.transform;
-      const xDiff=pos.x - drag!.x;
-      const yDiff=pos.y - drag!.y;
-      const sx={
+      const { xDiff, yDiff } = this.getMoveDiff(e);
+      const { x, y } = this.transform;
+      const sx = {
         x: xDiff + x,
         y: yDiff + y,
       }
@@ -195,11 +211,26 @@ export default class MouseWatcher {
     if (this.calc.noChange) return;
     const data = this.calc.getChanges();
     let event;
-    if (dt !== null && typeof dt != 'undefined' && dt.node !== null) {
-      event = new NodeChange({ data: dt, tag: `node-${dt.node.i}` });
-      event.name = 'NodeDrag';
-      this.calc.drag=false;
-      this.calc.moveNode(dt.node.i,data.nodes[dt.node.i]);
+    if (dt) {
+      this.calc.drag = false;
+      if (dt.type == 'node') {
+        event = new NodeChange({ data: dt, tag: `node-${dt.node!.i}` });
+        event.name = 'NodeDrag';
+        this.calc.moveNode(dt.node!.i, data.nodes[dt.node!.i]);
+      } else {
+        let tag = '';
+        this.calc.moveLink(dt, {x:0,y:0});
+        let name='';
+        if (dt.type == 'link') {
+          tag = `link-${dt.link!.l.i}`
+          name='OnLinkChange'
+        } else {
+          name='OnBundleChange'
+          tag = `bundle-${dt.bundle!.i}`
+        }
+        event = new OnChange({ data, tag });
+        event.name=name;
+      }
     } else {
       event = new OnChange({ data, tag: 'onMapDrag' });
     }
