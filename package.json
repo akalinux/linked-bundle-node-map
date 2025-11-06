@@ -12,7 +12,6 @@
     "testapp": "cd demo_app;npm run build",
     "tw": "cd demo_app;npm run watch",
     "clean": "rm -rf dist public/js||/bin/true",
-    "publish":"npm run clean && npm run test && npm run build && npm run deploy && npm publish",
     "deploy": "npm run build && bash -c 'cd  demo_app;npm run build'; gh-pages -d public",
     "test": "jest",
     "push":"npm run clean && npm run test && npm run build && npm run publish && npm run deploy"
