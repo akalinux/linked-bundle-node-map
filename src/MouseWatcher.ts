@@ -209,7 +209,6 @@ export default class MouseWatcher {
   onDragEnd() {
     const dt = this.dragTarget;
     this.dragTarget = null;
-    const tp = this.tp;
     this.tp = null;
     if (this.calc.noChange) return;
     const data = this.calc.getChanges();
@@ -223,14 +222,16 @@ export default class MouseWatcher {
       } else {
         let tag = '';
         this.calc.moveLink(dt, {x:0,y:0});
+        let name='';
         if (dt.type == 'link') {
           tag = `link-${dt.link!.l.i}`
+          name='OnLinkChange'
         } else {
-
+          name='OnBundleChange'
           tag = `bundle-${dt.bundle!.i}`
         }
         event = new OnChange({ data, tag });
-
+        event.name=name;
       }
     } else {
       event = new OnChange({ data, tag: 'onMapDrag' });
