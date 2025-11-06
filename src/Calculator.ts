@@ -4,7 +4,6 @@ import {
   CoreSize, CanvasSets,
   CoreTransform,
   ContainerBox,
-  NavIndex,
   MapChanges,
   NodeEl,
   LinkEl,
@@ -29,6 +28,7 @@ import Indexer from "./Indexer";
 
 
 interface LinkSets { [key: string]: LinkSet }
+
 
 interface SetCalculatorData {
   toolTipData?: ToolTipData,
@@ -820,7 +820,7 @@ export default class Calculator extends CalculatorBase {
     this.rebuild = false;
     this.createCache = true;
     const links: LinkSets = {};
-    const nodes: { [id: string]: NodeEl } = {};
+    const nodes: { [id: string]: NodeEl} = {};
     const nodeLinks: NodeLinks = {};
     const { linkOpts, nodeOpts, minMax, srcNodes, srcLinks, autoToolTip, toolTipData } = this;
 
@@ -931,6 +931,26 @@ export default class Calculator extends CalculatorBase {
 
     this.needsMinMax = true;
     this.draw();
+  }
+  
+  moveLink(res: PointLookupResult,o: Cordinate) {
+    const list:NodeEl[]=[];
+    
+    if(res.type=='link') {
+      list.push(this.nodes[res.link!.l.s]);
+      list.push(this.nodes[res.link!.l.d]);
+    } else {
+      list.push(this.nodes[res.bundle!.s]);
+      list.push(this.nodes[res.bundle!.d]);
+    }
+    for(let id=0;id<list.length;++id) {
+      const {x,y,i}=list[id];
+      const p: Cordinate={
+        x: x + o.x,
+        y: y + o.y,
+      }
+      this.moveNode(i,p);
+    }
   }
 
   moveCanvas(p: Cordinate) {
