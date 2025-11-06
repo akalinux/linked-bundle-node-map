@@ -4,8 +4,6 @@ import Calculator from './Calculator';
 import { StatusContextInterface, OnChange, OnClick, NodeChange } from './FormContext';
 
 export default class MouseWatcher {
-
-
   constructor(calc: Calculator, SC: StatusContextInterface) {
     this.calc = calc;
     this.SC = SC;
