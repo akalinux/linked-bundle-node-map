@@ -1,6 +1,6 @@
 {
   "name": "linked-bundle-node-map",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/bundle.js",
   "types": "dist/LinkedBundleNodeMap.d.ts",
   "funding":"https://github.com/sponsors/akalinux",
