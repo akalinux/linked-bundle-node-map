@@ -3,6 +3,7 @@
   "version": "1.0.3",
   "main": "dist/bundle.js",
   "types": "dist/LinkedBundleNodeMap.d.ts",
+  "funding":"https://github.com/sponsors/akalinux",
   "homepage": "https://github.com/akalinux/linked-bundle-node-map",
   "scripts": {
     "dev": "webpack -c webpack-dev.config.ts",
