@@ -73,7 +73,7 @@ export default function DragGroups() {
           <ul>
             <li><a href="https://github.com/akalinux/linked-bundle-node-map/">Back to the githib project</a></li>
             <li>
-              <a href="https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/GenerateXY/GenerateXY.tsx">
+              <a href="https://github.com/akalinux/linked-bundle-node-map/blob/master/demo_app/src/demos/DragGroups/DragGroups.tsx">
                 View this example's source
               </a>
             </li>
