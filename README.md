@@ -17,6 +17,8 @@ This npm package was created to solve a few problems. This widget provides good 
 - Pan & Zoom support, enabled by default, but can be disabled via props.
 - Toggle full screen mode ( enabled by default can be disabled via props )
 - Node/Map Dragging support ( enabled by default, can be disabled vi props )
+- Drag nodes by the links
+- Drag nodes as a goup
 - Stack multiple connections between nodes 
 - Bundle connections between nodes together
 - Stack multiple bundles between nodes
@@ -38,6 +40,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Manual Tool tips & Bundles](https://akalinux.github.io/linked-bundle-node-map/?demo=ttb)
 - [Events and Themes](https://akalinux.github.io/linked-bundle-node-map/?demo=theme_reset_event)
 - [Generate Tiled Node layout](https://akalinux.github.io/linked-bundle-node-map/?demo=genXY)
+- [Drag nodes Groupped togeather](https://akalinux.github.io/linked-bundle-node-map/?demo=dg)
 
 ## Installation
 
@@ -112,6 +115,9 @@ interface NodeEl {
   
   // user tagged data set ( internals never look at or touch this value )
   t?:any;
+  
+  // drag group
+  g?: string;
   
   // Hide this node
   h?:boolean|number;

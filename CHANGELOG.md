@@ -7,3 +7,7 @@
   - README.md updates
   - Added this file CHANGELOG.md
   - Added CONTRIBUTING.md
+
+1.0.3
+  - Added group node drag support
+  - added funding to package.json

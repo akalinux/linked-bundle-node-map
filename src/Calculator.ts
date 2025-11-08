@@ -69,10 +69,16 @@ export { type SetCalculatorData }
 interface NodeToLinkMap {
   [key: string]: { [key: string]: LinkSet }
 }
+
+interface DragGroups {
+  [nodeElId: string]: string[]
+}
+
 export default class Calculator extends CalculatorBase {
   rebuild = false;
   createCache = false;
   doDraw = true;
+  dragGroups: DragGroups = {};
   nodeToLinkMap: NodeToLinkMap = {}
   linkRenderCache: LinkRenderCache[] = [];
   linkRenderIndex: LinkRenerIndex = {};
@@ -823,6 +829,7 @@ export default class Calculator extends CalculatorBase {
     const nodes: { [id: string]: NodeEl } = {};
     const nodeLinks: NodeLinks = {};
     const { linkOpts, nodeOpts, minMax, srcNodes, srcLinks, autoToolTip, toolTipData } = this;
+    const dragGroups: DragGroups = this.dragGroups = {};
 
     for (const img of Object.values(this.images)) {
       img.n = [];
@@ -833,6 +840,8 @@ export default class Calculator extends CalculatorBase {
       if (!nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
       if (nodes[node.i]) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
+      if (node.g) (dragGroups[node.g] || (dragGroups[node.g] = [])).push(node.i);
+
       nodes[node.i] = node;
       if (i == 0) {
         minMax.minX = node.x
@@ -905,32 +914,49 @@ export default class Calculator extends CalculatorBase {
     if (this.noChange) return;
     this.fit = false;
     const node = this.nodes[id];
-    this.changes.nodes[id] = p;
-    this.nodes[id] = { ...node, x: p.x, y: p.y };
-    if (!this.drag) {
-      this.needsIndexing = true;
-      if (!node.h) {
-        const box = this.createNodeBox(p, this.r);
-        this.buildIndex(box, 'nodes', node);
-      }
-      this.rebuild = true;
-      for (const [key, link] of Object.entries(this.nodeToLinkMap[node.i])) {
-        this.indexer.cleaIndex("links", key);
-        this.drawLink(link);
-        delete this.linkCache[key];
-      }
-      this.rebuild = false;
-    } else {
+    const diff = {
+      x: p.x - this.nodes[id].x,
+      y: p.y - this.nodes[id].y,
+    };
+    const list: string[] = node.g && this.dragGroups[node.g] || [id];
 
-      this.doDraw = false;
-      this.rebuild = true;
-      for (const link of Object.values(this.nodeToLinkMap[node.i])) {
-        this.drawLink(link);
+    for (let i = 0; i<list.length; ++i) {
+      const gid = list[i];
+      const node=this.nodes[gid];
+      if (gid != id) {
+        this.nodes[gid] = { 
+          ...node, 
+          x: node.x + diff.x,
+          y: node.y + diff.y, 
+        };
+      } else {
+        this.nodes[gid] = { ...node, x: p.x, y: p.y };
       }
-      this.rebuild = false;
-      this.doDraw = true;
+      const np=this.changes.nodes[gid] = {x:node.x,y:node.y};
+      if (!this.drag) {
+        this.needsIndexing = true;
+        if (!node.h) {
+          const box = this.createNodeBox(np, this.r);
+          this.buildIndex(box, 'nodes', node);
+        }
+        this.rebuild = true;
+        for (const [key, link] of Object.entries(this.nodeToLinkMap[node.i])) {
+          this.indexer.cleaIndex("links", key);
+          this.drawLink(link);
+          delete this.linkCache[key];
+        }
+        this.rebuild = false;
+      } else {
+
+        this.doDraw = false;
+        this.rebuild = true;
+        for (const link of Object.values(this.nodeToLinkMap[node.i])) {
+          this.drawLink(link);
+        }
+        this.rebuild = false;
+        this.doDraw = true;
+      }
     }
-
     this.needsMinMax = true;
     this.draw();
   }

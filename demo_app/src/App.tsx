@@ -6,12 +6,14 @@ import MinimalDemo from './demos/MinimalDemo/MinimalDemo';
 import ManualToolTipsAndBundles from './demos/ManualToolTipsAndBundles/ManualToolTipsAndBundles';
 import ThemeEventsReset from './demos/ThemeEventsReset/ThemeEventsReset';
 import GenerateXY from './demos/GenerateXY/GenerateXY';
+import DragGroups from './demos/DragGroups/DragGroups'
 
 const maps: { [key: string]: () => React.ReactElement } = {
 	min: MinimalDemo,
 	ttb: ManualToolTipsAndBundles,
 	theme_reset_event: ThemeEventsReset,
   genXY: GenerateXY,
+  dg: DragGroups,
 };
 const el = document.getElementById('app');
 if (el !== null) {

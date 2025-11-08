@@ -12,6 +12,8 @@ interface PreNodeEl {
   i: string;
   h?: boolean | number;
   t?: any;
+  // drag group
+  g?:string;
 }
 
 interface NodeEl extends PreNodeEl {
