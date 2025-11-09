@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MapChanges, PointLookupResult } from './CommonTypes';
 import { createContext } from 'react';
 import ManageInstance from './ManageInstance';

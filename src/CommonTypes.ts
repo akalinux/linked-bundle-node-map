@@ -11,6 +11,7 @@ interface PreNodeEl {
   o: string;
   i: string;
   h?: boolean | number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t?: any;
   // drag group
   g?:string;
@@ -24,6 +25,7 @@ interface NodeEl extends PreNodeEl {
 interface Cordinate {
   x: number;
   y: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -163,6 +165,7 @@ interface NavIndex {
 
 interface HasIdEl {
   i: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 interface NodeLinks {

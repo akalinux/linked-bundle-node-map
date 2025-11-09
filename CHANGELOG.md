@@ -11,3 +11,7 @@
 1.0.3
   - Added group node drag support
   - added funding to package.json
+
+1.0.4
+  - added eslint checking
+  - updated contribution documentation

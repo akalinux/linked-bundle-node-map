@@ -259,7 +259,7 @@ export default class Calculator extends CalculatorBase {
     this.needsMinMax = false;
     const { minMax, nodes } = this;
     let i = 0;
-    for (let id in nodes) {
+    for (const id in nodes) {
       const node = nodes[id];
       const minX = node.x
       const minY = node.y
@@ -344,6 +344,7 @@ export default class Calculator extends CalculatorBase {
     this.draw();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   drawToolTip = (args: DrawToolTipArgs) => { }
 
   drawNodeHighlght(ctrl: CanvasRenderingContext2D, node: NodeEl) {
@@ -533,7 +534,7 @@ export default class Calculator extends CalculatorBase {
   drawLink(ls: LinkSet) {
     if (ls.l.length == 0) return;
     const { l, n, b } = ls;
-    const w = this.getLineWith(ls);
+    const w = this.getLineWith(ls.l.length);
     const p = this.nodes[n.s]
     const c = this.nodes[n.d]
     const ba = this.GetAngle(p.x, p.y, c.x, c.y);
@@ -814,8 +815,8 @@ export default class Calculator extends CalculatorBase {
   }
 
 
-  getLineWith(l: { l: any[], [key: string]: any }) {
-    return this.boxWidth / (l.l.length * 2 + 1);
+  getLineWith(w:number ) {
+    return this.boxWidth / (w * 2 + 1);
   }
 
   buildData() {
@@ -857,7 +858,7 @@ export default class Calculator extends CalculatorBase {
         if (node.y < minMax.minY) minMax.minY = node.y;
       }
       const ttKey = `node-${node.i}`;
-      if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
+      if (autoToolTip && !Object.hasOwnProperty.call(toolTipData,ttKey)) {
         toolTipData[ttKey] = { label: node.l }
       }
     }
@@ -883,7 +884,7 @@ export default class Calculator extends CalculatorBase {
         order.push(key);
       }
       const ttKey = `link-${link.i}`;
-      if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
+      if (autoToolTip && !Object.hasOwnProperty.call(toolTipData,ttKey)) {
         toolTipData[ttKey] = { label: link.l || link.i };
       }
       const { l, b, s } = set;
@@ -891,13 +892,14 @@ export default class Calculator extends CalculatorBase {
       if (!link.b) continue;
       for (const tb of link.b) {
         const ttKey = `bundle-${key},${tb}`;
-        if (autoToolTip && !toolTipData.hasOwnProperty(ttKey)) {
+        if (autoToolTip && !Object.hasOwnProperty.call(toolTipData,ttKey)) {
           toolTipData[ttKey] = { label: tb, data: [] };
           autBundleTT[ttKey] = true;
         }
         if (!s[tb]) {
           b.push(tb);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         s[tb] || (s[tb] = [])
         s[tb].push(link.i);
         if (autBundleTT[ttKey]) {

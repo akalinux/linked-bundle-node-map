@@ -1,4 +1,4 @@
-import React,{createContext} from "react";
-const ThemeContext:React.Context<string>=React.createContext('light');
+import {createContext} from "react";
+const ThemeContext:React.Context<string>=createContext('light');
 export default ThemeContext;
 export { ThemeContext }

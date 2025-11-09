@@ -15,12 +15,13 @@ export default class CalculateNodeXY extends CalculatorBase {
     let id = -1;
     for (let i = 0; i < list.length; ++i) {
       const node = list[i];
-      const tc = typeof node.t;
+      const t=node.t
+      const tc = typeof t;
       if (tc == 'number' || tc == 'string') {
-        if (groups.hasOwnProperty(node.t)) {
-          todo[groups[node.t]].push(node);
+        if (Object.prototype.hasOwnProperty.call(groups,t)) {
+          todo[groups[t]].push(node);
         } else {
-          groups[node.t] = ++id;
+          groups[t] = ++id;
           todo[id] = [node];
         }
       } else {
@@ -39,7 +40,6 @@ export default class CalculateNodeXY extends CalculatorBase {
     let column = 0;
     let minY = 0;
     let minX = 0;
-    let row=0;
     let maxY = 0;
     const distance = this.r * this.nodeDistance;
     const pad = this.r * this.boxDistance;
@@ -72,7 +72,6 @@ export default class CalculateNodeXY extends CalculatorBase {
         minX = 0;
         column = 0;
         minY = maxY;
-        ++row;
       }
     }
   }

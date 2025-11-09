@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cordinate, PointLookupResult, DrawToolTipArgs, CoreTransform } from './CommonTypes';
 import { MouseEvent } from 'react';
 import Calculator from './Calculator';
@@ -115,6 +116,7 @@ export default class MouseWatcher {
     this.drawToolTip({ id, x: ex, y: ey });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   drawToolTip = (args: DrawToolTipArgs) => {
 
   }

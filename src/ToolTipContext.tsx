@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext } from "react";
 import ToolTip from './ToolTip';
 import { ToolTipData } from "./CommonTypes";

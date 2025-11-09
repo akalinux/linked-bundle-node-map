@@ -9,7 +9,8 @@ Please submit pull requests on the offical github project page [here](https://gi
 3. Update the documentation as required.
 4. Provide the updates that belong in CHANGELOG.md file.
 5. Project white space is 2 spaces cuddle braces..
-6. Core code must be in TypeScript
+6. All code must be in TypeScript
+7. Eslint must pass
 
 
 ## Things on the todo list

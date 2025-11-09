@@ -4,6 +4,7 @@ import CompassProps from "./CompasProps";
 
 const CORE_PROPS: CompassProps = {
   side: 35,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClick: (key: string) => { },
   cStyle: { cursor: 'pointer' },
   title: "Move and Center the Map",

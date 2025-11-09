@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useSyncExternalStore, useContext, useState, useRef, useEffect } from "react";
 import ManageInstance from "./ManageInstance";
 import ThemeContext from "./ThemeContext";
