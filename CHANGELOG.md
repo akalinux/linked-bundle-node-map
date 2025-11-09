@@ -15,3 +15,6 @@
 1.0.4
   - added eslint checking
   - updated contribution documentation
+
+1.0.5
+  - added npm audit to the test/build process
