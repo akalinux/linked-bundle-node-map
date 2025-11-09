@@ -183,6 +183,7 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
             }
             {!props.hideCompass &&
               <Compass onClick={(key: string) => {
+                // eslint-disable-next-line no-prototype-builtins
                 if (COMPASS_MAP.hasOwnProperty(key)) {
                   const t = { ...calc.transform };
                   const size = calc.boxR * 2;
@@ -195,6 +196,7 @@ const LinkedBundleNodeMap = forwardRef<HTMLDivElement, SetCalculatorData>((props
                   const t = calc.createCenertTransform();
                   calc.setTransform(t);
                 }
+                // eslint-disable-next-line no-prototype-builtins
                 const tag = COMPASS_TAGS.hasOwnProperty(key) ? COMPASS_TAGS[key] : key;
                 const event = new OnChange({ data: calc.getChanges(), tag });
                 fw.sendEvent(event, event.data);

@@ -3,6 +3,7 @@ export default class ManageInstance<T> {
     this.n = this.obj = obj;
     this.pooled = pooled
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: any = null;
   n: T;
   stop = true;
@@ -50,6 +51,7 @@ export default class ManageInstance<T> {
   }
 
   getObj = () => { return this.obj; }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onPush = (m: ManageInstance<T>) => { }
 
   publish(obj: T) {

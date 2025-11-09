@@ -21,9 +21,9 @@ export default class Indexer extends CalculatorBase {
 
   cleaIndex(target: NodeLinkChoice, id: string) {
     const { indexMap, indexes } = this;
-    if (!indexMap.hasOwnProperty(target)) return;
+    if (!Object.hasOwnProperty.call(indexMap, target)) return;
     const targets = indexMap[target];
-    if (!targets.hasOwnProperty(id)) return;
+    if (!Object.hasOwnProperty.call(targets, id)) return;
     const todo = targets[id];
     delete targets[id];
     for (let idx = 0; idx < todo.length; ++idx) {
@@ -61,8 +61,10 @@ export default class Indexer extends CalculatorBase {
       const index = indexes[x] || (indexes[x] = {});
       for (let y = startY; y <= endY; y += indexSize) {
         const set = index[y] || (index[y] = { nodes: [], links: [] });
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         set[target] || (set[target] = []);
-        let idx = set[target].push(obj.i) - 1;
+        const idx = set[target].push(obj.i) - 1;
         const list = indexMap[target][obj.i] || (indexMap[target][obj.i] = []);
         list.push({ x, y, i: idx });
       }
@@ -73,11 +75,11 @@ export default class Indexer extends CalculatorBase {
     const { indexSize, indexes } = this;
     const rx = Math.round(p.x);
     const x = rx - rx % indexSize;
-    if (!indexes.hasOwnProperty(x)) return null;
+    if (!Object.hasOwnProperty.call(indexes, x)) return null;
     const idx = indexes[x];
     const ry = Math.round(p.y);
     const y = ry - ry % indexSize;
-    if (!idx.hasOwnProperty(y)) return null;
+    if (!Object.hasOwnProperty.call(idx, y)) return null;
     return idx[y] as IndexLookupResult;
   }
 }

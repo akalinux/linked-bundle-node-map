@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useContext, useRef, useEffect, useSyncExternalStore } from "react";
 import ManageInstance from './ManageInstance';
 import ThemeContext from "./ThemeContext";

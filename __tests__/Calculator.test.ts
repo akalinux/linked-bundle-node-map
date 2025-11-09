@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Calculator from "../src/Calculator"
 
 it('basic instance creation', () => {
@@ -170,6 +171,6 @@ it('index builder test',()=>{
 it('link size calculator',()=>{
   const sl = new Calculator();
   sl.boxWidth=10;
-  expect(sl.getLineWith({l:[1]})).toBeCloseTo(10/3)
-  expect(sl.getLineWith({l:[1,2]})).toBeCloseTo(2);
+  expect(sl.getLineWith(1)).toBeCloseTo(10/3)
+  expect(sl.getLineWith(2)).toBeCloseTo(2);
 })

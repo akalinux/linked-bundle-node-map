@@ -8,17 +8,19 @@ import ToolTipsProps, { DefaultToolTipOptions } from "./ToolTipsProps";
 
 
 function ToolTips(props: ToolTipsProps) {
-	const { id, offsetTop, offsetLeft, absolute, needsOffset, x, y } = { ...props };
+	const { id, offsetTop, offsetLeft, absolute, x, y } = { ...props };
 	const { toolTipData } = useContext(CalculatorContext);
 	const ToolTip = useContext(ToolTipContext);
 	const fc = useContext(FormContext);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const w: ManageInstance<any> = fc.getSlotRefWatcher() || new ManageInstance(useRef(null));
 	const slotRef = useSyncExternalStore(...w.subscribe()) as React.RefObject<HTMLDivElement>;
 
-	if (!id || !toolTipData.hasOwnProperty(id) || !slotRef || !slotRef.current) return;
+	if (!id || !Object.hasOwnProperty.call(toolTipData,id) || !slotRef || !slotRef.current) return;
+  
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const style: { [key: string]: any } = {}
 	// YES THIS IS A FROZEN SHAPSHOT!
-	const copy = { ...style, top: y, left: x }
 	style.top = y! + offsetTop!
 	style.left = x! + offsetLeft!;
 	if (absolute) {
@@ -32,6 +34,7 @@ function ToolTips(props: ToolTipsProps) {
 	return <ToolTip id={id} toolTipData={toolTipData} style={style} />
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function WatchTT(props: { m: ManageInstance<null | { [key: string]: any }> }) {
 	const tt = useSyncExternalStore(...props.m.subscribe()) as ToolTipsProps;
 	if (!tt) return '';
@@ -41,7 +44,9 @@ function WatchTT(props: { m: ManageInstance<null | { [key: string]: any }> }) {
 
 function CreateTT(opts = DefaultToolTipOptions) {
 	const safe = { ...DefaultToolTipOptions, ...(opts || {}) };
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const m: ManageInstance<any> = new ManageInstance(null);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const res: [(arg: DrawToolTipArgs) => void, ReactElement, ManageInstance<any>] = [
 		(arg: DrawToolTipArgs) => {
 			if (arg) {

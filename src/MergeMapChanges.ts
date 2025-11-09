@@ -7,7 +7,7 @@ export default function MergeMapChanges(changes: MapChanges, data: SetCalculator
 	for (let id = 0; id < dn.length; ++id) {
 		const node = dn[id];
 		const { i } = node;
-		if (nodes.hasOwnProperty(i)) {
+		if (Object.prototype.hasOwnProperty.call(nodes, i)) {
 			node.x = nodes[i].x;
 			node.y = nodes[i].y;
 		}
