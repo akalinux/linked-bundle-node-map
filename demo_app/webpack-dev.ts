@@ -4,6 +4,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 export default {
   mode: 'development',
+  watchOptions: {
+    poll: 1000,
+  },
   entry: './src/App.tsx',
 	plugins: [
     new MiniCssExtractPlugin({

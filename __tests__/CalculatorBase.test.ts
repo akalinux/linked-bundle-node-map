@@ -10,7 +10,7 @@ it('spheer scaling tests', () => {
 	const calc = new CalculatorBase();
 	for (let distance = 4; distance < 100; ++distance) {
 
-		let lastr = 0;
+		const lastr = 0;
 		for (let count = 2; count < 100; count++) {
 			const r = calc.computeRforEvenlySpacedPointsOnCircle(distance, count);
 			const degree = 360 / count;
