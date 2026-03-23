@@ -6,5 +6,4 @@ package-lock.json
 index.js
 .settings/*
 *.swp
-.npmrc
 token.txt
