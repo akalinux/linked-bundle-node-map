@@ -35,6 +35,10 @@ if( process.argv.includes('-w') ||  process.argv.includes('--watch')) {
 
 module.exports = {
   entry: './src/LinkedBundleNodeMap.tsx',
+  watchOptions: {
+    poll: 1000,
+    ignored: /node_modules/,
+  },
   output: {
     path: dist,
     filename: 'bundle.js',

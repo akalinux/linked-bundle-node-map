@@ -415,7 +415,6 @@ export default class Calculator extends CalculatorBase {
   }
 
   drawNodes() {
-
     const { width, height } = this.initSize;
     const { srcNodes } = this;
     if (this.fit && srcNodes.length != 0) {
@@ -593,7 +592,7 @@ export default class Calculator extends CalculatorBase {
               r: d,
               c,
               o: i,
-              f: i ? c : this.bgColor,
+              f: i ? this.bgColor : c,
               w: w * .75,
             }
             this.animations[aid++] = animate;
@@ -651,11 +650,28 @@ export default class Calculator extends CalculatorBase {
   }
 
   createNodeBox(c: Cordinate, r: number) {
-    const o: ContainerBox = { ne: { x: 0, y: 0 }, nw: { x: 0, y: 0 }, se: { x: 0, y: 0 }, sw: { x: 0, y: 0 }, };
-    o.ne.x = o.se.x = c.x + r;
-    o.nw.x = o.sw.x = c.x - r;
-    o.se.y = o.sw.y = c.y + r;
-    o.nw.y = o.ne.y = c.y - r;
+    const n=c.y-r
+    const s=c.y+r
+    const e=c.x+r
+    const w=c.x-r
+    const o: ContainerBox = { 
+      ne: { 
+        x: e, 
+        y: n
+      }, 
+      nw: { 
+        x: n, 
+        y: w 
+      }, 
+      se: { 
+        x: e, 
+        y: s 
+      }, 
+      sw: { 
+        x: w, 
+        y: s 
+      }, 
+    };
     return o;
   }
 
