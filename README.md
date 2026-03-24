@@ -16,16 +16,16 @@ This npm package was created to solve a few problems. This widget provides good 
 
 - Pan & Zoom support, enabled by default, but can be disabled via props.
 - Toggle full screen mode ( enabled by default can be disabled via props )
-- Node/Map Dragging support ( enabled by default, can be disabled vi props )
+- Node/Map Dragging support ( enabled by default, can be disabled via props )
 - Drag nodes by the links
-- Drag nodes as a goup
+- Drag nodes as a group
 - Stack multiple connections between nodes 
 - Bundle connections between nodes together
 - Stack multiple bundles between nodes
 - Tool tip support
 - Overloadable UI Components(including tooltips)
 - Status mapping for nodes and links
-- Milti directional Link animations.
+- Multi directional Link animations.
 - Data Merging utilities
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
@@ -40,7 +40,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Manual Tool tips & Bundles](https://akalinux.github.io/linked-bundle-node-map/?demo=ttb)
 - [Events and Themes](https://akalinux.github.io/linked-bundle-node-map/?demo=theme_reset_event)
 - [Generate Tiled Node layout](https://akalinux.github.io/linked-bundle-node-map/?demo=genXY)
-- [Drag nodes Groupped togeather](https://akalinux.github.io/linked-bundle-node-map/?demo=dg)
+- [Drag nodes Grouped together](https://akalinux.github.io/linked-bundle-node-map/?demo=dg)
 
 ## Installation
 
@@ -305,7 +305,7 @@ How to import MergeMapChanges
 
 ## ThemeContext
 
-Themse are managed via a ThemeContext, the theme applies to 2 things.
+Themes are managed via a ThemeContext, the theme applies to 2 things.
 
 1. Css Classes
 2. Data Structure
