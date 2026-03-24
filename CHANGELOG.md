@@ -27,3 +27,7 @@
 1.0.7
   - Added missing entries to this file
   - Spelling/grammer cleanups in the docs
+
+1.0.8
+  - added Unit test CI Badge
+  - added npm version badge
