@@ -15,3 +15,15 @@
 1.0.4
   - added eslint checking
   - updated contribution documentation
+
+1.0.5
+  - not released
+
+1.0.6
+  - fixed bug causing animations to render in the wrong order
+  - simplified the box creation code for nodes
+  - documentation cleanups
+
+1.0.7
+  - Added missing entries to this file
+  - Spelling/grammer cleanups in the docs
