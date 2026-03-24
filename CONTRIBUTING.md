@@ -7,7 +7,7 @@ Please submit pull requests on the official github project page [here](https://g
 1. Please explain what your change does.
 2. Provide updated unit tests if required.
 3. Update the documentation as required.
-4. Provide the updates that belong in CHANGE LOG.md file.
+4. Provide the updates that belong in CHANGELOG.md file.
 5. Project white space is 2 spaces cuddle braces..
 6. All code must be in TypeScript
 7. Eslint must pass
@@ -52,3 +52,6 @@ Launch the main project in watch mode
 Launch the demo app
 - npm run tw &
 
+### Dev Container support
+
+To make it easier to contribute to this project, a .devcontainer folder has been added. 
