@@ -102,7 +102,7 @@ interface LinkRenderCache{
     w: number, // width
     aid:number // animation id
   }[]
-  bunldes:{
+  bundles:{
     p:Cordinate,
     c: string, // color
     bR: number, // Bunlde Radius

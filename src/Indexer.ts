@@ -19,7 +19,7 @@ export default class Indexer extends CalculatorBase {
     }
   }
 
-  cleaIndex(target: NodeLinkChoice, id: string) {
+  clearIndex(target: NodeLinkChoice, id: string) {
     const { indexMap, indexes } = this;
     if (!Object.hasOwnProperty.call(indexMap, target)) return;
     const targets = indexMap[target];

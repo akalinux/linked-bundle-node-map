@@ -478,7 +478,7 @@ export default class Calculator extends CalculatorBase {
       for (let i = 0; i < linkRenderCache.length; ++i) {
         const todo = linkRenderCache[i];
         const l = todo.links;
-        const b = todo.bunldes;
+        const b = todo.bundles;
         for (let id = 0; id < l.length; ++id) {
           const { start, end, c, w } = l[id];
           this.drawLine(links, start, end, c, w);
@@ -551,7 +551,7 @@ export default class Calculator extends CalculatorBase {
     ls.lr = w * .5;
     const renderSet: LinkRenderCache = {
       links: [],
-      bunldes: [],
+      bundles: [],
     }
     for (let i = 0; i < l.length; ++i) {
       const link = l[i];
@@ -613,16 +613,16 @@ export default class Calculator extends CalculatorBase {
       const pos = this.computeLinePoint(p, d, ba + 180, b.length, i);
       bl.push({ c: pos, b: b[i] });
 
-      renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR })
+      renderSet.bundles.push({ p: pos, c: this.bundleColor, bR })
       if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bR)
 
       const bi = bR / 1.5;
       if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bi)
-      renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR: bi })
+      renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bi })
 
       const bx = bR / 4;
       if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bx)
-      renderSet.bunldes.push({ p: pos, c: this.bundleColor, bR: bx })
+      renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bx })
     }
     const next = this.rebuild ? this.linkRenderIndex[ls.key] : this.linkRenderCache.length;
     this.linkRenderCache[next] = renderSet;
@@ -959,7 +959,7 @@ export default class Calculator extends CalculatorBase {
         }
         this.rebuild = true;
         for (const [key, link] of Object.entries(this.nodeToLinkMap[node.i])) {
-          this.indexer.cleaIndex("links", key);
+          this.indexer.clearIndex("links", key);
           this.drawLink(link);
           delete this.linkCache[key];
         }
