@@ -116,7 +116,8 @@ export default class Calculator extends CalculatorBase {
     ctrl: null, nodes: null, bundles: null, animations: null, links: null
   }
   links: LinkSets = {};
-  nodes: { [id: string]: NodeEl } = {};
+  //nodes: { [id: string]: NodeEl } = {};
+  nodes: Map<string,NodeEl>=new Map<string,NodeEl>
   nodeLinks: NodeLinks = {};
   rawLinks: { [id: string]: LinkEl } = {};
   nodeOpts: { [optId: string]: NodeElOpt } = {}
@@ -259,8 +260,8 @@ export default class Calculator extends CalculatorBase {
     this.needsMinMax = false;
     const { minMax, nodes } = this;
     let i = 0;
-    for (const id in nodes) {
-      const node = nodes[id];
+    for (const [,node] of nodes) {
+
       const minX = node.x
       const minY = node.y
       const maxX = node.x
@@ -334,7 +335,7 @@ export default class Calculator extends CalculatorBase {
 
   drawCenteredOnNode(node: NodeEl) {
     if (!node) return;
-    const n = this.nodes[node.i];
+    const n = this.nodes.get(node.i)!
     const { width, height } = this.initSize;
 
     const { k } = this.transform;
@@ -365,16 +366,19 @@ export default class Calculator extends CalculatorBase {
       this.shadeColor,
       lr * 3
     )
-    const { r, imgSize } = this;
     const { s, d } = link.l;
-    if (!this.nodes[s].h) {
-      const n = this.nodes[s]
-      ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
-      this.drawNodeHighlght(ctrl, n)
-    }
+    const list =[s,d]
+    this.nodeContextHighlighter(ctrl,list)
+  }
 
-    if (!this.nodes[d].h) {
-      const n = this.nodes[d]
+  nodeContextHighlighter(ctrl: CanvasRenderingContext2D,list: string[]) {
+    const { r, imgSize } = this;
+    for (const k of list) {
+      const n=this.nodes.get(k)!
+      console.log(k,n)
+      if(n.h) {
+        continue
+      }
       ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
       this.drawNodeHighlght(ctrl, n)
     }
@@ -391,20 +395,8 @@ export default class Calculator extends CalculatorBase {
         lr * 3
       )
     }
-    if (!this.nodes[s].h) {
-      const { r, imgSize } = this;
-      const n = this.nodes[s]
-      ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
-      this.drawNodeHighlght(ctrl, n)
-    }
-
-    if (!this.nodes[d].h) {
-      const { r, imgSize } = this;
-      const n = this.nodes[d]
-      ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
-      this.drawNodeHighlght(ctrl, n)
-    }
-
+    const list=[s,d]
+    this.nodeContextHighlighter(ctrl,list)
     this.drawCircle(
       ctrl,
       c,
@@ -444,9 +436,9 @@ export default class Calculator extends CalculatorBase {
       this.indexTodo = [];
       this.linkCache = {};
       this.animations = [];
-      const drawnLinks: { [key: string]: number } = {};
+      const drawnLinks=new Map<string,number>
       for (let i = srcNodes.length - 1; i > -1; --i) {
-        const node = nodes[srcNodes[i].i];
+        const node = nodes.get(srcNodes[i].i)!
 
         if (!node.h) {
           this.drawNode(node);
@@ -460,15 +452,15 @@ export default class Calculator extends CalculatorBase {
         const { order, sets } = links;
         for (let idx = order.length - 1; idx > -1; --idx) {
           const key = order[idx];
-          if (drawnLinks[key]) continue;
-          drawnLinks[key] = 1;
+          if (drawnLinks.has(key)) continue;
+          drawnLinks.set(key,1);
           this.drawLink(sets[key]);
         }
       }
       this.createCache = false;
     } else {
       for (let i = srcNodes.length - 1; i > -1; --i) {
-        const node = nodes[srcNodes[i].i];
+        const node = nodes.get(srcNodes[i].i)!
         if (!node.h) {
           this.drawNode(node);
         }
@@ -534,8 +526,8 @@ export default class Calculator extends CalculatorBase {
     if (ls.l.length == 0) return;
     const { l, n, b } = ls;
     const w = this.getLineWith(ls.l.length);
-    const p = this.nodes[n.s]
-    const c = this.nodes[n.d]
+    const p = this.nodes.get(n.s)!
+    const c = this.nodes.get(n.d)!
     const ba = this.GetAngle(p.x, p.y, c.x, c.y);
     const da = this.GetAngle(c.x, c.y, p.x, p.y);
     const angle = ba + 270;
@@ -715,7 +707,7 @@ export default class Calculator extends CalculatorBase {
     if (Object.keys(el).length == 1) return res;
     const { tp, nodes, links } = el;
     for (let i = 0; nodes && i < nodes.length; ++i) {
-      const node = this.nodes[nodes[i]];
+      const node = this.nodes.get(nodes[i])!;
       if (this.insideSquare(node, tp)) {
         res.node = node || null;
         res.type = 'node';
@@ -843,7 +835,7 @@ export default class Calculator extends CalculatorBase {
     this.rebuild = false;
     this.createCache = true;
     const links: LinkSets = {};
-    const nodes: { [id: string]: NodeEl } = {};
+    const nodes =new Map<string,NodeEl>
     const nodeLinks: NodeLinks = {};
     const { linkOpts, nodeOpts, minMax, srcNodes, srcLinks, autoToolTip, toolTipData } = this;
     const dragGroups: DragGroups = this.dragGroups = {};
@@ -856,10 +848,10 @@ export default class Calculator extends CalculatorBase {
       nodeLinkMap[node.i] = {};
       if (!nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
-      if (nodes[node.i]) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
+      if (nodes.has(node.i)) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
       if (node.g) (dragGroups[node.g] || (dragGroups[node.g] = [])).push(node.i);
 
-      nodes[node.i] = node;
+      nodes.set(node.i,node);
       if (i == 0) {
         minMax.minX = node.x
         minMax.minY = node.y
@@ -885,7 +877,7 @@ export default class Calculator extends CalculatorBase {
       if (sane[link.i]) throw new Error(`Duplicate link.i ${link.i} in srcLinks[${i}`);
       sane[link.i] = link;
       if (!linkOpts[link.o]) throw new Error(`missing linkOpt in: srcLinks[${i}]`)
-      if (!nodes[link.s] || !nodes[link.d] || link.s == link.d)
+      if (!nodes.has(link.s) || !nodes.has(link.d) || link.s == link.d)
         throw new Error(`Bad link in srcNodes[${i}], missing node(s)`)
 
       const key = link.s > link.d ? (link.d + ',' + link.s) : (link.s + ',' + link.d);
@@ -931,24 +923,24 @@ export default class Calculator extends CalculatorBase {
   moveNode(id: string, p: Cordinate) {
     if (this.noChange) return;
     this.fit = false;
-    const node = this.nodes[id];
+    const node = this.nodes.get(id)!;
     const diff = {
-      x: p.x - this.nodes[id].x,
-      y: p.y - this.nodes[id].y,
+      x: p.x - node.x,
+      y: p.y - node.y,
     };
     const list: string[] = node.g && this.dragGroups[node.g] || [id];
 
     for (let i = 0; i<list.length; ++i) {
       const gid = list[i];
-      const node=this.nodes[gid];
+      const node=this.nodes.get(gid)!;
       if (gid != id) {
-        this.nodes[gid] = { 
+        this.nodes.set(gid, { 
           ...node, 
           x: node.x + diff.x,
           y: node.y + diff.y, 
-        };
+        });
       } else {
-        this.nodes[gid] = { ...node, x: p.x, y: p.y };
+        this.nodes.set(gid, { ...node, x: p.x, y: p.y })
       }
       const np=this.changes.nodes[gid] = {x:node.x,y:node.y};
       if (!this.drag) {
@@ -983,11 +975,11 @@ export default class Calculator extends CalculatorBase {
     const list: NodeEl[] = [];
 
     if (res.type == 'link') {
-      list.push(this.nodes[res.link!.l.s]);
-      list.push(this.nodes[res.link!.l.d]);
+      list.push(this.nodes.get(res.link!.l.s)!);
+      list.push(this.nodes.get(res.link!.l.d)!);
     } else {
-      list.push(this.nodes[res.bundle!.s]);
-      list.push(this.nodes[res.bundle!.d]);
+      list.push(this.nodes.get(res.bundle!.s)!);
+      list.push(this.nodes.get(res.bundle!.d)!);
     }
     for (let id = 0; id < list.length; ++id) {
       const { x, y, i } = list[id];
