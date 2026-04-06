@@ -31,3 +31,6 @@
 1.0.8
   - added Unit test CI Badge
   - added npm version badge
+
+1.0.9
+  - Code internal spelling mistakes cleaned up
