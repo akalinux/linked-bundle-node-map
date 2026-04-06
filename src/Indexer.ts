@@ -1,15 +1,16 @@
 import CalculatorBase from "./CalculatorBase";
-import { NavIndex, ContainerBox, HasIdEl, NodeLinkChoice, Cordinate, IndexLookupResult } from "./CommonTypes";
+import { ContainerBox, HasIdEl, NodeLinkChoice, Cordinate, IndexLookupResult,IndexSet } from "./CommonTypes";
 
-interface IdxMaps { [key: string]: { x: number, y: number, i: number }[] }
+interface XYISet {x:number,y:number,i:number}
+
 export default class Indexer extends CalculatorBase {
   indexSize: number = 48;
-  indexes: NavIndex = {};
-  indexMap: { nodes: IdxMaps, links: IdxMaps } = { links: {}, nodes: {} };
+  indexes: Map<number,Map<number,IndexSet>>=new Map<number,Map<number,IndexSet>>
+  indexMap: { nodes: Map<string,XYISet[]>, links:  Map<string,XYISet[]> } = { links: new  Map<string,XYISet[]>, nodes: new  Map<string,XYISet[]> };
 
   reset() {
-    this.indexes = {};
-    this.indexMap = { links: {}, nodes: {} };
+    this.indexes = new Map<number,Map<number,IndexSet>>
+    this.indexMap = { links: new  Map<string,XYISet[]>, nodes: new  Map<string,XYISet[]> };
   }
 
   buildIndexes(todo: { Cs: ContainerBox; target: NodeLinkChoice; obj: HasIdEl; }[]) {
@@ -23,16 +24,16 @@ export default class Indexer extends CalculatorBase {
     const { indexMap, indexes } = this;
     if (!Object.hasOwnProperty.call(indexMap, target)) return;
     const targets = indexMap[target];
-    if (!Object.hasOwnProperty.call(targets, id)) return;
-    const todo = targets[id];
-    delete targets[id];
+    if (!targets.has(id)) return;
+    const todo = targets.get(id)!;
+    targets.delete(id)
     for (let idx = 0; idx < todo.length; ++idx) {
       const { x, y, i } = todo[idx];
-      const yIdx = indexes[x][y][target];
+      const yIdx = indexes.get(x)!.get(y)![target];
       yIdx.splice(i, 1);
 
-      if (indexes[x][y].links.length == 0 && indexes[x][y].nodes.length == 0) delete indexes[x][y];
-      if (Object.keys(indexes[x]).length == 0) delete indexes[x];
+      if (indexes.get(x)!.get(y)!.links.length == 0 && indexes.get(x)!.get(y)!.nodes.length == 0) indexes.get(x)!.delete(y);
+      if (indexes.get(x)!.size == 0) indexes.delete(x);
     }
   }
 
@@ -58,15 +59,29 @@ export default class Indexer extends CalculatorBase {
     const startY = sy - sy % indexSize;
     const endY = ey - ey % indexSize;
     for (let x = startX; x <= endX; x += indexSize) {
-      const index = indexes[x] || (indexes[x] = {});
+      if(!indexes.has(x)) {
+        indexes.set(x,new Map<number,IndexSet>)
+      }
+      const index =indexes.get(x)!
+
       for (let y = startY; y <= endY; y += indexSize) {
-        const set = index[y] || (index[y] = { nodes: [], links: [] });
+
+        let set!: IndexSet
+        if(!index.has(y)) {
+          set={nodes:[],links:[]}
+          index.set(y,set)
+        } else {
+          set=index.get(y)!
+        }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         set[target] || (set[target] = []);
         const idx = set[target].push(obj.i) - 1;
-        const list = indexMap[target][obj.i] || (indexMap[target][obj.i] = []);
-        list.push({ x, y, i: idx });
+        if(!indexMap[target].has(obj.i)) {
+          indexMap[target].set(obj.i,[])
+        }
+        
+        indexMap[target].get(obj.i)!.push({ x, y, i: idx });
       }
     }
   }
@@ -75,12 +90,11 @@ export default class Indexer extends CalculatorBase {
     const { indexSize, indexes } = this;
     const rx = Math.round(p.x);
     const x = rx - rx % indexSize;
-    if (!Object.hasOwnProperty.call(indexes, x)) return null;
-    const idx = indexes[x];
+    if (!indexes.has(x)) return null;
+    const idx = indexes.get(x)!
     const ry = Math.round(p.y);
     const y = ry - ry % indexSize;
-    if (!Object.hasOwnProperty.call(idx, y)) return null;
-    return idx[y] as IndexLookupResult;
+    return idx.has(y) ? idx.get(y)! as IndexLookupResult : null
   }
 }
 

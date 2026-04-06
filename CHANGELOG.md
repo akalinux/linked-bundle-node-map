@@ -34,3 +34,4 @@
 
 1.0.9
   - Code internal spelling mistakes cleaned up
+  - Indexer now uses Map in place of Object, ( performance improivement )

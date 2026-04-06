@@ -157,11 +157,7 @@ interface IndexSet {
 
 type IndexLookupResult =IndexSet|null;
 
-interface NavIndex {
-  [x: string]: {
-    [y: string]: IndexSet,
-  };
-}
+
 
 interface HasIdEl {
   i: string;
@@ -192,7 +188,6 @@ export {
   type PointLookupResult,
   type NodeLinks,
   type HasIdEl,
-  type NavIndex,
   type Animation,
   type LinkElOpt,
   type LinkSet,
