@@ -38,3 +38,4 @@
   - nodes internal structure changed from object, to Map ( performacne improvement )
   - Created Common method for node highlighting
   - Converted link/index/cache to Map from Object ( performance improvement )
+  - Image loader optimizations

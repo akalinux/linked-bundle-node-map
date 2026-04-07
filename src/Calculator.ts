@@ -62,9 +62,7 @@ const CORE_SIZE = { width: 1920, height: 1080 }
 const CORE_TRANSFORM = { x: 0, y: 0, k: 1 };
 
 export { type SetCalculatorData }
-interface NodeToLinkMap {
-  [key: string]: { [key: string]: LinkSet }
-}
+
 
 interface DragGroups {
   [nodeElId: string]: string[]
@@ -75,7 +73,7 @@ export default class Calculator extends CalculatorBase {
   createCache = false;
   doDraw = true;
   dragGroups: DragGroups = {};
-  nodeToLinkMap: NodeToLinkMap = {}
+  nodeToLinkMap: Map<string,{[key:string]: LinkSet}>=new Map<string,{[key:string]:LinkSet}>
   linkRenderCache: LinkRenderCache[] = [];
   linkRenderIndex: Map<string,number>=new Map<string,number>;
   showReset: boolean = false;
@@ -114,12 +112,11 @@ export default class Calculator extends CalculatorBase {
   links: Map<string,LinkSet>=new Map<string,LinkSet>
   nodes: Map<string,NodeEl>=new Map<string,NodeEl>
   nodeLinks: Map<string,NodeLink>=new Map<string,NodeLink>;
-  rawLinks: { [id: string]: LinkEl } = {};
   nodeOpts: { [optId: string]: NodeElOpt } = {}
   alpha = 1;
   shadeAlpha = .5;
   linkOpts: { [option: string]: LinkElOpt } = {}
-  images: { [key: string]: { img: HTMLImageElement, n: NodeEl[], loaded: boolean } } = {};
+  images: Map<string, { img: HTMLImageElement, n: NodeEl[], loaded: boolean }>=new Map<string, { img: HTMLImageElement, n: NodeEl[], loaded: boolean }>
   imgSize = 24;
   fontSize = 10;
   drag: boolean = false;
@@ -766,30 +763,33 @@ export default class Calculator extends CalculatorBase {
   }
 
   drawImage(context: CanvasRenderingContext2D, node: NodeEl, src: string) {
-    if (this.images[src]) {
-      if (this.images[src].loaded) {
-        context.drawImage(this.images[src].img, node.x - this.r, node.y - this.r, this.imgSize, this.imgSize);
+    if (this.images.has(src)) {
+      const i=this.images.get(src)!
+      if (i.loaded) {
+        context.drawImage(i.img, node.x - this.r, node.y - this.r, this.imgSize, this.imgSize);
       } else {
-        this.images[src].n.push(node);
+        i.n.push(node);
       }
     } else {
       const img = new Image();
       img.src = src;
       img.onload = () => {
-        this.images[src].loaded = true;
+        const imgc=this.images.get(src)!
+        imgc.loaded = true;
         if (!this.mounted) return;
 
-        const nodes = this.images[src].n;
+        const nodes = imgc.n;
         for (let i = 0; i < nodes.length; ++i) {
           const node = nodes[i];
-          context.drawImage(this.images[src].img, node.x - this.r, node.y - this.r, this.imgSize, this.imgSize);
+          context.drawImage(imgc.img, node.x - this.r, node.y - this.r, this.imgSize, this.imgSize);
         }
       }
-      this.images[src] = {
+      this.images.set(src,{
         loaded: false,
         img,
         n: [node],
       }
+      )
     }
   }
 
@@ -827,7 +827,7 @@ export default class Calculator extends CalculatorBase {
     this.indexer.reset();
     this.linkRenderCache = [];
     this.linkRenderIndex = new Map<string,number>
-    const nodeLinkMap: NodeToLinkMap = this.nodeToLinkMap = {};
+    const nodeLinkMap=this.nodeToLinkMap=new Map<string,{[key:string]:LinkSet}>
     this.rebuild = false;
     this.createCache = true;
     const links=new Map<string,LinkSet>
@@ -841,7 +841,7 @@ export default class Calculator extends CalculatorBase {
     }
     for (let i = 0; i < srcNodes.length; ++i) {
       const node = srcNodes[i];
-      nodeLinkMap[node.i] = {};
+      nodeLinkMap.set(node.i, {});
       if (!nodeOpts[node.o]) throw new Error(`Bad node options, check value of: o,  in srcNodes[${i}, o must exist in nodeOpts]`)
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
       if (nodes.has(node.i)) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
@@ -867,11 +867,11 @@ export default class Calculator extends CalculatorBase {
       }
     }
     const autBundleTT: { [key: string]: boolean } = {};
-    const sane: { [id: string]: LinkEl } = this.rawLinks = {};
+    const sane= new Map<string,LinkEl>
     for (let i = 0; i < srcLinks.length; ++i) {
       const link = srcLinks[i];
-      if (sane[link.i]) throw new Error(`Duplicate link.i ${link.i} in srcLinks[${i}`);
-      sane[link.i] = link;
+      if (sane.has(link.i)) throw new Error(`Duplicate link.i ${link.i} in srcLinks[${i}`);
+      sane.set(link.i,  link);
       if (!linkOpts[link.o]) throw new Error(`missing linkOpt in: srcLinks[${i}]`)
       if (!nodes.has(link.s) || !nodes.has(link.d) || link.s == link.d)
         throw new Error(`Bad link in srcNodes[${i}], missing node(s)`)
@@ -882,8 +882,9 @@ export default class Calculator extends CalculatorBase {
       if(!nodeLinks.has(link.s)) nodeLinks.set(link.s,{sets:{},order:[]})
       const { sets, order } = nodeLinks.get(link.s)!
 
-      nodeLinkMap[link.s][link.i] = set
-      nodeLinkMap[link.d][link.i] = set;
+
+      nodeLinkMap.get(link.s)![link.i] = set
+      nodeLinkMap.get(link.d)![link.i] = set;
 
       if (!sets[key]) {
         sets[key] = set;
@@ -948,7 +949,7 @@ export default class Calculator extends CalculatorBase {
           this.buildIndex(box, 'nodes', node);
         }
         this.rebuild = true;
-        for (const [key, link] of Object.entries(this.nodeToLinkMap[node.i])) {
+        for (const [key, link] of Object.entries(this.nodeToLinkMap.get(node.i)!)) {
           this.indexer.clearIndex("links", key);
           this.drawLink(link);
           this.linkCache.delete(key)
@@ -958,7 +959,7 @@ export default class Calculator extends CalculatorBase {
 
         this.doDraw = false;
         this.rebuild = true;
-        for (const link of Object.values(this.nodeToLinkMap[node.i])) {
+        for (const link of Object.values(this.nodeToLinkMap.get(node.i)!)) {
           this.drawLink(link);
         }
         this.rebuild = false;
