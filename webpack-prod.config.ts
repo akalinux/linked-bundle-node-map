@@ -12,7 +12,7 @@ try {
 
 const rawCss=fs.readFileSync(path.join(src,'LinkedSet.css')).toString();
 const minifiedCss=rawCss.replaceAll(/\t/g,'',).replaceAll(/[\r\n]/g,'').replaceAll(/\s{2,}/g,' ');
-fs.writeFileSync(path.join(dist,'linked-bundle-node.css'),minifiedCss),
+fs.writeFileSync(path.join(dist,'linked-bundle-node.css'),minifiedCss)
 
 
 module.exports = {

@@ -31,3 +31,12 @@
 1.0.8
   - added Unit test CI Badge
   - added npm version badge
+
+1.0.9
+  - Code internal spelling mistakes cleaned up
+  - Indexer now uses Map in place of Object, ( performance improivement )
+  - nodes internal structure changed from object, to Map ( performacne improvement )
+  - Created Common method for node highlighting
+  - Converted link/index/cache to Map from Object ( performance improvement )
+  - Image loader optimizations
+  - unit tests updated to match new internal optimizations

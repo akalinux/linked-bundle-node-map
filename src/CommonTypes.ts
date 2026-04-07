@@ -102,15 +102,13 @@ interface LinkRenderCache{
     w: number, // width
     aid:number // animation id
   }[]
-  bunldes:{
+  bundles:{
     p:Cordinate,
     c: string, // color
     bR: number, // Bunlde Radius
   }[]
 };
-interface LinkRenerIndex {
-  [key:string]:number;
-}
+
 
 interface LinkSet {
   key: string;
@@ -157,25 +155,22 @@ interface IndexSet {
 
 type IndexLookupResult =IndexSet|null;
 
-interface NavIndex {
-  [x: string]: {
-    [y: string]: IndexSet,
-  };
-}
+
 
 interface HasIdEl {
   i: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
-interface NodeLinks {
-  [nodeId: string]: {
-    order: string[];
-    sets: {
-      [pairKey: string]: LinkSet;
-    };
-  };
+
+
+interface NodeLink {
+  order: string[];
+  sets: {
+    [pairkey: string]: LinkSet;
+  }
 }
+
 interface PointLookupResult {
   tp: Cordinate;
   type: string;
@@ -190,9 +185,8 @@ export {
   type ToolTipData,
   type DrawToolTipArgs,
   type PointLookupResult,
-  type NodeLinks,
+  type NodeLink,
   type HasIdEl,
-  type NavIndex,
   type Animation,
   type LinkElOpt,
   type LinkSet,
@@ -211,7 +205,6 @@ export {
   type NodeLinkChoice,
   type IndexLookupResult,
   type IndexSet,
-  type LinkRenerIndex,
   type LinkRenderCache,
 }
 

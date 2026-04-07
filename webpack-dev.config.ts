@@ -8,6 +8,7 @@ const src=path.resolve(__dirname, 'src');
 try {
   fs.mkdirSync(dist);
 } catch (e) {
+  console.warn("Dir existed, got error:",e)
   // don't care
 }
 
@@ -19,7 +20,7 @@ fs.copyFileSync(
 if( process.argv.includes('-w') ||  process.argv.includes('--watch')) {
   fs.watchFile(
     path.join(src,'LinkedSet.css'),
-    (ctime,ptime)=>{
+    ()=>{
       console.log('inked-bundle-node.css updated')
       try {
         fs.copyFileSync(
