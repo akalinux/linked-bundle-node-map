@@ -39,3 +39,4 @@
   - Created Common method for node highlighting
   - Converted link/index/cache to Map from Object ( performance improvement )
   - Image loader optimizations
+  - unit tests updated to match new internal optimizations

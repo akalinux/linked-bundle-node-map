@@ -136,7 +136,7 @@ it('validate data strucutre tests', () => {
   console.log('links',sl.links)
   //console.log('nodeLinks',sl.nodeLinks)
   expect(error).toBeFalsy();
-  expect(Object.keys(sl.links).length==1).toBeTruthy();
+  expect(sl.links.size==1).toBeTruthy();
 })
 
 it('index builder test',()=>{
