@@ -13,21 +13,17 @@ import {
   Animation,
   HasIdEl,
   Cordinate,
-  NodeLinks,
+  NodeLink,
   LinkDraw,
   PointLookupResult,
   BundleDraw,
   NodeLinkChoice,
-  LinkRenderCache,
-  LinkRenerIndex
+  LinkRenderCache
 } from "./CommonTypes";
 import CalculatorBase, { CORE_R, FULL_CIRCLE, } from "./CalculatorBase";
 import { THEME_MAP, ThemeOptionSets } from "./THEME_MAP";
 import ToolTipsProps from "./ToolTipsProps";
 import Indexer from "./Indexer";
-
-
-interface LinkSets { [key: string]: LinkSet }
 
 
 interface SetCalculatorData {
@@ -81,12 +77,12 @@ export default class Calculator extends CalculatorBase {
   dragGroups: DragGroups = {};
   nodeToLinkMap: NodeToLinkMap = {}
   linkRenderCache: LinkRenderCache[] = [];
-  linkRenderIndex: LinkRenerIndex = {};
+  linkRenderIndex: Map<string,number>=new Map<string,number>;
   showReset: boolean = false;
   autoToolTip: boolean = true;
   needsIndexing: boolean = false;
   toolTipData: ToolTipData = {};
-  linkCache: { [nodeId: string]: ContainerBox } = {}
+  linkCache: Map<string,ContainerBox>=new Map<string,ContainerBox>
   highlight = false;
   textAlign: string = 'center';
   fontFamily: string = 'Arial';
@@ -115,10 +111,9 @@ export default class Calculator extends CalculatorBase {
   canvases: CanvasSets = {
     ctrl: null, nodes: null, bundles: null, animations: null, links: null
   }
-  links: LinkSets = {};
-  //nodes: { [id: string]: NodeEl } = {};
+  links: Map<string,LinkSet>=new Map<string,LinkSet>
   nodes: Map<string,NodeEl>=new Map<string,NodeEl>
-  nodeLinks: NodeLinks = {};
+  nodeLinks: Map<string,NodeLink>=new Map<string,NodeLink>;
   rawLinks: { [id: string]: LinkEl } = {};
   nodeOpts: { [optId: string]: NodeElOpt } = {}
   alpha = 1;
@@ -434,7 +429,7 @@ export default class Calculator extends CalculatorBase {
     if (this.createCache) {
       this.needsIndexing = true;
       this.indexTodo = [];
-      this.linkCache = {};
+      this.linkCache = new Map<string,ContainerBox>
       this.animations = [];
       const drawnLinks=new Map<string,number>
       for (let i = srcNodes.length - 1; i > -1; --i) {
@@ -447,7 +442,7 @@ export default class Calculator extends CalculatorBase {
             this.buildIndex(box, 'nodes', node);
           }
         }
-        const links = this.nodeLinks[node.i];
+        const links = this.nodeLinks.get(node.i);
         if (!links) continue;
         const { order, sets } = links;
         for (let idx = order.length - 1; idx > -1; --idx) {
@@ -557,7 +552,7 @@ export default class Calculator extends CalculatorBase {
       ll.push(ls.lm[link.i] = lmv);
       const as = { s: { a: ba, s: start }, d: { a: da, s: end } };
       let aid = this.rebuild ?
-        this.linkRenderCache[this.linkRenderIndex[ls.key]].links[i].aid :
+        this.linkRenderCache[this.linkRenderIndex.get(ls.key)!].links[i].aid :
         this.animations.length;
 
       renderSet.links.push({ start, end, c, w, aid });
@@ -616,9 +611,9 @@ export default class Calculator extends CalculatorBase {
       if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bx)
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bx })
     }
-    const next = this.rebuild ? this.linkRenderIndex[ls.key] : this.linkRenderCache.length;
+    const next = this.rebuild ? this.linkRenderIndex.get(ls.key)! : this.linkRenderCache.length;
     this.linkRenderCache[next] = renderSet;
-    this.linkRenderIndex[ls.key] = next;
+    this.linkRenderIndex.set(ls.key, next);
   }
 
   drawAinimation(context: CanvasRenderingContext2D, animation: Animation) {
@@ -716,7 +711,7 @@ export default class Calculator extends CalculatorBase {
     }
     for (let i = 0; links && i < links.length; ++i) {
       const key = links[i];
-      const nl = this.links[key] as LinkSet;
+      const nl = this.links.get(key)!
       if (this.insideBox(nl.box!, tp)) {
         for (let i = 0; i < nl.bl!.length; ++i) {
           const { b, c } = nl.bl![i];
@@ -745,7 +740,8 @@ export default class Calculator extends CalculatorBase {
         const { ll, l, lr } = nl;
         for (let i = 0; i < ll.length; ++i) {
           const src = ll[i];
-          const box = this.linkCache[src.i!] || (this.linkCache[src.i!] = this.createLinkBox(src.s, src.d, lr));
+          if(!this.linkCache.has(src.i!)) this.linkCache.set(src.i!,this.createLinkBox(src.s, src.d, lr))
+          const box = this.linkCache.get(src.i!)!
           if (this.insideBox(box, tp)) {
             res.link = { l: l[i], s: src.s, d: src.d, r: lr };
             res.type = 'link';
@@ -830,13 +826,13 @@ export default class Calculator extends CalculatorBase {
   buildData() {
     this.indexer.reset();
     this.linkRenderCache = [];
-    this.linkRenderIndex = {};
+    this.linkRenderIndex = new Map<string,number>
     const nodeLinkMap: NodeToLinkMap = this.nodeToLinkMap = {};
     this.rebuild = false;
     this.createCache = true;
-    const links: LinkSets = {};
+    const links=new Map<string,LinkSet>
     const nodes =new Map<string,NodeEl>
-    const nodeLinks: NodeLinks = {};
+    const nodeLinks =new Map<string,NodeLink>
     const { linkOpts, nodeOpts, minMax, srcNodes, srcLinks, autoToolTip, toolTipData } = this;
     const dragGroups: DragGroups = this.dragGroups = {};
 
@@ -881,8 +877,10 @@ export default class Calculator extends CalculatorBase {
         throw new Error(`Bad link in srcNodes[${i}], missing node(s)`)
 
       const key = link.s > link.d ? (link.d + ',' + link.s) : (link.s + ',' + link.d);
-      const set = links[key] || (links[key] = { bl: [], ll: [], lm: {}, l: [], b: [], s: {}, key, n: { s: link.s, d: link.d } });
-      const { sets, order } = (nodeLinks[link.s] || (nodeLinks[link.s] = { sets: {}, order: [] }));
+      if(!links.has(key)) links.set(key,{ bl: [], ll: [], lm: {}, l: [], b: [], s: {}, key, n: { s: link.s, d: link.d } })
+      const set =links.get(key)!
+      if(!nodeLinks.has(link.s)) nodeLinks.set(link.s,{sets:{},order:[]})
+      const { sets, order } = nodeLinks.get(link.s)!
 
       nodeLinkMap[link.s][link.i] = set
       nodeLinkMap[link.d][link.i] = set;
@@ -953,7 +951,7 @@ export default class Calculator extends CalculatorBase {
         for (const [key, link] of Object.entries(this.nodeToLinkMap[node.i])) {
           this.indexer.clearIndex("links", key);
           this.drawLink(link);
-          delete this.linkCache[key];
+          this.linkCache.delete(key)
         }
         this.rebuild = false;
       } else {
