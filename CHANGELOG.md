@@ -40,3 +40,8 @@
   - Converted link/index/cache to Map from Object ( performance improvement )
   - Image loader optimizations
   - unit tests updated to match new internal optimizations
+
+1.0.10
+  - Added .vscode config to enforce proper typescript version.. ( Vscode randomly breaks if you don't )
+  - Fixed launch script for development
+  - removed console.log statement

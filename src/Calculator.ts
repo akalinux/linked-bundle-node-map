@@ -367,7 +367,6 @@ export default class Calculator extends CalculatorBase {
     const { r, imgSize } = this;
     for (const k of list) {
       const n=this.nodes.get(k)!
-      console.log(k,n)
       if(n.h) {
         continue
       }
