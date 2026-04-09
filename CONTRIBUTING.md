@@ -43,6 +43,14 @@ To run the demo app do the following ( assumes Linux with bash ).
 
 Typically development builds are run locally.
 
+To spin up the sand box env for port 5000 and start the builds run the following.
+
+```
+./launch_dev.sh
+```
+
+If you want to run these commands by hand.
+
 Launching the webserver on http://localhost:5000
 - npm run server &
 
