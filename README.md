@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/linked-bundle-node-map.svg)](https://badge.fury.io/js/linked-bundle-node-map)[![CI](https://github.com/akalinux/linked-bundle-node-map/actions/workflows/ci.yml/badge.svg)](https://github.com/akalinux/linked-bundle-node-map/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/linked-bundle-node-map.svg)](https://badge.fury.io/js/linked-bundle-node-map)[![CI](https://github.com/akalinux/linked-bundle-node-map/actions/workflows/ci.yml/badge.svg)](https://github.com/akalinux/linked-bundle-node-map/actions/workflows/ci.yml)[![Socket Badge](https://badge.socket.dev/npm/package/linked-bundle-node-map/1.0.10)](https://badge.socket.dev/npm/package/linked-bundle-node-map/1.0.10)
 # Linked Bundle Node Map
 
 This npm package was created to solve a few problems. This widget provides good network diagrams, with no dependencies other than the version of React that comes with your build.  The rendering is done in a single pass, with minimal data processing.  The diagram interactions are indexed using binary space partitioning. Indexing is deferred until a user tries to interact with the top level canvas.  The core design is fairly easy to subclass.  The internals are written in TypeScript and the dist folder is uglified/minified es6. The widgets were developed using functional React, which makes the code simple to read and manage.
@@ -31,6 +31,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
 - Nodes, links, and bundles are rendered in a deterministic order
+- Variable node size support
 - Deferred indexing, only created when needed
 - Ref forwarding support allowing for screen shots, pdf generation etc..
 - Extensible Theme support, ( default light and dark ) add more as you see fit
@@ -113,6 +114,9 @@ interface NodeEl {
   o: string;
   // Unique Internal ID
   i: string;
+
+  // scales the node size by this number, if not set it defaults to 1.
+  k?:number
   
   // user tagged data set ( internals never look at or touch this value )
   t?:any;

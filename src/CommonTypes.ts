@@ -20,6 +20,7 @@ interface PreNodeEl {
 interface NodeEl extends PreNodeEl {
   x: number;
   y: number;
+  k?:number;
 }
 
 interface Cordinate {

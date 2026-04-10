@@ -45,3 +45,7 @@
   - Added .vscode config to enforce proper typescript version.. ( Vscode randomly breaks if you don't )
   - Fixed launch script for development
   - removed console.log statement
+
+1.0.11
+  - Added varied node size suppport..  ( long over due )
+  - Added demo of varied node size support

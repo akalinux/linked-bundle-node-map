@@ -4,6 +4,7 @@ import React, { StrictMode } from 'react';
 import 'linked-bundle-node-map/dist/linked-bundle-node.css'
 import MinimalDemo from './demos/MinimalDemo/MinimalDemo';
 import ManualToolTipsAndBundles from './demos/ManualToolTipsAndBundles/ManualToolTipsAndBundles';
+import VariedNodeSize from './demos/VariedNodeSize/VariedNodeSize';
 import ThemeEventsReset from './demos/ThemeEventsReset/ThemeEventsReset';
 import GenerateXY from './demos/GenerateXY/GenerateXY';
 import DragGroups from './demos/DragGroups/DragGroups'
@@ -12,14 +13,16 @@ const maps: { [key: string]: () => React.ReactElement } = {
 	min: MinimalDemo,
 	ttb: ManualToolTipsAndBundles,
 	theme_reset_event: ThemeEventsReset,
-  genXY: GenerateXY,
-  dg: DragGroups,
+    genXY: GenerateXY,
+    dg: DragGroups,
+	vn: VariedNodeSize,
 };
 const el = document.getElementById('app');
 if (el !== null) {
 	const root = ReactDOM.createRoot(el);
 	const key = window.location.href.replace(/^.*\?demo=/, '');
-	const Demo = maps.hasOwnProperty(key) ? maps[key] : MinimalDemo;
+	
+	const Demo = Object.prototype.hasOwnProperty.call(maps,key) ? maps[key] : MinimalDemo;
 
 	root.render(<StrictMode>
 		<div style={{ width: '100%', height: '100%' }}>
