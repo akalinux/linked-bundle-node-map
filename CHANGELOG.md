@@ -49,3 +49,6 @@
 1.0.11
   - Added varied node size suppport..  ( long over due )
   - Added demo of varied node size support
+
+1.0.12
+ - Removed Socket badge.. 
