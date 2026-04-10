@@ -43,6 +43,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - [Events and Themes](https://akalinux.github.io/linked-bundle-node-map/?demo=theme_reset_event)
 - [Generate Tiled Node layout](https://akalinux.github.io/linked-bundle-node-map/?demo=genXY)
 - [Drag nodes Grouped together](https://akalinux.github.io/linked-bundle-node-map/?demo=dg)
+- [Variable Node Size](https://akalinux.github.io/linked-bundle-node-map/?demo=vn)
 
 ## Installation
 
