@@ -31,6 +31,7 @@ This npm package was created to solve a few problems. This widget provides good 
 - Supports fully non interactive mode (useful for creating tool tips and sub diagrams)
 - Nodes can be disabled with the connections still showing
 - Nodes, links, and bundles are rendered in a deterministic order
+- Variable node size support
 - Deferred indexing, only created when needed
 - Ref forwarding support allowing for screen shots, pdf generation etc..
 - Extensible Theme support, ( default light and dark ) add more as you see fit
