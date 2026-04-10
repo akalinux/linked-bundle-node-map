@@ -113,6 +113,9 @@ interface NodeEl {
   o: string;
   // Unique Internal ID
   i: string;
+
+  // scales the node size by this number, if not set it defaults to 1.
+  k?:number
   
   // user tagged data set ( internals never look at or touch this value )
   t?:any;

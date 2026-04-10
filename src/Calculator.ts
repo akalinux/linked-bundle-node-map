@@ -345,7 +345,7 @@ export default class Calculator extends CalculatorBase {
       ctrl,
       node,
       this.shadeColor,
-      this.shadeR,
+      this.shadeR * (node.k||1),
       this.shadeColor
     )
   }
@@ -434,7 +434,7 @@ export default class Calculator extends CalculatorBase {
         if (!node.h) {
           this.drawNode(node);
           if (!this.drag) {
-            const box = this.createNodeBox(node, r);
+            const box = this.createNodeBox(node, r *(node.k||1));
             this.buildIndex(box, 'nodes', node);
           }
         }
@@ -505,11 +505,11 @@ export default class Calculator extends CalculatorBase {
   drawNode(node: NodeEl) {
     const opts = this.nodeOpts[node.o];
     const { nodes } = this.contexts;
-    this.drawText(nodes, node, node.l);
+    this.drawText(nodes, node, node.k||1,node.l);
     if (opts.i) {
       this.drawImage(nodes, node, opts.i)
     } else {
-      this.drawBox(nodes, node, opts.c || '');
+      this.drawBox(nodes, node,node.k||1, opts.c || '');
     }
   }
 
@@ -699,7 +699,7 @@ export default class Calculator extends CalculatorBase {
     const { tp, nodes, links } = el;
     for (let i = 0; nodes && i < nodes.length; ++i) {
       const node = this.nodes.get(nodes[i])!;
-      if (this.insideSquare(node, tp)) {
+      if (this.insideSquare(node, tp,this.r * (node.k||1))) {
         res.node = node || null;
         res.type = 'node';
         return res;
@@ -762,10 +762,12 @@ export default class Calculator extends CalculatorBase {
   }
 
   drawImage(context: CanvasRenderingContext2D, node: NodeEl, src: string) {
+    const isize=this.imgSize * (node.k||1)
+    const rsize=this.r * (node.k||1)
     if (this.images.has(src)) {
       const i=this.images.get(src)!
       if (i.loaded) {
-        context.drawImage(i.img, node.x - this.r, node.y - this.r, this.imgSize, this.imgSize);
+        context.drawImage(i.img, node.x - rsize, node.y - rsize, isize, isize);
       } else {
         i.n.push(node);
       }
@@ -780,7 +782,7 @@ export default class Calculator extends CalculatorBase {
         const nodes = imgc.n;
         for (let i = 0; i < nodes.length; ++i) {
           const node = nodes[i];
-          context.drawImage(imgc.img, node.x - this.r, node.y - this.r, this.imgSize, this.imgSize);
+          context.drawImage(imgc.img, node.x - rsize, node.y - rsize, isize, isize);
         }
       }
       this.images.set(src,{
@@ -803,17 +805,19 @@ export default class Calculator extends CalculatorBase {
     context.closePath();
   }
 
-  drawBox(context: CanvasRenderingContext2D, n: Cordinate, c: string, r = this.r, imgSize = this.imgSize) {
+  drawBox(context: CanvasRenderingContext2D, n: Cordinate, k: number, c: string, r = this.r, imgSize = this.imgSize) {
     context.fillStyle = c;
-    context.rect(n.x - r, n.y - r, imgSize, imgSize)
+    const isize=imgSize * k
+    const rsize=r*k
+    context.rect(n.x - rsize, n.y - rsize, isize, isize)
     context.fill();
   }
 
-  drawText(context: CanvasRenderingContext2D, n: Cordinate, l: string) {
+  drawText(context: CanvasRenderingContext2D, n: Cordinate, k: number, l: string) {
     context.fillStyle = this.color;
     const meta = context.measureText(l);
     const xo = meta.width / -2;
-    const yo = (meta.actualBoundingBoxAscent + meta.actualBoundingBoxDescent) / 2 + this.r;
+    const yo = (meta.actualBoundingBoxAscent + meta.actualBoundingBoxDescent) / 2 + this.r *k;
     context.fillText(l, n.x + xo, n.y - yo);
   }
 
