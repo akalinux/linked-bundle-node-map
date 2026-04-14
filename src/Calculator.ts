@@ -345,7 +345,7 @@ export default class Calculator extends CalculatorBase {
       ctrl,
       node,
       this.shadeColor,
-      this.shadeR * (node.k||1),
+      this.shadeR * node.k!,
       this.shadeColor
     )
   }
@@ -370,7 +370,10 @@ export default class Calculator extends CalculatorBase {
       if(n.h) {
         continue
       }
-      ctrl.clearRect(n.x - r, n.y - r, imgSize, imgSize)
+      const s=imgSize *n.k!
+      const o=r* n.k!
+      
+      ctrl.clearRect(n.x - o, n.y - o, s, s)
       this.drawNodeHighlght(ctrl, n)
     }
   }
@@ -434,7 +437,7 @@ export default class Calculator extends CalculatorBase {
         if (!node.h) {
           this.drawNode(node);
           if (!this.drag) {
-            const box = this.createNodeBox(node, r *(node.k||1));
+            const box = this.createNodeBox(node, r *node.k!);
             this.buildIndex(box, 'nodes', node);
           }
         }
@@ -480,7 +483,7 @@ export default class Calculator extends CalculatorBase {
 
   drawAllAnimations() {
     const todo = this.animations;
-    if (todo.length == 0) return;
+    if (todo.length == 0 ) return;
 
     const { width, height } = this.initSize;
     const { animations } = this.contexts;
@@ -505,11 +508,11 @@ export default class Calculator extends CalculatorBase {
   drawNode(node: NodeEl) {
     const opts = this.nodeOpts[node.o];
     const { nodes } = this.contexts;
-    this.drawText(nodes, node, node.k||1,node.l);
+    this.drawText(nodes, node, node.k!,node.l);
     if (opts.i) {
       this.drawImage(nodes, node, opts.i)
     } else {
-      this.drawBox(nodes, node,node.k||1, opts.c || '');
+      this.drawBox(nodes, node,node.k!, opts.c || '');
     }
   }
 
@@ -519,7 +522,7 @@ export default class Calculator extends CalculatorBase {
     const w = this.getLineWith(ls.l.length);
     const p = this.nodes.get(n.s)!
     const c = this.nodes.get(n.d)!
-    const ba = this.GetAngle(p.x, p.y, c.x, c.y);
+    let ba = this.GetAngle(p.x, p.y, c.x, c.y);
     const da = this.GetAngle(c.x, c.y, p.x, p.y);
     const angle = ba + 270;
     const { linkOpts, boxWidth, boxR } = this;
@@ -555,7 +558,6 @@ export default class Calculator extends CalculatorBase {
       if (link.a) {
         const { a } = link;
         if (a == 's' || a == 'd') {
-          /** @type {Animation} */
           const animate: Animation = {
             ...as[a],
             r: d,
@@ -569,7 +571,6 @@ export default class Calculator extends CalculatorBase {
         } else if (a == 'b') {
           for (let i = 0; i < SD.length; ++i) {
             const a = SD[i];
-            /** @type {Animation} */
             const animate: Animation = {
               ...as[a],
               r: d,
@@ -592,20 +593,21 @@ export default class Calculator extends CalculatorBase {
     }
     const bR = boxR - w * .5;
     ls.br = bR;
+    ba +=180
+    const bi = bR / 1.5;
+    const bx = bR / 4;
     for (let i = 0; i < b.length; ++i) {
-      const pos = this.computeLinePoint(p, d, ba + 180, b.length, i);
+      const pos = this.computeLinePoint(p, d, ba, b.length, i);
       bl.push({ c: pos, b: b[i] });
 
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR })
-      if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bR)
-
-      const bi = bR / 1.5;
-      if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bi)
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bi })
-
-      const bx = bR / 4;
-      if (this.doDraw) this.drawCircle(bundles, pos, this.bundleColor, bx)
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bx })
+      if(this.doDraw) {
+        this.drawCircle(bundles, pos, this.bundleColor, bR)
+        this.drawCircle(bundles, pos, this.bundleColor, bi)
+        this.drawCircle(bundles, pos, this.bundleColor, bx)
+      }
     }
     const next = this.rebuild ? this.linkRenderIndex.get(ls.key)! : this.linkRenderCache.length;
     this.linkRenderCache[next] = renderSet;
@@ -699,7 +701,7 @@ export default class Calculator extends CalculatorBase {
     const { tp, nodes, links } = el;
     for (let i = 0; nodes && i < nodes.length; ++i) {
       const node = this.nodes.get(nodes[i])!;
-      if (this.insideSquare(node, tp,this.r * (node.k||1))) {
+      if (this.insideSquare(node, tp,this.r * node.k!)) {
         res.node = node || null;
         res.type = 'node';
         return res;
@@ -762,8 +764,8 @@ export default class Calculator extends CalculatorBase {
   }
 
   drawImage(context: CanvasRenderingContext2D, node: NodeEl, src: string) {
-    const isize=this.imgSize * (node.k||1)
-    const rsize=this.r * (node.k||1)
+    const isize=this.imgSize * node.k!
+    const rsize=this.r * node.k!
     if (this.images.has(src)) {
       const i=this.images.get(src)!
       if (i.loaded) {
@@ -849,6 +851,7 @@ export default class Calculator extends CalculatorBase {
       if (!nodeOpts[node.o].i && !nodeOpts[node.o].c) throw new Error(`No image or color option set for node: srcNodes[${i}] in nodeOpts for ${node.o}`);
       if (nodes.has(node.i)) throw new Error(`Duplicate node: [${node.i}] in srcNodes[${i}]`);
       if (node.g) (dragGroups[node.g] || (dragGroups[node.g] = [])).push(node.i);
+      node.k=node.k||1
 
       nodes.set(node.i,node);
       if (i == 0) {
@@ -948,7 +951,7 @@ export default class Calculator extends CalculatorBase {
       if (!this.drag) {
         this.needsIndexing = true;
         if (!node.h) {
-          const box = this.createNodeBox(np, this.r);
+          const box = this.createNodeBox(np, this.r *node.k!);
           this.buildIndex(box, 'nodes', node);
         }
         this.rebuild = true;
