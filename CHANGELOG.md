@@ -51,4 +51,11 @@
   - Added demo of varied node size support
 
 1.0.12
- - Removed Socket badge.. 
+  - Removed Socket badge.. 
+
+1.0.13
+  - node.k is now validated and set only once at dataBuild time.
+  - drawLink optimizations, bundle computations moved outside of the loop
+  - fixed node highlight render defect now links ends clear properly on highlight
+  - fixed issue with node indexing post drag not being applied with proper geometry when a node.k value other than 1 is used.
+

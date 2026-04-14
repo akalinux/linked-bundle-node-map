@@ -11,7 +11,7 @@ export default function VariedNodeSize() {
 	let changes: MapChanges|null=null;
 	const [theme, setTheme] = useState('light');
 	const [data, setData] = useState(JSON.parse(clone) as SetCalculatorData);
-	// set the "Easter Node" to the default options with no image.
+	// set the "Eastern Node" to the default options with no image.
 	data.nodes[3].o='default'
 
 	// set the size of the eastern node to .75 the normal node size
