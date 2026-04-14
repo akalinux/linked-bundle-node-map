@@ -8,7 +8,7 @@ const clone = JSON.stringify(RawData);
 
 export default function VariedNodeSize() {
 
-	let changes: MapChanges|null=null;
+	let changes: MapChanges
 	const [theme, setTheme] = useState('light');
 	const [data, setData] = useState(JSON.parse(clone) as SetCalculatorData);
 	// set the "Eastern Node" to the default options with no image.

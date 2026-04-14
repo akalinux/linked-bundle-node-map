@@ -59,3 +59,5 @@
   - fixed node highlight render defect now links ends clear properly on highlight
   - fixed issue with node indexing post drag not being applied with proper geometry when a node.k value other than 1 is used.
 
+1.0.14
+  - Fixed demos

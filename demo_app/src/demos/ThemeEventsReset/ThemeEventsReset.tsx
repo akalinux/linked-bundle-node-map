@@ -8,7 +8,7 @@ const clone = JSON.stringify(RawData);
 
 export default function ThemeEventsReset() {
 
-	let changes: MapChanges|null=null;
+	let changes: MapChanges;
 	const [theme, setTheme] = useState('light');
 	const [data, setData] = useState(JSON.parse(clone) as SetCalculatorData);
 	const fc = new LinkedMapStatus();

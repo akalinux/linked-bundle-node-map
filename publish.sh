@@ -5,4 +5,5 @@ set -x
 npm run test
 npm run deploy
 rm -rf public/js
-npm publish
+npm run clean
+NPM_TOKEN=$(cat token.txt) npm publish
