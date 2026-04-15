@@ -1,7 +1,6 @@
 {
   "name": "linked-bundle-node-map",
-  "version": "1.0.15",
-  "main": "dist/bundle.js",
+  "version": "1.0.16",
   "types": "dist/LinkedBundleNodeMap.d.ts",
   "funding": "https://github.com/sponsors/akalinux",
   "homepage": "https://github.com/akalinux/linked-bundle-node-map",
@@ -36,11 +35,12 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@babel/register": "^7.28.3",
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
+    "@types/node": "^25.6.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "gh-pages": "^6.3.0",
     "jest": "^30.0.5",
     "react": "^19.2.0",
@@ -48,10 +48,24 @@
     "style-loader": "^4.0.0",
     "ts-jest": "^29.4.0",
     "ts-loader": "^9.5.4",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.1",
     "typescript-eslint": "^8.46.3",
     "webpack": "^5.102.1",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^7.0.2"
   },
-  "dependencies": {}
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/bundle.js",
+      "default": "./dist/bundle.js",
+      "types": "./dist/LinkedBundleNodeMap.d.ts"
+    },
+    "./dist/CommonTypes": {
+      "import": "./dist/CommonTypes.d.ts"
+    },
+    "./dist/linked-bundle-node.css": {
+      "import": "./dist/linked-bundle-node.css",
+      "require": "./dist/linked-bundle-node.css"
+    }
+  }
 }

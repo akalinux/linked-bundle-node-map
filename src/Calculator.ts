@@ -553,7 +553,7 @@ export default class Calculator extends CalculatorBase {
       const lmv: LinkDraw = { i: link.i, s: start, d: end, l: link };
       ll.push(ls.lm[link.i] = lmv);
       const as = { s: { a: ba, s: start }, d: { a: da, s: end } };
-      let aid = this.rebuild ?
+      const aid = this.rebuild ?
         this.linkRenderCache[this.linkRenderIndex.get(ls.key)!].links[i].aid :
         this.animations.length;
 
@@ -569,7 +569,7 @@ export default class Calculator extends CalculatorBase {
             w: w * .75,
             o: i,
           }
-          this.animations[aid++] = animate;
+          this.animations[aid+1] = animate;
         } else if (a == 'b') {
           for (let i = 0; i < SD.length; ++i) {
             const a = SD[i];
@@ -581,7 +581,7 @@ export default class Calculator extends CalculatorBase {
               f: i ? this.bgColor : c,
               w: w * .75,
             }
-            this.animations[aid++] = animate;
+            this.animations[aid+1] = animate;
           }
         }
       }

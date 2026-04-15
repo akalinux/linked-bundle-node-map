@@ -220,9 +220,9 @@ export default class MouseWatcher {
         event.name = 'NodeDrag';
         this.calc.moveNode(dt.node!.i, data.nodes[dt.node!.i]);
       } else {
-        let tag = '';
+        // eslint-disable-next-line no-useless-assignment
+        let tag ='',name = ''
         this.calc.moveLink(dt, {x:0,y:0});
-        let name='';
         if (dt.type == 'link') {
           tag = `link-${dt.link!.l.i}`
           name='OnLinkChange'
