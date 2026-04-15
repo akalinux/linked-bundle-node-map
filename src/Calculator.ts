@@ -569,7 +569,7 @@ export default class Calculator extends CalculatorBase {
             w: w * .75,
             o: i,
           }
-          this.animations[aid++] = animate; // eslint-disable-line no-useless-assignment
+          this.animations[aid] = animate; 
         } else if (a == 'b') {
           for (let i = 0; i < SD.length; ++i) {
             const a = SD[i];
