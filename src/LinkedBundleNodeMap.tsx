@@ -69,6 +69,7 @@ const Draw = (args: { m: ManageInstance<Calculator | null>, props: SetCalculator
     calc.setData(props);
     calc.onMount();
     calc.draw();
+    calc.setupAnimations()
   } catch (e) {
     console.error("Failed to render, error was:", e);
   }

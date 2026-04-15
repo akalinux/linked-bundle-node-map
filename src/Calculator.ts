@@ -71,7 +71,6 @@ interface DragGroups {
 export default class Calculator extends CalculatorBase {
   rebuild = false;
   createCache = false;
-  doDraw = true;
   dragGroups: DragGroups = {};
   nodeToLinkMap: Map<string,{[key:string]: LinkSet}>=new Map<string,{[key:string]:LinkSet}>
   linkRenderCache: LinkRenderCache[] = [];
@@ -187,6 +186,7 @@ export default class Calculator extends CalculatorBase {
 
   buildFullIndex() {
     if (!this.needsIndexing) return;
+    this.needsIndexing=false
     const indexTodo = this.indexTodo;
     this.indexer.indexSize = this.indexSize;
     this.indexer.buildIndexes(indexTodo);
@@ -474,9 +474,11 @@ export default class Calculator extends CalculatorBase {
           this.drawCircle(bundles, p, c, bR);
         }
       }
-
     }
     this.drawAllAnimations();
+  }
+
+  setupAnimations() {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(this.onAnimate, this.animationTimer);
   }
@@ -494,7 +496,7 @@ export default class Calculator extends CalculatorBase {
     const tick = this.tick;
     for (let i = 0; i < todo.length; ++i) {
       this.tick += i;
-      this.drawAinimation(animations, todo[i]);
+      this.drawAnimation(animations, todo[i]);
     }
     this.tick = tick;
   }
@@ -516,7 +518,7 @@ export default class Calculator extends CalculatorBase {
     }
   }
 
-  drawLink(ls: LinkSet) {
+  drawLink(ls: LinkSet, doDraw: boolean=true  ) {
     if (ls.l.length == 0) return;
     const { l, n, b } = ls;
     const w = this.getLineWith(ls.l.length);
@@ -539,6 +541,7 @@ export default class Calculator extends CalculatorBase {
       links: [],
       bundles: [],
     }
+    const tick=this.tick
     for (let i = 0; i < l.length; ++i) {
       const link = l[i];
       const r = o + i * incBy;
@@ -546,7 +549,7 @@ export default class Calculator extends CalculatorBase {
       const end = this.getXY(nw.x, nw.y, r, sa);
       const c = linkOpts[link.o].c
 
-      if (this.doDraw) this.drawLine(links, start, end, c, w);
+      if (doDraw) this.drawLine(links, start, end, c, w);
       const lmv: LinkDraw = { i: link.i, s: start, d: end, l: link };
       ll.push(ls.lm[link.i] = lmv);
       const as = { s: { a: ba, s: start }, d: { a: da, s: end } };
@@ -567,7 +570,6 @@ export default class Calculator extends CalculatorBase {
             o: i,
           }
           this.animations[aid++] = animate;
-
         } else if (a == 'b') {
           for (let i = 0; i < SD.length; ++i) {
             const a = SD[i];
@@ -584,6 +586,7 @@ export default class Calculator extends CalculatorBase {
         }
       }
     }
+    this.tick=tick
     const se = this.getXY(c.x, c.y, boxR, sa);
     const sw = this.getXY(p.x, p.y, boxR, sa);
     const bl = ls.bl = [] as { c: Cordinate, b: string }[];
@@ -603,7 +606,7 @@ export default class Calculator extends CalculatorBase {
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR })
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bi })
       renderSet.bundles.push({ p: pos, c: this.bundleColor, bR: bx })
-      if(this.doDraw) {
+      if(doDraw) {
         this.drawCircle(bundles, pos, this.bundleColor, bR)
         this.drawCircle(bundles, pos, this.bundleColor, bi)
         this.drawCircle(bundles, pos, this.bundleColor, bx)
@@ -614,7 +617,7 @@ export default class Calculator extends CalculatorBase {
     this.linkRenderIndex.set(ls.key, next);
   }
 
-  drawAinimation(context: CanvasRenderingContext2D, animation: Animation) {
+  drawAnimation(context: CanvasRenderingContext2D, animation: Animation) {
     const { a, c, f, r, s, w, o } = animation
     const { tick, tickSlots, ticks, tickSpace } = this;
     for (let i = 0; i < tickSlots; ++i) {
@@ -948,7 +951,13 @@ export default class Calculator extends CalculatorBase {
         this.nodes.set(gid, { ...node, x: p.x, y: p.y })
       }
       const np=this.changes.nodes[gid] = {x:node.x,y:node.y};
-      if (!this.drag) {
+      if (this.drag) {
+        this.rebuild = true;
+        for (const link of Object.values(this.nodeToLinkMap.get(node.i)!)) {
+          this.drawLink(link,false);
+        }
+        this.rebuild = false;
+      } else {
         this.needsIndexing = true;
         if (!node.h) {
           const box = this.createNodeBox(np, this.r *node.k!);
@@ -957,19 +966,11 @@ export default class Calculator extends CalculatorBase {
         this.rebuild = true;
         for (const [key, link] of Object.entries(this.nodeToLinkMap.get(node.i)!)) {
           this.indexer.clearIndex("links", key);
-          this.drawLink(link);
+          this.drawLink(link,false);
           this.linkCache.delete(key)
         }
         this.rebuild = false;
-      } else {
 
-        this.doDraw = false;
-        this.rebuild = true;
-        for (const link of Object.values(this.nodeToLinkMap.get(node.i)!)) {
-          this.drawLink(link);
-        }
-        this.rebuild = false;
-        this.doDraw = true;
       }
     }
     this.needsMinMax = true;

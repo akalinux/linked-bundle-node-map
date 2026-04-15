@@ -61,3 +61,7 @@
 
 1.0.14
   - Fixed demos
+
+1.0.15
+  - fixed issue that caused links to be rendered multiple times while nodes,links,bundles, or groups were being dragged
+  - animations now persist through dragging
