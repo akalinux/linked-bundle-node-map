@@ -71,3 +71,9 @@
     -- This was a major undertaking.. TypeScript has been upgraded from 5.x to 6.x
   - package.json exports have been modernized
   - webpack builds have been upgraded, we are now no longer using deprecated features.
+
+1.0.17
+  - animation rendering optimization
+
+1.0.18
+  - added missing change log for version 1.0.17
