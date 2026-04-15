@@ -65,3 +65,9 @@
 1.0.15
   - fixed issue that caused links to be rendered multiple times while nodes,links,bundles, or groups were being dragged
   - animations now persist through dragging
+
+1.0.16
+  - all devDependencies upgraded.. 
+    -- This was a major undertaking.. TypeScript has been upgraded from 5.x to 6.x
+  - package.json exports have been modernized
+  - webpack builds have been upgraded, we are now no longer using deprecated features.
