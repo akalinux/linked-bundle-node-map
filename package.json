@@ -1,7 +1,6 @@
 {
   "name": "linked-bundle-node-map",
-  "version": "1.0.15",
-  "main": "dist/bundle.js",
+  "version": "1.0.16",
   "types": "dist/LinkedBundleNodeMap.d.ts",
   "funding": "https://github.com/sponsors/akalinux",
   "homepage": "https://github.com/akalinux/linked-bundle-node-map",
@@ -13,7 +12,7 @@
     "testapp": "cd demo_app;npm run build",
     "tw": "cd demo_app;npm run watch",
     "clean": "rm -rf dist public/js||/bin/true",
-    "deploy": "npm run build && bash -c 'cd  demo_app;npm run build'; gh-pages -d public",
+    "deploy": "npm run clean && npm run build && bash -c 'cd  demo_app;npm run build'; gh-pages -d public",
     "test": "npx eslint src && jest",
     "push": "npm run clean && npm run test && npm run build && npm run publish && npm run deploy"
   },
@@ -31,27 +30,42 @@
   "license": "MIT",
   "description": "General diagram tool.  Create flow charts, network maps, UML diagrams etc..",
   "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
-    "@babel/register": "^7.28.3",
-    "@eslint/js": "^9.39.1",
+    "@babel/register": "^7.28.6",
+    "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
-    "eslint": "^9.39.1",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.2.0",
     "gh-pages": "^6.3.0",
-    "jest": "^30.0.5",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "jest": "^30.3.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "style-loader": "^4.0.0",
-    "ts-jest": "^29.4.0",
-    "ts-loader": "^9.5.4",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3",
-    "webpack": "^5.102.1",
-    "webpack-cli": "^6.0.1"
+    "ts-jest": "^29.4.9",
+    "ts-loader": "^9.5.7",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.2",
+    "webpack": "^5.106.1",
+    "webpack-cli": "^7.0.2"
   },
-  "dependencies": {}
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/bundle.js",
+      "default": "./dist/bundle.js",
+      "types": "./dist/LinkedBundleNodeMap.d.ts"
+    },
+    "./dist/CommonTypes": {
+      "import": "./dist/CommonTypes.d.ts"
+    },
+    "./dist/linked-bundle-node.css": {
+      "import": "./dist/linked-bundle-node.css",
+      "require": "./dist/linked-bundle-node.css"
+    }
+  }
 }

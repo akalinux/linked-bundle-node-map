@@ -60,7 +60,7 @@ export default class CalculateNodeXY extends CalculatorBase {
           nodes.push(node);
         }
       } else {
-        const x = minX = minX + pad;
+        const x = minX + pad;
         const y = minY + pad;
         const node = { ...list[0], x, y } as NodeEl;
         nodes.push(node);

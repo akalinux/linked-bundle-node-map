@@ -1,8 +1,9 @@
-const express = require('express');
-const nocache = require("nocache");
-const path = require('path');
+import express from 'express';
+import nocache from 'nocache';
+import path from 'path';
 const app = express();
 const PORT = process.env.PORT || 5000;
+const __dirname = import.meta.dirname;
 
 app.use(nocache());
 // Serve static files from the 'build' directory (or 'dist')

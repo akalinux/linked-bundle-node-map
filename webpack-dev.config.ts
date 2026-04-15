@@ -43,9 +43,12 @@ module.exports = {
   output: {
     path: dist,
     filename: 'bundle.js',
-    library: 'LinkedBundleNodeMap', // Global variable name for the UMD module
-    libraryTarget: 'umd',
     globalObject: 'this', // Ensures UMD works in various environments
+    //module:true,
+    library: {
+      name: 'LinkedBundleNodeMap',
+      type:'umd',
+    }
   },
   resolve: {
     extensions: ['.ts', '.tsx',],
