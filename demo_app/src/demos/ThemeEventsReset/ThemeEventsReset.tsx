@@ -36,7 +36,7 @@ export default function ThemeEventsReset() {
 				<div className='noBlock' style={{ marginLeft: "10px" }}>
 					See the JavaScript console for example events.<br />
 					Select A theme: <select value={theme} onChange={e => {
-						if(changes!==null) MergeMapChanges(changes,data)
+						if(changes!=null) MergeMapChanges(changes,data)
 							console.log(data);
 						setTheme(e.target.value);
 					}} name="theme">
