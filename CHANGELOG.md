@@ -78,6 +78,6 @@
 1.0.18
   - added missing change log for version 1.0.17
 
-1.0.18
-  - fixed nulll check for theme options in the demo
+1.0.19
+  - fixed nulll check for theme options in the demos
   - removed extranious variable from the drawLink method
