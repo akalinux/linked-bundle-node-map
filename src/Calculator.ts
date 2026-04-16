@@ -541,7 +541,6 @@ export default class Calculator extends CalculatorBase {
       links: [],
       bundles: [],
     }
-    const tick=this.tick
     for (let i = 0; i < l.length; ++i) {
       const link = l[i];
       const r = o + i * incBy;
@@ -586,7 +585,6 @@ export default class Calculator extends CalculatorBase {
         }
       }
     }
-    this.tick=tick
     const se = this.getXY(c.x, c.y, boxR, sa);
     const sw = this.getXY(p.x, p.y, boxR, sa);
     const bl = ls.bl = [] as { c: Cordinate, b: string }[];
