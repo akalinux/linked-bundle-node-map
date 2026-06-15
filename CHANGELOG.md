@@ -81,3 +81,6 @@
 1.0.19
   - fixed nulll check for theme options in the demos
   - removed extranious variable from the drawLink method
+
+1.0.20
+  - package.json updates
