@@ -8,3 +8,5 @@ index.js
 *.swp
 token.txt
 *.bak
+.yarn*
+.yarn/*

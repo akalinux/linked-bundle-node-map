@@ -4,7 +4,14 @@
 	"name": "Node.js & TypeScript",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	//"image": "mcr.microsoft.com/devcontainers/typescript-node:4-24-trixie",
-        "image": "mcr.microsoft.com/devcontainers/typescript-node",
+    //"image": "mcr.microsoft.com/devcontainers/typescript-node",
+
+
+    "build": {
+        // Path is relative to the devcontainer.json file.
+        "dockerfile": "Dockerfile"
+    },
+
 	//"image": "mcr.microsoft.com/devcontainers/typescript-node:4-${templateOption:imageVariant}",
 	"features": {
 		//"ghcr.io/devcontainer-config/features/dot-config:4": {}

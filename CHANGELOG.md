@@ -84,3 +84,5 @@
 
 1.0.20
   - package.json updates
+  - updated Dockerfile and .devtools folder.
+  - Internals are being re-written into rust to reduce size and improive performance.
